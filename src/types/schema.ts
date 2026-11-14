@@ -136,6 +136,7 @@ export interface OperationalZoneLink {
 
 /**
  * 6. Member Model (Espace Membre)
+ * Augmented with Gamification (Interactien du Mois)
  */
 export interface Member {
   id: string; // matches Firebase Auth UID
@@ -146,7 +147,7 @@ export interface Member {
   phone: string;
   avatarUrl?: string;
   role: 'member' | 'bureau' | 'bureau_elargi' | 'admin';
-  bureauTitle?: string; // e.g. "Présidente", "Trésorière Générale", etc.
+  bureauTitle?: string;
 
   // Commission allocation (Enforces 2 mandatory + at least 1 elective)
   assignedCommissions: CommissionName[];
@@ -156,12 +157,59 @@ export interface Member {
   cotisationPaidTND: number;
   cotisationRemainingTND: number;
 
-  // Gamification (Feature Expansion 2)
-  currentMonthPoints: number; // default 0
-  lifetimePoints: number; // default 0
+  // Gamification: "Interactien du Mois" Point System
+  currentMonthPoints: number; // default 0 (resets monthly)
+  lifetimePoints: number; // default 0 (cumulative)
 
   // Relationship pointers
   sanctions?: Sanction[];
   joinedAt: Timestamp | string;
   isActive: boolean;
+}
+
+/**
+ * 7. Leaderboard Model (Gamification)
+ */
+export interface LeaderboardEntry {
+  rank: number;
+  memberId: string;
+  fullName: string;
+  avatarUrl?: string;
+  bureauTitle?: string;
+  assignedCommissions: CommissionName[];
+  currentMonthPoints: number;
+  lifetimePoints: number;
+  badge?: 'Or' | 'Argent' | 'Bronze';
+}
+
+export interface PointAdjustmentAudit {
+  id: string;
+  memberId: string;
+  pointsDelta: number; // positive or negative
+  reason: string;
+  adjustedBy: string; // Admin UID
+  timestamp: Timestamp | string;
+}
+
+/**
+ * 8. Bibliothèque Numérique (Resource Library)
+ * Read-only asset catalog mapped directly from Google Drive
+ */
+export type ResourceCategory = 
+  | 'Règlements & chartes'
+  | 'Ressources Graphiques'
+  | 'Archives Administratives';
+
+export interface ResourceDocument {
+  id: string;
+  title: string;
+  category: ResourceCategory;
+  fileType: 'pdf' | 'docx' | 'image' | 'xlsx' | 'archive';
+  driveFileId: string;
+  driveFolderId?: string;
+  previewUrl: string;
+  downloadUrl: string;
+  sizeFormatted?: string;
+  description?: string;
+  updatedAt: string;
 }

@@ -85,6 +85,12 @@ When an administrator reviews and approves a candidate in the Admin Dashboard:
 ### 3.4 Authenticated Member Portal (`/espace-membre`)
 Personalized dashboard restricted to approved members with Firebase Auth:
 * **Header & Identity Bar:** Member name, avatar, role badge, and assigned commissions pills.
+* **Gamification Podium (`Leaderboard` Component):** Displays the Top 3 members with highest `currentMonthPoints` for the "Interactien du Mois" challenge.
+* **Bibliothèque Numérique (`ResourceLibrary` Component):** Read-only document repository categorized into:
+  * *Règlements & chartes* (Rotary bylaws, CNIT guidelines).
+  * *Ressources Graphiques* (Brand asset templates, logos).
+  * *Archives Administratives* (Procès-verbaux / Past meeting minutes).
+  Directly integrated with the connected Google Drive folder (`12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9`).
 * **Flux d'Actualités (News Feed):** Official club announcements, urgent notices, and action debriefs.
 * **Calendrier des Commissions:** Filtered event calendar displaying only meetings and field initiatives relevant to the member's assigned commissions.
 * **Suivi des Sanctions:** Personal transparency table detailing recorded penalties (`Date`, `Motif`, `Type`: *Avertissement, Blâme, Suspension temporaire, Exclusion*).
@@ -95,7 +101,7 @@ Personalized dashboard restricted to approved members with Firebase Auth:
 ### 3.5 Administrator Management Portal (`/admin` - CRM)
 Full CRUD interface for executive officers:
 * **Candidatures:** List, filter, inspect full application dossiers, approve (triggering the commission rule), or reject.
-* **Gestion des Membres:** Member directory, commissions management, and manual balance adjusters.
+* **Gestion des Membres & Gamification:** Member directory, commissions management, and manual point adjustment modal (`PointAdjustmentModal`) for "Interactien du Mois".
 * **Module Sanctions:** Issue, edit, or revoke member sanctions.
 * **Module Cotisations:** Update dues assessed, record cash/transfer payments, and track outstanding club receivables.
 * **Actualités & Annonces:** Rich-text publishing for member news feed.
@@ -137,7 +143,7 @@ export interface Candidate {
   submittedAt: Timestamp;
 }
 
-// 2. Member Model (With Commission Allocation & Financial Tracker)
+// 2. Member Model (With Commission Allocation, Financial Tracker & Gamification)
 export interface Member {
   id: string; // Firebase Auth UID
   candidateId?: string;
@@ -152,11 +158,41 @@ export interface Member {
   cotisationAssessedTND: number;
   cotisationPaidTND: number;
   cotisationRemainingTND: number;
+  currentMonthPoints: number; // Default 0 ("Interactien du Mois")
+  lifetimePoints: number; // Default 0
   joinedAt: Timestamp;
   isActive: boolean;
 }
 
-// 3. Sanction Model
+// 3. Leaderboard Entry Model
+export interface LeaderboardEntry {
+  rank: number;
+  memberId: string;
+  fullName: string;
+  avatarUrl?: string;
+  bureauTitle?: string;
+  assignedCommissions: string[];
+  currentMonthPoints: number;
+  lifetimePoints: number;
+  badge?: 'Or' | 'Argent' | 'Bronze';
+}
+
+// 4. Resource Document Model (Bibliothèque Numérique)
+export interface ResourceDocument {
+  id: string;
+  title: string;
+  category: 'Règlements & chartes' | 'Ressources Graphiques' | 'Archives Administratives';
+  fileType: 'pdf' | 'docx' | 'image' | 'xlsx' | 'archive';
+  driveFileId: string;
+  driveFolderId?: string;
+  previewUrl: string;
+  downloadUrl: string;
+  sizeFormatted?: string;
+  description?: string;
+  updatedAt: string;
+}
+
+// 5. Sanction Model
 export interface Sanction {
   id: string;
   memberId: string;
@@ -167,7 +203,7 @@ export interface Sanction {
   createdAt: Timestamp;
 }
 
-// 4. News Announcement Model
+// 6. News Announcement Model
 export interface News {
   id: string;
   title: string;
@@ -179,7 +215,7 @@ export interface News {
   isPinned?: boolean;
 }
 
-// 5. Commission Event Model
+// 7. Commission Event Model
 export interface CommissionEvent {
   id: string;
   title: string;
@@ -189,7 +225,7 @@ export interface CommissionEvent {
   meetingLink?: string;
 }
 
-// 6. Operational Zone Link Model
+// 8. Operational Zone Link Model
 export interface OperationalZoneLink {
   id: string;
   actionTitle: string;
@@ -415,4 +451,5 @@ export interface OperationalZoneLink {
 * **Commits:**
   - `dbfcbb9` docs: add structural implementation plan and UI/UX Pro Max skill specification
   - `636ebeb` feat: populate club data from Google Drive repository
-  - `pending` feat: architect custom recruitment form, member dashboard, and admin CRM
+  - `af40256` feat: architect custom recruitment form, member dashboard, and admin CRM
+  - `pending` feat: add leaderboard point system schema and resource library architecture
