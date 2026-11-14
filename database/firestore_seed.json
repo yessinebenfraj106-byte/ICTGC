@@ -1,0 +1,126 @@
+{
+  "clubProfile": {
+    "ictgc-219646": {
+      "name": "Interact Club Tunis Golfe Carthagène",
+      "acronym": "ICTGC",
+      "clubNumber": "219646",
+      "district": "District 9010",
+      "sponsorClub": "Rotary Club Ariana La Rose",
+      "charterDate": "2019-01-07",
+      "initiationDate": "2017-03-17",
+      "rotarySignatory": "Barry Rassin",
+      "motto": "Service Above Self • La Jeunesse au Service de la Communauté",
+      "socials": {
+        "instagram": "https://instagram.com/ic.tunisgolfecarthagene",
+        "instagramHandle": "@ic.tunisgolfecarthagene",
+        "email": "interact.tunisgolfecarthagene@gmail.com"
+      },
+      "sponsors": [
+        "Tunisie Telecom",
+        "Sotuver",
+        "Sotuchoc",
+        "Maxx Chips",
+        "Amen Bank",
+        "Afrimed Logistics",
+        "Ben Jeddou Events",
+        "Lobna"
+      ],
+      "mediaFeatures": [
+        "Radio Mosaïque FM",
+        "IFM"
+      ]
+    }
+  },
+  "mandates": {
+    "mandat-2026-2027": {
+      "years": "2026–2027",
+      "statutoryMeetingDate": "2026-08-01",
+      "isActive": true,
+      "theme": "L'Énergie de la Jeunesse Solidaire",
+      "bureauExecutif": {
+        "president": "Yasmine Cherif",
+        "vicePresident": "Nour Tajouri",
+        "secretaireGeneral": "Yessine Ben Fraj",
+        "tresoriereGenerale": "Eya Houas",
+        "chefProtocole": "Mohamed Ayoub Masmoudi",
+        "representantCNIT": "Skander Mellouli",
+        "conseillereGenerale": "Yasmine Chaabani"
+      },
+      "bureauElargi": {
+        "adjointSecretaire": "Youssef Neffati",
+        "adjointTresoriere": "Iyed Tlili",
+        "adjointeProtocole": "Yasmine Missaoui"
+      }
+    }
+  },
+  "commissions": {
+    "comm-cip": {
+      "name": "Commission d'Intérêt Public",
+      "leadership": "Co-chefs: Omar Jerbi & Zeyneb Koubaa",
+      "isMandatory": true
+    },
+    "comm-crie": {
+      "name": "Commission des Relations Internes & Externes",
+      "leadership": "Pas de chef actuel",
+      "isMandatory": true
+    },
+    "comm-fin": {
+      "name": "Commission des Finances",
+      "leadership": "Chef Sponsoring: Adam Ben Ghodhbane • Cheffe Finances: Ritej Iris Mendili",
+      "isMandatory": false
+    },
+    "comm-rh": {
+      "name": "Commission des Ressources Humaines",
+      "leadership": "Cheffe: Kenza Miral",
+      "isMandatory": false
+    },
+    "comm-cai": {
+      "name": "Commission des Actions Internationales",
+      "leadership": "Chef: Mahdi Ghabri",
+      "isMandatory": false
+    },
+    "comm-media": {
+      "name": "Commission de Médiatisation",
+      "leadership": "Pôle Communication Digitale",
+      "isMandatory": false
+    }
+  },
+  "metrics": {
+    "beneficiaries": {
+      "key": "beneficiaries_total",
+      "label": "Bénéficiaires Directs Soutenus",
+      "value": "1 940+",
+      "subtext": "Familles et enfants équipés ou soutenus lors des caravanes"
+    },
+    "school_kids": {
+      "key": "school_kids",
+      "label": "Écoliers Dotés de Cartables",
+      "value": "800",
+      "subtext": "Action Rentrée Scolaire (Nabeul)"
+    },
+    "food_baskets": {
+      "key": "food_baskets",
+      "label": "Paniers Alimentaires Distribués",
+      "value": "1 000",
+      "subtext": "Couffin de Ramadan (Mahdia)"
+    },
+    "winter_families": {
+      "key": "winter_families",
+      "label": "Foyers Réchauffés en Hiver",
+      "value": "120",
+      "subtext": "Hiver au Chaud (Testour)"
+    },
+    "community_reach": {
+      "key": "community_reach",
+      "label": "Communauté Digitale",
+      "value": "3 120+",
+      "subtext": "Abonnés engagés sur Instagram (@ic.tunisgolfecarthagene)"
+    },
+    "years_active": {
+      "key": "years_active",
+      "label": "Années d'Engagement",
+      "value": "8+",
+      "subtext": "Depuis mars 2017 (Charte officielle le 7 janvier 2019)"
+    }
+  }
+}
