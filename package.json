@@ -1,0 +1,20 @@
+{
+  "name": "interact-tunis-golfe-carthagene",
+  "version": "1.0.0",
+  "description": "Official Web Platform & CRM for Interact Club Tunis Golfe Carthagène (Club #219646, District 9010)",
+  "scripts": {
+    "dev": "python server.py",
+    "db:init": "python database/init_db.py",
+    "start": "python server.py"
+  },
+  "keywords": [
+    "interact",
+    "rotary",
+    "district9010",
+    "tunisia",
+    "ngo",
+    "crm"
+  ],
+  "author": "Interact Club Tunis Golfe Carthagène",
+  "license": "MIT"
+}
