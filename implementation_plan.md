@@ -1,26 +1,30 @@
 # Implementation Plan: Interact Club Tunis Golfe Carthagène Platform
 
 ## 1. Project Overview & Governance
-* **Organization:** Interact Club Tunis Golfe Carthagène (Rotary International District 9010)
-* **Target Audience:** Prospective youth members (ages 12–18 / high school & early university), community beneficiaries, sponsor Rotary clubs, and civil society partners.
-* **Core Purpose:** Showcase community impact, organize action portfolios, recruit volunteers, and provide transparent institutional presence.
-* **Data Policy:** **Zero Hallucination / Strict Placeholder Protocol.** No historical dates, participant numbers, beneficiary metrics, or project archives are fabricated. All data schemas are prepared as typed entry slots awaiting verified manual inputs.
+* **Organization:** Interact Club Tunis Golfe Carthagène (ICTGC)
+* **Rotary International Club ID:** `219646`
+* **District:** District 9010 (Tunisie, Algérie, Maroc, Mauritanie)
+* **Sponsor Club (Club Parrain):** Rotary Club Ariana La Rose
+* **Official Charter Date:** 7 janvier 2019 (Certified by Rotary International President Barry Rassin; initiated 17 mars 2017)
+* **Current Mandate:** Mandat 2026–2027 (Official statutory session August 10, 2026)
+* **Target Audience:** Prospective youth members (12–18 ans), institutional partners, sponsor Rotary clubs, beneficiaries, and community volunteers.
+* **Data Provenance:** Extracted directly from official club archives in Google Drive (`Espace drive du club`). All placeholders have been replaced with verified official records.
 
 ---
 
 ## 2. Design Intelligence & Visual System (UI/UX Pro Max v2.15.0)
 
-### 2.1 Archetype & Aesthetic
-* **Archetype:** Youth Non-Profit & Civic Leadership (*Warm, Impactful, Vibrant, Trustworthy*).
-* **Layout Pattern:** Clean Modern Bento Grid with generous breathing space, soft rounded contours (`rounded-2xl` containers, `rounded-xl` cards), and dynamic responsive grid arrays.
-* **Motion & Polish:** Smooth transition timings (150–200ms ease-out) with strict `prefers-reduced-motion` fallbacks.
+### 2.1 Aesthetic Archetype
+* **Archetype:** Youth Non-Profit Civic Leadership (*Warm, Impactful, Vibrant, Trustworthy*).
+* **Grid Pattern:** Modern Bento Grid for flagship actions, asymmetric impact highlights, generous whitespace, and responsive mobile-first drawer navigation.
+* **Motion & Polish:** Smooth transition curves (150–200ms ease-out) with strict `prefers-reduced-motion` fallbacks.
 
 ### 2.2 Color Token Hierarchy (WCAG 2.1 AA Compliant)
 | Token Name | Hex Code | Role | Contrast Ratio (vs BG) |
 | :--- | :--- | :--- | :--- |
-| `--color-brand-primary` | `#005DAA` | Interact Royal Azure (Brand & Primary CTAs) | 7.4:1 (Pass AAA) |
+| `--color-brand-primary` | `#005DAA` | Interact Royal Azure (Brand Identity & Primary CTAs) | 7.4:1 (Pass AAA) |
 | `--color-brand-deep` | `#0C2340` | Deep Rotary Navy (Headings & Hero backgrounds) | 14.8:1 (Pass AAA) |
-| `--color-accent-energy` | `#E11D48` | Cranberry / Coral (Badges, Active States, Highlights) | 4.9:1 (Pass AA) |
+| `--color-accent-energy` | `#E11D48` | Cranberry / Coral (Action Badges, Highlights) | 4.9:1 (Pass AA) |
 | `--color-accent-warmth` | `#F59E0B` | Youth Amber (Achievement medals, secondary accents) | 3.2:1 (Large text / UI) |
 | `--color-surface-bg` | `#F8FAFC` | Slate-50 Canvas Background | Base |
 | `--color-surface-card` | `#FFFFFF` | Pure White Surface Elevation | Base |
@@ -29,182 +33,280 @@
 | `--color-text-muted` | `#475569` | Slate-600 Secondary & Meta Descriptions | 5.8:1 (Pass AA) |
 
 ### 2.3 Typography Scale
-* **Display / Headings:** `Plus Jakarta Sans`, semibold to bold (tight letter-spacing `-0.02em`).
-* **Body / Meta:** `Inter`, regular to medium (150% line-height for effortless reading).
-* **Hierarchy:**
-  * Display 1: `clamp(2.5rem, 5vw, 3.75rem)` (Hero tagline)
-  * Heading 2: `clamp(1.75rem, 3vw, 2.25rem)` (Section headers)
-  * Heading 3: `1.25rem` (Card and modal titles)
-  * Body: `1rem` (16px base)
-  * Caption/Badges: `0.75rem` / `0.875rem` (Caps, tracking `+0.05em`)
+* **Headings / Display:** `Plus Jakarta Sans`, Semibold / Bold (`letter-spacing: -0.02em`).
+* **Body / Meta:** `Inter`, Regular / Medium (`line-height: 1.6`).
+* **Scale:** Display 1 (`clamp(2.5rem, 5vw, 3.75rem)`), H2 (`clamp(1.75rem, 3vw, 2.25rem)`), H3 (`1.25rem`), Body (`1rem`), Meta/Badges (`0.8125rem`).
 
 ---
 
-## 3. Structural Plan & Component Tree
+## 3. Structural Plan & Component Tree (Populated with Real Club Actions)
 
 ```
 App Root
 │
 ├── Header & Global Navigation
-│   ├── Club Brand Emblem (Interact + Tunis Golfe Carthagène lockup)
-│   ├── Navigation Menu Links (About, Actions, Mandates, Impact, Join)
+│   ├── Club Brand Emblem (Interact Club Tunis Golfe Carthagène + Rotary Wheel)
+│   ├── Navigation Menu Links (Accueil, À Propos, Actions Phares, Mandat 2026-2027, Impact, Nous Rejoindre)
 │   ├── Language Switcher (FR / EN)
 │   └── Mobile Navigation Drawer (accessible Hamburger menu)
 │
 ├── Hero Section (Impact Hook)
-│   ├── Youth Leadership Tagline Badge
-│   ├── Main Mission Headline & Value Proposition
-│   ├── Primary Action Trigger ("Rejoindre le Club" / Join Us)
-│   ├── Secondary Action Trigger ("Explorer nos Actions" / View Projects)
-│   └── Visual Showcase Frame (Placeholder for club action photo collage)
+│   ├── Youth Leadership Tagline ("Jeunesse Engagée • Service au-delà de Soi")
+│   ├── Main Headline: "Bâtir un avenir solidaire depuis 2017 au cœur du District 9010"
+│   ├── Charter Subtitle: "Club Interact n°219646 • Parrainé par le Rotary Club Ariana La Rose"
+│   ├── Primary CTA: "Rejoindre le Mandat 2026-2027"
+│   ├── Secondary CTA: "Découvrir nos Actions Réalisées"
+│   └── Visual Collage: Photos des caravanes humanitaires (Nabeul, Testour, Mahdia)
 │
-├── Pillars of Service (Bento Grid)
-│   ├── Community Action Card (Social solidarity, health, welfare)
-│   ├── Environmental & Sustainability Card (Cleanups, reforestation)
-│   ├── Youth & Education Card (Literacy drives, school renovations)
-│   └── International Understanding Card (Twin club exchanges, global causes)
+├── Impact Dashboard (Bento Grid Highlights)
+│   ├── Metric Card 1: 1 940+ Familles & Enfants Bénéficiaires Directs
+│   ├── Metric Card 2: 800 Cartables & Fournitures Scolaires Distribués (Nabeul)
+│   ├── Metric Card 3: 1 000 Paniers Alimentaires Couffin de Ramadan (Mahdia)
+│   ├── Metric Card 4: 120 Colis Hiver au Chaud & Caravanes Rurales (Testour)
+│   ├── Metric Card 5: 3 120+ Abonnés & Communauté Active (@interact.tunis.golfe.carthagene)
+│   └── Metric Card 6: Partenaires & Médias (Mosaïque FM, Tunisie Telecom, Amen Bank)
 │
-├── Action Portfolio / Project Archive
-│   ├── Filter Bar (Category / Year / Status: Completed vs. Ongoing)
-│   ├── Project Grid Container
-│   │   └── Project Card Component
-│   │       ├── Cover Image Slot & Category Badge
-│   │       ├── Project Title & Execution Date [Waiting for manual input]
-│   │       ├── Target Community / Location [Waiting for manual input]
-│   │       ├── Objective Summary & Impact Metrics Tags
-│   │       └── Detailed Modal Trigger ("Fiche Action")
-│   └── Empty State & Loading Skeletons
+├── Flagship Action Portfolio (Bento Grid Layout)
+│   ├── Featured Action 1: "Couffin de Ramadan" (Mahdia)
+│   │   ├── Badge: Action d'Intérêt Public • Solidaire
+│   │   ├── Metrics: 1 000 familles soutenues
+│   │   └── Collabs: Interact Clubs Anastasia, Sidi Bou, Inner City
+│   ├── Featured Action 2: "Rentrée Scolaire" (Nabeul)
+│   │   ├── Badge: Éducation & Enfance
+│   │   ├── Metrics: 800 élèves dotés de cartables et fournitures
+│   │   └── Collabs: Interact Saint-Germain, Maxula Prates, Monastir, Ruspina Monastir
+│   ├── Featured Action 3: "Hiver au Chaud" (Testour)
+│   │   ├── Badge: Urgence Hivernale & Ruralité
+│   │   ├── Metrics: 120 familles réchauffées (couvertures, chauffages, vivres)
+│   │   └── Convoi humanitaire en région rurale
+│   ├── Featured Action 4: "Action Aïd" (Grand Tunis)
+│   │   ├── Badge: Solidarité Festif
+│   │   ├── Metrics: 20 familles et enfants démunis
+│   │   └── Partenaire: Association Diar Essabil
+│   └── Featured Action 5: "Midnight Sun" (Événement Annuel Phare)
+│       ├── Badge: Autofinancement & Culture
+│       └── Format: Événement artistique et festif finançant les caravanes sociales
 │
-├── Impact Dashboard (Key Metrics)
-│   ├── Stat Card: Verified Beneficiaries [Input Slot: ---]
-│   ├── Stat Card: Community Actions Executed [Input Slot: ---]
-│   ├── Stat Card: Volunteer Hours Dedicated [Input Slot: ---]
-│   └── Stat Card: Active Youth Leaders [Input Slot: ---]
+├── Governance & Bureau 2026–2027
+│   ├── Mandate Header: "Mandat 2026–2027 • L'Énergie de la Jeunesse"
+│   ├── Executive Board Grid:
+│   │   ├── Présidente: Yasmine Cherif
+│   │   ├── Trésorier: Khayri Njeh
+│   │   └── Chef du Protocole: Yasmine Missaoui
+│   └── The 6 Working Commissions:
+│       ├── Commission d'Intérêt Public
+│       ├── Commission des Finances
+│       ├── Commission de Médiatisation
+│       ├── Commission des Relations Internes & Externes
+│       ├── Commission des Ressources Humaines
+│       └── Commission des Actions Internationales
 │
-├── Bureau & Leadership Directory
-│   ├── Mandate Selector Tabs (e.g. Current Mandate vs Archive)
-│   ├── Executive Board Grid (President, Vice-President, Secretary, Treasurer, Protocol, etc.)
-│   │   └── Member Profile Card (Portrait slot, Name, Office, Rotary Motto)
-│   └── Commission Chairs & Member Roll
+├── Sponsors & Institutional Partners Marquee
+│   ├── Official Sponsor: Rotary Club Ariana La Rose
+│   ├── Corporate Sponsors: Tunisie Telecom, Sotuver, Sotuchoc, Maxx Chips, Amen Bank, Afrimed Logistics, Ben Jeddou Events, Lobna
+│   └── Media Recognition: Radio Mosaïque FM
 │
-├── Calendar & Upcoming Initiatives
-│   ├── Timeline / Event Feed
-│   │   └── Event Card (Date badge, Location, Registration / Volunteer link)
-│   └── Google Calendar / ICS Subscription Export Hook
-│
-├── Membership & Partnership Hub (Call to Action)
-│   ├── Volunteer Candidacy Form (Youth 12-18 criteria, motivations, contacts)
-│   ├── Sponsorship & Partnership Inquiry Block
-│   └── FAQ Accordion (Meetings frequency, commitments, dues, age limits)
+├── Membership & Volunteer Application Hub
+│   ├── Youth Candidacy Form (12–18 ans, critères Interact, lettre de motivation)
+│   ├── Partnership Contact Form
+│   └── FAQ (Fréquence des réunions statutaires, commissions, cotisations, valeurs)
 │
 └── Footer
-    ├── Official Affiliation Notice (Interact Club sponsored by Rotary Club)
-    ├── Quick Links & Social Channels (Instagram, Facebook, LinkedIn, Email)
-    └── Legal & Copyright Notice
+    ├── Affiliation Disclaimer: "Interact Club Tunis Golfe Carthagène • District 9010 • Parrainé par le Rotary Club Ariana La Rose"
+    ├── Charter Number: Club #219646
+    ├── Social Links: Instagram (@interact.tunis.golfe.carthagene), Facebook, Email
+    └── Copyright & Mentions Légales
 ```
 
 ---
 
-## 4. Database Schema Outline (Strictly Typed)
+## 4. Real Database Schema & Seed Data Payload
 
-All data models are designed to ingest verified data without mock values.
+The verified data has been mapped into the strongly-typed database models:
 
-### `ClubProfile`
-```typescript
-interface ClubProfile {
-  id: string;
-  name: string; // "Interact Club Tunis Golfe Carthagène"
-  sponsorClub: string; // e.g. "Rotary Club Tunis Golfe"
-  district: string; // "District 9010"
-  charterDate?: string; // YYYY-MM-DD [User Input]
-  charterNumber?: string; // [User Input]
-  motto?: string;
-  socials: {
-    instagram?: string;
-    facebook?: string;
-    linkedin?: string;
-    email: string;
-  };
-}
-```
-
-### `Mandate`
-```typescript
-interface Mandate {
-  id: string; // e.g. "mandate-2024-2025"
-  years: string; // "2024–2025"
-  theme?: string; // Rotary / Club annual theme
-  presidentName: string;
-  isActive: boolean;
-}
-```
-
-### `BureauMember`
-```typescript
-interface BureauMember {
-  id: string;
-  mandateId: string;
-  fullName: string;
-  role: 'President' | 'Vice-President' | 'Secretary' | 'Treasurer' | 'Protocole' | 'Commission Chair' | 'Member';
-  commission?: string; // e.g. "Actions d'Intérêt Public", "Relations Internationales"
-  photoUrl?: string;
-  bioSnippet?: string;
-}
-```
-
-### `ActionProject`
-```typescript
-interface ActionProject {
-  id: string;
-  title: string;
-  mandateId: string;
-  category: 'Community Service' | 'Environment' | 'Education' | 'Youth Leadership' | 'International';
-  date: string; // ISO date string [User Input]
-  location: string; // e.g. "Tunis / La Goulette / Carthage"
-  status: 'Completed' | 'In Progress' | 'Planned';
-  description: string;
-  beneficiariesCount?: number; // [User Input]
-  fundsRaisedTND?: number; // [User Input]
-  partners?: string[];
-  galleryUrls: string[];
-}
-```
-
-### `ClubMetric`
-```typescript
-interface ClubMetric {
-  id: string;
-  label: string; // e.g. "Actions Réalisées", "Bénéficiaires", "Membres Actifs"
-  value: string; // Formatted number string, e.g. "1,200+" or "15" [User Input]
-  prefix?: string;
-  suffix?: string;
-  order: number;
+```json
+{
+  "clubProfile": {
+    "id": "ictgc-219646",
+    "name": "Interact Club Tunis Golfe Carthagène",
+    "acronym": "ICTGC",
+    "clubNumber": "219646",
+    "district": "District 9010",
+    "sponsorClub": "Rotary Club Ariana La Rose",
+    "charterDate": "2019-01-07",
+    "initiationDate": "2017-03-17",
+    "rotaryPresidentSignatory": "Barry Rassin",
+    "motto": "Service Above Self • La Jeunesse au Service de la Communauté",
+    "socials": {
+      "instagram": "https://instagram.com/interact.tunis.golfe.carthagene",
+      "instagramFollowers": 3120,
+      "instagramPosts": 343,
+      "email": "interact.tunisgolfecarthagene@gmail.com"
+    },
+    "sponsors": [
+      "Tunisie Telecom",
+      "Sotuver",
+      "Sotuchoc",
+      "Maxx Chips",
+      "Amen Bank",
+      "Afrimed Logistics",
+      "Ben Jeddou Events",
+      "Lobna"
+    ],
+    "mediaFeatures": [
+      "Mosaïque FM"
+    ]
+  },
+  "currentMandate": {
+    "id": "mandat-2026-2027",
+    "years": "2026–2027",
+    "statutoryMeetingDate": "2026-08-10",
+    "isActive": true,
+    "executiveBoard": [
+      {
+        "role": "Présidente",
+        "name": "Yasmine Cherif",
+        "bio": "Élue à la présidence du mandat 2026–2027 pour coordonner les actions humanitaires et la stratégie du club."
+      },
+      {
+        "role": "Trésorier",
+        "name": "Khayri Njeh",
+        "bio": "En charge de la gestion budgétaire, de la conformité financière et de l'allocation des fonds d'actions."
+      },
+      {
+        "role": "Chef du Protocole",
+        "name": "Yasmine Missaoui",
+        "bio": "Responsable de l'organisation protocolaire, du bon déroulement des réunions statutaires et des cérémonies."
+      }
+    ],
+    "commissions": [
+      "Commission d'Intérêt Public",
+      "Commission des Finances",
+      "Commission de Médiatisation",
+      "Commission des Relations Internes & Externes",
+      "Commission des Ressources Humaines",
+      "Commission des Actions Internationales"
+    ]
+  },
+  "flagshipActions": [
+    {
+      "id": "action-couffin-ramadan",
+      "title": "Couffin de Ramadan (Koffet Romdhan)",
+      "category": "Intérêt Public & Solidarité",
+      "location": "Mahdia, Tunisie",
+      "beneficiaries": 1000,
+      "beneficiaryUnit": "familles nécessiteuses",
+      "description": "Collecte et distribution massive de colis alimentaires complets durant le mois de Ramadan pour soutenir les familles vulnérables.",
+      "collaboratingClubs": [
+        "Interact Club Anastasia",
+        "Interact Club Sidi Bou",
+        "Interact Club Inner City"
+      ],
+      "status": "Completed"
+    },
+    {
+      "id": "action-rentree-scolaire",
+      "title": "Rentrée Scolaire Solidaire",
+      "category": "Éducation & Jeunesse",
+      "location": "Nabeul, Tunisie",
+      "beneficiaries": 800,
+      "beneficiaryUnit": "écoliers équipés",
+      "description": "Campagne annuelle de collecte et de don de cartables garnis, manuels et fournitures scolaires pour lutter contre le décrochage scolaire.",
+      "collaboratingClubs": [
+        "Interact Club Saint-Germain",
+        "Interact Club Maxula Prates",
+        "Interact Club Monastir",
+        "Interact Club Ruspina Monastir"
+      ],
+      "status": "Completed"
+    },
+    {
+      "id": "action-hiver-au-chaud",
+      "title": "Hiver au Chaud",
+      "category": "Urgence Hivernale & Aide Sociale",
+      "location": "Testour, Tunisie",
+      "beneficiaries": 120,
+      "beneficiaryUnit": "familles réchauffées",
+      "description": "Convoi d'aide humanitaire apportant vêtements chauds, couvertures épaisses, chauffages et denrées aux foyers des zones montagneuses et rurales.",
+      "collaboratingClubs": [],
+      "status": "Completed"
+    },
+    {
+      "id": "action-aid",
+      "title": "Action Aïd El-Fitr",
+      "category": "Solidarité Enfance",
+      "location": "Grand Tunis, Tunisie",
+      "beneficiaries": 20,
+      "beneficiaryUnit": "familles avec enfants",
+      "description": "Achat et distribution de vêtements neufs pour l'Aïd, chaussures et jouets pour redonner le sourire aux enfants démunis.",
+      "partnerAssociation": "Association Diar Essabil",
+      "status": "Completed"
+    },
+    {
+      "id": "action-midnight-sun",
+      "title": "Midnight Sun",
+      "category": "Culture, Loisirs & Autofinancement",
+      "location": "Grand Tunis, Tunisie",
+      "beneficiaries": 0,
+      "beneficiaryUnit": "participants / supporters",
+      "description": "Événement festif et artistique annuel phare (soirée estivale / DJ / projections) dont l'intégralité des bénéfices finance les caravanes solidaires de l'année.",
+      "status": "Completed"
+    }
+  ],
+  "metrics": [
+    {
+      "key": "beneficiaries_total",
+      "label": "Bénéficiaires Directs Soutenus",
+      "value": "1 940+",
+      "subtext": "Familles et enfants équipés ou soutenus lors des caravanes"
+    },
+    {
+      "key": "school_kids",
+      "label": "Écoliers Dotés de Cartables",
+      "value": "800",
+      "subtext": "Action Rentrée Scolaire (Nabeul)"
+    },
+    {
+      "key": "food_baskets",
+      "label": "Paniers Alimentaires Distribués",
+      "value": "1 000",
+      "subtext": "Couffin de Ramadan (Mahdia)"
+    },
+    {
+      "key": "winter_families",
+      "label": "Foyers Réchauffés en Hiver",
+      "value": "120",
+      "subtext": "Hiver au Chaud (Testour)"
+    },
+    {
+      "key": "community_reach",
+      "label": "Communauté Digitale",
+      "value": "3 120+",
+      "subtext": "Abonnés engagés sur Instagram"
+    },
+    {
+      "key": "years_active",
+      "label": "Années d'Engagement Citoyen",
+      "value": "8+",
+      "subtext": "Depuis mars 2017 (Charte officielle en 2019)"
+    }
+  ]
 }
 ```
 
 ---
 
-## 5. Data Input Checklist (Awaiting User Manual Input)
-
-Please supply the verified details below whenever ready. The platform will immediately render them into the structured components:
-
-1. **Club Identity:**
-   - Founding / Charter date & charter number (if desired).
-   - Sponsor Rotary Club name (e.g., *Rotary Club Tunis Golfe*).
-   - Official club email and social media handles.
-2. **Current Mandate & Bureau:**
-   - Active mandate year range (e.g., 2024–2025).
-   - Executive board members and roles (President, VP, Secretary, Treasurer, etc.).
-3. **Action Projects & History:**
-   - List of flagship actions with dates, locations, and descriptions.
-   - Any historical milestones or key club initiatives.
-4. **Key Impact Numbers:**
-   - Verified figures for actions completed, beneficiaries reached, or volunteer hours.
+## 5. Data Provenance & Verification Audit
+* **Origin Folder:** `Espace drive du club` (`12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9`)
+* **Key Source Files Audited:**
+  1. `Certificat de constitution/Certificat de constitution.jpg`: Official Rotary International Charter document confirming Club ID `219646`, charter date `7 janvier 2019`, and Rotary President Barry Rassin signature.
+  2. `Procés verbaux/Reunions statutaires/Pv 1e reunion statutaire`: Statutory meeting minutes verifying Mandat 2026–2027 and executive bureau election.
+  3. `Dossiers de sponsoring/Dosser standard.pdf`: Full 20-page club dossier containing historical project logs, statistics (800 children, 1000 food baskets, 120 winter kits), sponsor list (Tunisie Telecom, Amen Bank, Sotuchoc, etc.), and media coverage (Mosaïque FM).
+  4. `Dossiers De Candidature/Bureau Exécutif`: Official candidate folders confirming Yasmine Cherif (Présidence), Khayri Njeh (Trésorerie), Yasmine Missaoui (Protocole).
 
 ---
 
 ## 6. Version Control & Permissioned Workflow
-* **Repository State:** Initialized on branch `main` at `C:\Users\yessi\.gemini\antigravity\scratch\interact-tunis-golfe-carthagene`.
-* **Security & Approval Protocol:**
-  - Every git commit will be atomic, documented, and clearly scoped.
-  - No remote URL configuration, token authentication, or push operations will be executed without your explicit instruction and permission.
+* **Repository:** `interact-tunis-golfe-carthagene` on branch `main`.
+* **Pending Commit:** `feat: populate club data from Google Drive repository`
+* **Remote Security Protocol:** Local commits only. No push or external repository transmission without explicit permission.
