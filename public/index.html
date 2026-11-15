@@ -222,9 +222,9 @@
         </a>
         <!-- Language Switcher: FR / EN / AR -->
         <div class="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-[10px] sm:text-xs font-bold shadow-2xs">
-          <button type="button" onclick="setAppLanguage('fr')" id="lang-btn-fr" class="px-2 py-1 rounded-lg transition-all bg-white text-blue-700 shadow-2xs" title="Français">FR</button>
-          <button type="button" onclick="setAppLanguage('en')" id="lang-btn-en" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900" title="English">EN</button>
-          <button type="button" onclick="setAppLanguage('ar')" id="lang-btn-ar" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900 font-bold" title="العربية">عربي</button>
+          <button type="button" onclick="setAppLanguage('fr', true)" id="lang-btn-fr" class="px-2 py-1 rounded-lg transition-all bg-white text-blue-700 shadow-2xs" title="Français">FR</button>
+          <button type="button" onclick="setAppLanguage('en', true)" id="lang-btn-en" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900" title="English">EN</button>
+          <button type="button" onclick="setAppLanguage('ar', true)" id="lang-btn-ar" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900 font-bold" title="العربية">عربي</button>
         </div>
 
         <!-- Nous Rejoindre CTA -->
@@ -2240,13 +2240,12 @@
         const description = (a.description || 'Action menée par l\'Interact Club Tunis Golfe Carthagène.').trim();
         const lang = window.currentAppLanguage || 'fr';
         const dict = (typeof I18N_DICT !== 'undefined' && I18N_DICT[lang]) ? I18N_DICT[lang] : I18N_DICT.fr;
-        const actionMeta = (typeof ACTIONS_I18N !== 'undefined' && ACTIONS_I18N[actionId]) ? ACTIONS_I18N[actionId] : null;
-
-        let displayTitle = (actionMeta && actionMeta.title && actionMeta.title[lang]) || title;
-        let displayDesc = (actionMeta && actionMeta.description && actionMeta.description[lang]) || description;
-        let displayCat = (actionMeta && actionMeta.category && actionMeta.category[lang]) || (typeof CATEGORY_I18N !== 'undefined' && CATEGORY_I18N[category] && CATEGORY_I18N[category][lang]) || category;
-        let displayLoc = (actionMeta && actionMeta.location && actionMeta.location[lang]) || (location.includes('Tunisie') ? (lang === 'en' ? location.replace('Tunisie', 'Tunisia') : (lang === 'ar' ? location.replace('Tunisie', 'تونس') : location)) : location);
-        let displayUnit = (actionMeta && actionMeta.unit && actionMeta.unit[lang]) || a.beneficiary_unit || (lang === 'ar' ? 'مستفيد' : (lang === 'en' ? 'beneficiaries' : 'bénéficiaires'));
+        const dyn = (typeof aiTranslateDynamicAction === 'function') ? aiTranslateDynamicAction({ ...a, id: actionId, title, category, location, beneficiary_unit: a.beneficiary_unit, description }, lang) : {};
+        let displayTitle = dyn.title || title;
+        let displayDesc = dyn.description || description;
+        let displayCat = dyn.category || category;
+        let displayLoc = dyn.location || location;
+        let displayUnit = dyn.unit || a.beneficiary_unit || (lang === 'ar' ? 'مستفيد' : (lang === 'en' ? 'beneficiaries' : 'bénéficiaires'));
 
 
         // Render Album Preview depending on photo count (Completely removed 'Action Solidaire ICTGC' tag)
@@ -2450,10 +2449,7 @@
       let memberName = m.fullName || m.full_name || 'Membre';
       let memberRole = m.role || '';
       const lang = window.currentAppLanguage || 'fr';
-      let displayRole = memberRole;
-      if (lang !== 'fr' && typeof ROLE_I18N !== 'undefined' && ROLE_I18N[memberRole] && ROLE_I18N[memberRole][lang]) {
-        displayRole = ROLE_I18N[memberRole][lang];
-      }
+      let displayRole = (typeof getTranslatedRole === 'function') ? getTranslatedRole(memberRole, lang) : memberRole;
 
       if (window.cachedSiteContent) {
         if (window.cachedSiteContent[`bureau-name-${mId}`]) {
@@ -2622,10 +2618,7 @@
         let memberName = m.fullName || m.full_name || 'Membre';
         let memberRole = m.role || '';
         const lang = window.currentAppLanguage || 'fr';
-        let displayRole = memberRole;
-        if (lang !== 'fr' && typeof ROLE_I18N !== 'undefined' && ROLE_I18N[memberRole] && ROLE_I18N[memberRole][lang]) {
-          displayRole = ROLE_I18N[memberRole][lang];
-        }
+        let displayRole = (typeof getTranslatedRole === 'function') ? getTranslatedRole(memberRole, lang) : memberRole;
         if (window.cachedSiteContent) {
           if (window.cachedSiteContent[`bureau-name-${mId}`]) memberName = window.cachedSiteContent[`bureau-name-${mId}`].trim() || memberName;
           if (window.cachedSiteContent[`bureau-role-${mId}`]) memberRole = window.cachedSiteContent[`bureau-role-${mId}`].trim() || memberRole;
@@ -3343,7 +3336,7 @@
 
         heroTagline: "Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose",
         heroTitle: "La Jeunesse au Service de la Communauté",
-        heroDescription: "Depuis mars 2017 (charte officielle le 7 janvier 2019), l'Interact Club Tunis Golfe Carthagène rassemble des jeunes engagés de 12 à 18 ans pour transformer des vies à travers des actions solidaires durables.",
+        heroDescription: "L'Interact Club Tunis Golfe Carthagène réunit les jeunes leaders lycéens (12-18 ans) engagés dans des actions citoyennes, humanitaires et d'intérêt public, parrainé par le Rotary Club Ariana La Rose (District 9010).",
         heroCtaRecruit: "Postuler pour le Mandat 2026-2027",
         heroCtaActions: "Découvrir nos Actions Réalisées",
 
@@ -3394,7 +3387,7 @@
 
         bureauBadge: "Gouvernance Officielle",
         bureauSectionTitle: "Bureau du Mandat 2026–2027",
-        bureauSectionSubtitle: "Réunion statutaire constitutive du 1er août 2026",
+        bureauSectionSubtitle: "Bureau Officiel du Mandat 2026–2027",
         bureauExecHeading: "Bureau Exécutif",
         bureauChefsHeading: "Chefs des Commissions",
         bureauCommsHeading: "Chefs des Commissions",
@@ -3442,7 +3435,7 @@
 
         heroTagline: "Mandate 2026–2027 • Sponsored by Rotary Club Ariana La Rose",
         heroTitle: "Youth in Service of the Community",
-        heroDescription: "Since March 2017 (official charter on January 7, 2019), Interact Club Tunis Carthage Gulf unites high school student leaders aged 12 to 18 to transform lives through sustainable civic initiatives.",
+        heroDescription: "Interact Club Tunis Carthage Gulf unites high school student leaders (ages 12-18) committed to civic, humanitarian, and public interest initiatives, sponsored by Rotary Club Ariana La Rose (District 9010).",
         heroCtaRecruit: "Apply for 2026–2027 Mandate",
         heroCtaActions: "Explore Our Completed Actions",
 
@@ -3493,7 +3486,7 @@
 
         bureauBadge: "Official Governance",
         bureauSectionTitle: "Board of Mandate 2026–2027",
-        bureauSectionSubtitle: "Statutory constituent assembly held on August 1, 2026",
+        bureauSectionSubtitle: "Official Board of the 2026–2027 Mandate",
         bureauExecHeading: "Executive Board",
         bureauChefsHeading: "Commission Heads",
         bureauCommsHeading: "Commission Heads",
@@ -3541,7 +3534,7 @@
 
         heroTagline: "العهدة 2026-2027 • برعاية نادي روتاري أريانة الورد",
         heroTitle: "الشباب في خدمة المجتمع",
-        heroDescription: "منذ مارس 2017 (الميثاق الرسمي في 7 جانفي 2019)، يجمع نادي إنتراكت تونس خليج قرطاجنة نخبة من شباب المعاهد (12-18 سنة) لصناعة الفارق وتغيير الحياة عبر مبادرات تضامنية مستدامة.",
+        heroDescription: "يجمع نادي إنتراكت تونس خليج قرطاجنة نخبة من قادة المستقبل من تلاميذ المعاهد (12-18 سنة) الملتزمين بالعمل الإنساني والمصلحة العامة، برعاية نادي روتاري أريانة الورد (المنطقة 9010).",
         heroCtaRecruit: "الترشح لعهدة 2026-2027",
         heroCtaActions: "اكتشف مبادراتنا المنجزة",
 
@@ -3592,7 +3585,7 @@
 
         bureauBadge: "الحوكمة والقيادة",
         bureauSectionTitle: "الهيئة المديرة 2026–2027",
-        bureauSectionSubtitle: "الجلسة العامة التأسيسية ليوم 1 أوت 2026",
+        bureauSectionSubtitle: "الهيئة المديرة الرسمية لعهدة 2026–2027",
         bureauExecHeading: "المكتب التنفيذي",
         bureauChefsHeading: "رؤساء اللجان",
         bureauCommsHeading: "رؤساء اللجان",
@@ -3697,59 +3690,273 @@
       }
     };
 
-    const ACTIONS_I18N = {
+    function getTranslatedRole(rawRole, targetLang) {
+      if (!rawRole || targetLang === 'fr') return rawRole;
+      
+      const clean = String(rawRole).trim();
+      const lower = clean.toLowerCase()
+        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .replace(/\s+/g, ' ');
+
+      // Check deputies first (before general titles)
+      if (lower.includes("adjoint") || lower.includes("adjointe")) {
+        if (lower.includes("secretaire")) {
+          return targetLang === 'ar' ? "مساعد الكاتب العام" : "Deputy Secretary General";
+        }
+        if (lower.includes("tresori") || lower.includes("finance")) {
+          return targetLang === 'ar' ? "مساعد أمينة المال" : "Deputy Treasurer General";
+        }
+        if (lower.includes("protocol")) {
+          return targetLang === 'ar' ? "مساعدة رئيس التشريفات" : "Deputy Head of Protocol";
+        }
+      }
+
+      // Past President
+      if (lower.includes("past president") || lower.includes("past presidente")) {
+        return targetLang === 'ar' ? "الرئيس السابق" : "Immediate Past President";
+      }
+
+      // Vice-President
+      if (lower.includes("vice-presidente") || lower.includes("vice presidente") || lower.includes("vice-president") || lower.includes("vice president")) {
+        return targetLang === 'ar' ? "نائبة الرئيسة" : "Vice-President";
+      }
+
+      // President
+      if (lower === "presidente" || lower === "president") {
+        return targetLang === 'ar' ? "الرئيسة" : "President";
+      }
+
+      // Secretary General
+      if (lower.includes("secretaire general")) {
+        return targetLang === 'ar' ? "الكاتب العام" : "Secretary General";
+      }
+
+      // Treasurer General
+      if (lower.includes("tresoriere generale") || lower.includes("tresorier general")) {
+        return targetLang === 'ar' ? "أمينة المال" : "Treasurer General";
+      }
+
+      // Head of Protocol
+      if (lower.includes("chef du protocole") || lower.includes("cheffe du protocole") || lower.includes("chef du protocol")) {
+        return targetLang === 'ar' ? "رئيس التشريفات والمراسم" : "Head of Protocol";
+      }
+
+      // CNIT
+      if (lower.includes("cnit")) {
+        return targetLang === 'ar' ? "ممثل النادي لدى التنسيقية الوطنية" : "CNIT Representative";
+      }
+
+      // Advisor
+      if (lower.includes("conseillere generale") || lower.includes("conseiller general")) {
+        return targetLang === 'ar' ? "المستشارة العامة" : "General Advisor";
+      }
+      
+      // Commissions:
+      // CIP
+      if (lower.includes("interet public") || lower.includes("cip")) {
+        if (lower.includes("co-chef") || lower.includes("co chef") || lower.includes("co-cheffe") || lower.includes("co cheffe")) {
+          return targetLang === 'ar' ? "رئيس مساعد للجنة المصلحة العامة (CIP)" : "Co-Head of Public Interest Commission (CIP)";
+        }
+        return targetLang === 'ar' ? "رئيس لجنة المصلحة العامة (CIP)" : "Head of Public Interest Commission (CIP)";
+      }
+      // CRIE
+      if (lower.includes("relations internes") || lower.includes("crie")) {
+        return targetLang === 'ar' ? "رئيسة لجنة العلاقات العامة والاتصال (CRIE)" : "Head of Relations Commission (CRIE)";
+      }
+      // CRH
+      if (lower.includes("ressources humaines") || lower.includes("crh")) {
+        return targetLang === 'ar' ? "رئيسة لجنة الموارد البشرية (CRH)" : "Head of Human Resources Commission (CRH)";
+      }
+      // Finances
+      if (lower.includes("finance")) {
+        return targetLang === 'ar' ? "رئيسة لجنة المالية والتمويل" : "Head of Finance Commission";
+      }
+      // International
+      if (lower.includes("international")) {
+        return targetLang === 'ar' ? "رئيس لجنة الأنشطة الدولية" : "Head of International Actions Commission";
+      }
+      // Media
+      if (lower.includes("media") || lower.includes("mediatisation")) {
+        return targetLang === 'ar' ? "رئيسة لجنة الإعلام والتوثيق" : "Head of Media Commission";
+      }
+      // Camaraderie
+      if (lower.includes("camaraderie")) {
+        return targetLang === 'ar' ? "رئيس لجنة الزمالة والأنشطة" : "Head of Fellowship Commission";
+      }
+
+      return clean;
+    }
+    window.getTranslatedRole = getTranslatedRole;
+
+const ACTIONS_I18N = {
       "action-couffin-ramadan": {
-        title: { en: "Ramadan Food Baskets (Couffin de Ramadan)", ar: "قفة رمضان التضامنية" },
-        category: { en: "Public Interest & Solidarity", ar: "المصلحة العامة والتضامن" },
-        location: { en: "Mahdia, Tunisia", ar: "المهدية، تونس" },
-        unit: { en: "families in need", ar: "عائلة معوزة" },
+        title: { fr: "Couffin de Ramadan (Koffet Romdhan)", en: "Ramadan Food Baskets (Couffin de Ramadan)", ar: "قفة رمضان التضامنية" },
+        category: { fr: "Intérêt Public & Solidarité", en: "Public Interest & Solidarity", ar: "المصلحة العامة والتضامن" },
+        location: { fr: "Mahdia, Tunisie", en: "Mahdia, Tunisia", ar: "المهدية، تونس" },
+        unit: { fr: "familles nécessiteuses", en: "families in need", ar: "عائلة معوزة" },
         description: {
+          fr: "Distribution massive de paniers alimentaires complets pour soutenir les familles vulnérables durant le mois saint.",
           en: "Massive food basket distribution supporting vulnerable families throughout the holy month of Ramadan.",
           ar: "توزيع طرود غذائية متكاملة لدعم العائلات المتعففة طيلة شهر رمضان المبارك."
         }
       },
       "action-rentree-scolaire": {
-        title: { en: "Back-to-School Solidarity Campaign", ar: "العودة المدرسية التضامنية" },
-        category: { en: "Education & Youth", ar: "التعليم والشباب" },
-        location: { en: "Nabeul, Tunisia", ar: "نابل، تونس" },
-        unit: { en: "students equipped", ar: "تلميذ تم تجهيزهم" },
+        title: { fr: "Rentrée Scolaire Solidaire", en: "Back-to-School Solidarity Campaign", ar: "العودة المدرسية التضامنية" },
+        category: { fr: "Éducation & Jeunesse", en: "Education & Youth", ar: "التعليم والشباب" },
+        location: { fr: "Nabeul, Tunisie", en: "Nabeul, Tunisia", ar: "نابل، تونس" },
+        unit: { fr: "écoliers équipés", en: "students equipped", ar: "تلميذ تم تجهيزهم" },
         description: {
-          en: "Backpack and school supplies distribution campaign to fight school dropout in rural areas.",
+          fr: "Campagne de collecte et don de cartables garnis, livres et fournitures scolaires pour soutenir les écoliers vulnérables et lutter contre le décrochage scolaire.",
+          en: "Backpack and school supplies distribution campaign to support underprivileged students and fight school dropout.",
           ar: "توزيع محافظ ولوازم مدرسية وكتب لدعم تلاميذ المدارس الريفية والحد من الانقطاع المدرسي."
         }
       },
       "action-hiver-au-chaud": {
-        title: { en: "Warm Winter Campaign", ar: "شتاء دافئ" },
-        category: { en: "Winter Relief & Social Aid", ar: "الإغاثة الشتوية والمساعدة الاجتماعية" },
-        location: { en: "Testour, Tunisia", ar: "تستور، تونس" },
-        unit: { en: "households warmed", ar: "عائلة تمت تدفئتها" },
+        title: { fr: "Hiver au Chaud", en: "Warm Winter Campaign", ar: "شتاء دافئ" },
+        category: { fr: "Urgence Hivernale & Aide Sociale", en: "Winter Relief & Social Aid", ar: "الإغاثة الشتوية والمساعدة الاجتماعية" },
+        location: { fr: "Testour, Tunisie", en: "Testour, Tunisia", ar: "تستور، تونس" },
+        unit: { fr: "familles réchauffées", en: "households warmed", ar: "عائلة تمت تدفئتها" },
         description: {
+          fr: "Caravane d'aide d'urgence apportant couvertures en laine, chauffages, vêtements chauds et denrées aux foyers ruraux isolés.",
           en: "Emergency winter caravan providing blankets, heaters, warm clothing, and food to isolated rural households.",
           ar: "قافلة إغاثة شتوية لتوفير الأغطية الصوفية، المدافئ، الملابس الشتوية والمؤونة للمناطق الريفية المعزولة."
         }
       },
       "action-aid": {
-        title: { en: "Eid Al-Fitr Joy Campaign", ar: "فرحة عيد الفطر" },
-        category: { en: "Childhood Solidarity", ar: "تضامن مع الطفولة" },
-        location: { en: "Greater Tunis, Tunisia", ar: "تونس الكبرى، تونس" },
-        unit: { en: "families with children", ar: "عائلات وأطفال" },
+        title: { fr: "Action Aïd El-Fitr", en: "Eid Al-Fitr Joy Campaign", ar: "فرحة عيد الفطر" },
+        category: { fr: "Solidarité Enfance", en: "Childhood Solidarity", ar: "تضامن مع الطفولة" },
+        location: { fr: "Grand Tunis, Tunisie", en: "Greater Tunis, Tunisia", ar: "تونس الكبرى، تونس" },
+        unit: { fr: "familles avec enfants", en: "families with children", ar: "عائلات وأطفال" },
         description: {
+          fr: "Achat et distribution de vêtements neufs pour l'Aïd, chaussures et jouets pour offrir la joie de la fête aux enfants défavorisés.",
           en: "Distribution of brand new festive clothes, shoes, and toys to bring Eid joy to underprivileged children.",
           ar: "شراء وتوزيع ملابس العيد الجديدة، الأحذية والألعاب لإدخال البهجة والسرور على قلوب الأطفال المحتاجين."
         }
       },
       "action-midnight-sun": {
-        title: { en: "Midnight Sun Charity Gala", ar: "ميدنايت صن (حفل التمويل)" },
-        category: { en: "Culture & Fundraising", ar: "ثقافة وترفيه وتمويل ذاتي" },
-        location: { en: "Greater Tunis, Tunisia", ar: "تونس الكبرى، تونس" },
+        title: { fr: "Run For Pink (Marathon Octobre Rose)", en: "Run For Pink (Pink October Marathon)", ar: "سباق ران فور بينك (أكتوبر الوردي)" },
+        category: { fr: "Santé & Solidarité", en: "Health & Solidarity", ar: "الصحة والتضامن" },
+        location: { fr: "Lac 1, Tunis, Tunisie", en: "Lac 1, Tunis, Tunisia", ar: "ضفاف البحيرة 1، تونس" },
+        unit: { fr: "participants", en: "participants", ar: "مشارك" },
         description: {
-          en: "Summer charity event with pool party and live DJ whose net proceeds directly fund the club's humanitarian actions.",
-          ar: "فعالية صيفية ترفيهية تخصص كامل مداخيلها وأرباحها لتمويل القوافل الإنسانية والمبادرات الخيرية للنادي."
+          fr: "Marathon Solidaire Octobre Rose au Lac 1 pour sensibiliser le grand public et soutenir activement la lutte contre le cancer du sein.",
+          en: "Pink October charity marathon at Lac 1 organized to raise awareness and support breast cancer prevention.",
+          ar: "ماراثون خيري توعوي نُظم بضفاف البحيرة 1 بمناسبة أكتوبر الوردي للتوعية ودعم مريضات سرطان الثدي."
+        }
+      },
+      "5raAK8SISKxtyWdhkicu": {
+        title: { fr: "Action Rentrée Scolaire", en: "Back-to-School Campaign - Kairouan", ar: "العودة المدرسية - القيروان" },
+        category: { fr: "Aide Humanitaire", en: "Humanitarian Aid", ar: "مساعدات إنسانية" },
+        location: { fr: "Kairouan, Tunisie", en: "Kairouan, Tunisia", ar: "القيروان، تونس" },
+        unit: { fr: "Élèves", en: "students equipped", ar: "تلميذ تم تجهيزهم" },
+        description: {
+          fr: "🎒 خطوة بخطوة، نبنيو مستقبل غدوة. ✨ Six clubs unis d'un même élan pour illuminer la rentrée scolaire de 1000 élèves à Kairouan.",
+          en: "🎒 Step by step, building tomorrow's future. ✨ Six Interact clubs joined forces to equip 1,000 students in Kairouan with school backpacks.",
+          ar: "🎒 خطوة بخطوة، نبنيو مستقبل غدوة. ✨ مبادرة مشتركة بين 6 أندية إنتراكت لتجهيز 1000 تلميذ بالحقائب المدرسية في القيروان."
+        }
+      },
+      "jvDibt0YjYdeetoKmqbF": {
+        title: { fr: "Action Mouled 2.0", en: "Mawlid Joy Campaign 2.0", ar: "مبادرة المولد النبوي 2.0" },
+        category: { fr: "Aide Humanitaire", en: "Humanitarian Aid", ar: "مساعدات إنسانية" },
+        location: { fr: "Dar El Iila, Médina Jedida, Tunisie", en: "Dar El Iila, Nouvelle Medina, Tunisia", ar: "دار العيلة، المدينة الجديدة، تونس" },
+        unit: { fr: "Individus", en: "beneficiaries", ar: "مستفيد" },
+        description: {
+          fr: "Le Mouled est avant tout une fête de partage. À cette occasion, notre club a eu le bonheur d’offrir un moment de convivialité et de soutien à 50 personnes.",
+          en: "Mawlid is a blessed celebration of sharing. Our club brought warmth, traditional sweets, and assistance to 50 individuals in Nouvelle Medina.",
+          ar: "المولد النبوي هو مناسبة للتآخي والتراحم. نظم نادينا يوماً تضامنياً مع تقديم مساعدات لفائدة 50 مستفيداً بدار العيلة."
+        }
+      },
+      "MjQYbCZ7gfU6XHzPpFVa": {
+        title: { fr: "Action Mouled 1.0", en: "Mawlid Joy Campaign 1.0", ar: "مبادرة المولد النبوي 1.0" },
+        category: { fr: "Aide Humanitaire", en: "Humanitarian Aid", ar: "مساعدات إنسانية" },
+        location: { fr: "SOS Village Mornag, Tunisie", en: "SOS Children's Village Mornag, Tunisia", ar: "قرية قمرت وسوس مورناق، تونس" },
+        unit: { fr: "Enfants", en: "children", ar: "طفل" },
+        description: {
+          fr: "À l’occasion du Mouled, notre club a eu le plaisir de partager un moment de solidarité et de convivialité avec les enfants du Village SOS Mornag.",
+          en: "On the occasion of Mawlid, our club brought festive joy, gifts, and smiles to the children at SOS Children's Village Mornag.",
+          ar: "بمناسبة ذكرى المولد النبوي الشريف، تشارك أعضاء النادي لحظات دافئة ومليئة بالبهجة مع 50 طفلاً في قرية الأطفال سوس مورناق."
+        }
+      },
+      "n9LcE0GRPvHwmoJ36b5d": {
+        title: { fr: "Action Mouled 1.0", en: "Mawlid Joy Campaign 1.0", ar: "مبادرة المولد النبوي 1.0" },
+        category: { fr: "Aide Humanitaire", en: "Humanitarian Aid", ar: "مساعدات إنسانية" },
+        location: { fr: "SOS Village Mornag, Tunisie", en: "SOS Children's Village Mornag, Tunisia", ar: "قرية قمرت وسوس مورناق، تونس" },
+        unit: { fr: "Enfants", en: "children", ar: "طفل" },
+        description: {
+          fr: "À l’occasion du Mouled, notre club a eu le plaisir de partager un moment de solidarité et de convivialité avec les enfants du Village SOS Mornag.",
+          en: "On the occasion of Mawlid, our club brought festive joy, gifts, and smiles to the children at SOS Children's Village Mornag.",
+          ar: "بمناسبة ذكرى المولد النبوي الشريف، تشارك أعضاء النادي لحظات دافئة ومليئة بالبهجة مع 50 طفلاً في قرية الأطفال سوس مورناق."
         }
       }
     };
+    window.ACTIONS_I18N = ACTIONS_I18N;
 
-    const CATEGORY_I18N = {
+    function aiTranslateDynamicAction(action, lang) {
+      if (!action) return {};
+      const id = action.id || '';
+      const meta = ACTIONS_I18N[id];
+      if (meta) {
+        return {
+          title: (meta.title && meta.title[lang]) || action.title || '',
+          category: (meta.category && meta.category[lang]) || action.category || '',
+          location: (meta.location && meta.location[lang]) || action.location || '',
+          unit: (meta.unit && meta.unit[lang]) || action.beneficiary_unit || '',
+          description: (meta.description && meta.description[lang]) || action.description || ''
+        };
+      }
+
+      // Keyword-based fallback for custom actions
+      let title = action.title || '';
+      let category = action.category || '';
+      let location = action.location || '';
+      let unit = action.beneficiary_unit || '';
+      let desc = action.description || '';
+
+      if (lang === 'fr') return { title, category, location, unit, description: desc };
+
+      // Category translation
+      if (typeof CATEGORY_I18N !== 'undefined' && CATEGORY_I18N[category] && CATEGORY_I18N[category][lang]) {
+        category = CATEGORY_I18N[category][lang];
+      } else if (category.toLowerCase().includes('humanitaire')) {
+        category = lang === 'ar' ? 'مساعدات إنسانية' : 'Humanitarian Aid';
+      } else if (category.toLowerCase().includes('interet') || category.toLowerCase().includes('intérêt')) {
+        category = lang === 'ar' ? 'المصلحة العامة والتضامن' : 'Public Interest & Solidarity';
+      }
+
+      // Location translation
+      if (location.includes('Tunisie')) {
+        location = lang === 'ar' ? location.replace('Tunisie', 'تونس') : location.replace('Tunisie', 'Tunisia');
+      }
+
+      // Unit translation
+      const uLower = unit.toLowerCase();
+      if (uLower.includes('eleve') || uLower.includes('élève')) {
+        unit = lang === 'ar' ? 'تلميذ' : 'students';
+      } else if (uLower.includes('enfant')) {
+        unit = lang === 'ar' ? 'طفل' : 'children';
+      } else if (uLower.includes('individu') || uLower.includes('personne')) {
+        unit = lang === 'ar' ? 'مستفيد' : 'individuals';
+      } else if (uLower.includes('famille')) {
+        unit = lang === 'ar' ? 'عائلة' : 'families';
+      }
+
+      // Title translation
+      const tLower = title.toLowerCase();
+      if (tLower.includes('mouled 2')) {
+        title = lang === 'ar' ? 'مبادرة المولد النبوي 2.0' : 'Mawlid Joy Campaign 2.0';
+      } else if (tLower.includes('mouled 1') || tLower.includes('mouled')) {
+        title = lang === 'ar' ? 'مبادرة المولد النبوي 1.0' : 'Mawlid Joy Campaign 1.0';
+      } else if (tLower.includes('rentree') || tLower.includes('rentrée')) {
+        title = lang === 'ar' ? 'العودة المدرسية التضامنية' : 'Back-to-School Campaign';
+      } else if (tLower.includes('pink')) {
+        title = lang === 'ar' ? 'سباق ران فور بينك (أكتوبر الوردي)' : 'Run For Pink (Pink October Marathon)';
+      }
+
+      return { title, category, location, unit, description: desc };
+    }
+    window.aiTranslateDynamicAction = aiTranslateDynamicAction;
+
+const CATEGORY_I18N = {
       "Intérêt Public & Solidarité": { en: "Public Interest & Solidarity", ar: "المصلحة العامة والتضامن" },
       "Éducation & Jeunesse": { en: "Education & Youth", ar: "التعليم والشباب" },
       "Urgence Hivernale & Aide Sociale": { en: "Winter Relief & Social Aid", ar: "الإغاثة الشتوية والمساعدة الاجتماعية" },
@@ -3760,7 +3967,7 @@
       "Environnement": { en: "Environment", ar: "بيئة" }
     };
 
-    function setAppLanguage(lang) {
+    function setAppLanguage(lang, showToast = false) {
       if (!['fr', 'en', 'ar'].includes(lang)) lang = 'fr';
       window.currentAppLanguage = lang;
       try { localStorage.setItem('ictgc_lang', lang); } catch(e){}
@@ -3808,8 +4015,10 @@
       if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
       else if (typeof defaultPartners !== 'undefined') renderPartners(defaultPartners);
 
-      const toastMsg = lang === 'ar' ? "تم تغيير اللغة إلى العربية بنجاح" : (lang === 'en' ? "Language switched to English!" : "Langue basculée en Français !");
-      showAppToast(toastMsg, "info", 1800);
+      if (showToast && typeof showAppToast === 'function') {
+        const toastMsg = lang === 'ar' ? "تم تغيير اللغة إلى العربية بنجاح" : (lang === 'en' ? "Language switched to English!" : "Langue basculée en Français !");
+        showAppToast(toastMsg, "info", 1800);
+      }
     }
     window.setAppLanguage = setAppLanguage;
 
@@ -3822,6 +4031,12 @@
         if (!val) continue;
         const el = document.querySelector(`[data-edit-key="${key}"]`) || document.getElementById(key);
         if (el) {
+          // Numbers, counters, and follower counts apply across ALL languages
+          if (key.startsWith('metric-val-') || key.startsWith('header-')) {
+            el.innerText = val;
+            continue;
+          }
+
           if (currentLang === 'fr') {
             el.innerText = val;
           } else {
