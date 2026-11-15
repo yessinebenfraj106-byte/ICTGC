@@ -1506,6 +1506,9 @@
 
           <div class="flex gap-2">
             <input type="text" id="partner-logo-input" name="partner_logo" placeholder="Ou collez l'URL directe du logo (https://...)" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" oninput="updatePartnerLogoPreview(this.value)" />
+            <button type="button" onclick="removePartnerModalLogoBackground()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1" title="Supprimer le fond noir ou blanc du logo">
+              <span>🪄</span> Sans Fond
+            </button>
             <button type="button" onclick="cropPartnerModalLogo()" class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1">
               <span>✂️</span> Recadrer
             </button>
@@ -1690,7 +1693,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDocs, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBYwIszncVzLT_VFPt965kpm5Pu32vPX-E",
@@ -1705,7 +1708,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     window.firestoreDb = db;
-    window.fs = { collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDocs, setDoc };
+    window.fs = { collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDocs, setDoc, writeBatch };
 
     if (typeof window.initCloudSync === 'function') {
       window.initCloudSync();
@@ -3958,6 +3961,84 @@
     initCloudSync();
   
     // --- Image Compression & Management (Full Transparency & No-Background Support) ---
+    
+    // --- Universal Edge-Connected Flood-Fill Background Removal ---
+    function removeBackgroundFromCanvas(canvas) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const corners = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+      let sampleR = 0, sampleG = 0, sampleB = 0, count = 0;
+      for (const [cx, cy] of corners) {
+        const idx = (cy * w + cx) * 4;
+        if (data[idx + 3] > 30) {
+          sampleR += data[idx];
+          sampleG += data[idx + 1];
+          sampleB += data[idx + 2];
+          count++;
+        }
+      }
+      if (count === 0) return canvas;
+
+      const bgR = Math.round(sampleR / count);
+      const bgG = Math.round(sampleG / count);
+      const bgB = Math.round(sampleB / count);
+
+      const isCornerDark = (bgR < 75 && bgG < 75 && bgB < 75);
+      const isCornerLight = (bgR > 195 && bgG > 195 && bgB > 195);
+
+      const visited = new Uint8Array(w * h);
+      const queue = [];
+
+      // Seed all 4 borders
+      for (let x = 0; x < w; x++) {
+        queue.push(x, 0);
+        queue.push(x, h - 1);
+      }
+      for (let y = 0; y < h; y++) {
+        queue.push(0, y);
+        queue.push(w - 1, y);
+      }
+
+      const threshold = 68;
+      let head = 0;
+      while (head < queue.length) {
+        const x = queue[head++];
+        const y = queue[head++];
+        const pIdx = y * w + x;
+        if (visited[pIdx]) continue;
+        visited[pIdx] = 1;
+
+        const dIdx = pIdx * 4;
+        const r = data[dIdx];
+        const g = data[dIdx + 1];
+        const b = data[dIdx + 2];
+        const a = data[dIdx + 3];
+
+        if (a < 15) continue;
+
+        const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
+        const isMatching = (dist < threshold) ||
+                           (isCornerDark && r <= 60 && g <= 60 && b <= 60) ||
+                           (isCornerLight && r >= 220 && g >= 220 && b >= 220);
+
+        if (isMatching) {
+          data[dIdx + 3] = 0; // Pure Transparent
+          if (x > 0 && !visited[pIdx - 1]) queue.push(x - 1, y);
+          if (x < w - 1 && !visited[pIdx + 1]) queue.push(x + 1, y);
+          if (y > 0 && !visited[pIdx - w]) queue.push(x, y - 1);
+          if (y < h - 1 && !visited[pIdx + w]) queue.push(x, y + 1);
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+      return canvas;
+    }
+    window.removeBackgroundFromCanvas = removeBackgroundFromCanvas;
+
     function compressImageFile(file, maxWidth = 600, maxHeight = 600, quality = 0.85) {
       return new Promise((resolve, reject) => {
         if (!file || !file.type.startsWith('image/')) {
@@ -4013,14 +4094,9 @@
               hasAlpha = isTransparentType;
             }
 
-            // If image has transparent / no background, export as image/png so alpha channel is 100% preserved!
-            if (hasAlpha || isTransparentType) {
-              const dataUrl = canvas.toDataURL('image/png');
-              resolve(dataUrl);
-            } else {
-              const dataUrl = canvas.toDataURL('image/jpeg', quality);
-              resolve(dataUrl);
-            }
+            // Export as pure PNG to preserve 100% alpha transparency
+            const dataUrl = canvas.toDataURL('image/png');
+            resolve(dataUrl);
           };
           img.onerror = () => reject(new Error('Erreur de décodage de l\'image.'));
           img.src = e.target.result;
@@ -4822,8 +4898,7 @@
       } catch(e) {}
 
       // If transparent, export as image/png to preserve alpha transparency, else image/jpeg
-      const exportFormat = (hasAlpha || cropperState.preserveAlpha || cropperState.hasTransparentBg) ? 'image/png' : 'image/jpeg';
-      const croppedDataUrl = exportCanvas.toDataURL(exportFormat, (exportFormat === 'image/png' ? undefined : 0.88));
+      const croppedDataUrl = exportCanvas.toDataURL('image/png');
       const cb = cropperState.callback;
       closeImageCropper();
       cb(croppedDataUrl);
@@ -4844,47 +4919,15 @@
         tCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
         tCtx.drawImage(cropperState.img, 0, 0);
 
-        const imgData = tCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-        const data = imgData.data;
+        removeBackgroundFromCanvas(tempCanvas);
 
-        // Sample corner pixels to determine background tone
-        const w = tempCanvas.width;
-        const h = tempCanvas.height;
-        const cornerIndices = [
-          0,
-          (w - 1) * 4,
-          (h - 1) * w * 4,
-          ((h - 1) * w + w - 1) * 4
-        ];
-
-        let bgR = 255, bgG = 255, bgB = 255;
-        if (cornerIndices.length > 0) {
-          bgR = data[cornerIndices[0]];
-          bgG = data[cornerIndices[0] + 1];
-          bgB = data[cornerIndices[0] + 2];
-        }
-
-        const threshold = 65;
-        const isCornerDark = (bgR < 65 && bgG < 65 && bgB < 65);
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
-          // If close to corner background tone OR near-white OR near-black
-          if (dist < threshold || (r >= 225 && g >= 225 && b >= 225) || (isCornerDark && r <= 55 && g <= 55 && b <= 55)) {
-            data[i + 3] = 0; // Transparent
-          }
-        }
-
-        tCtx.putImageData(imgData, 0, 0);
         const newImg = new Image();
         newImg.onload = () => {
           cropperState.img = newImg;
           cropperState.preserveAlpha = true;
           cropperState.hasTransparentBg = true;
           renderCropperCanvas();
-          showAppToast("Fond uni supprimé ! Le format sans fond (transparent) est actif.", "success");
+          showAppToast("Fond uni supprimé avec succès ! Format sans fond (transparent) actif.", "success");
         };
         newImg.src = tempCanvas.toDataURL('image/png');
       } catch (err) {
@@ -5005,30 +5048,8 @@
           ctx.clearRect(0, 0, w, h);
           ctx.drawImage(img, 0, 0, w, h);
 
-          const imgData = ctx.getImageData(0, 0, w, h);
-          const data = imgData.data;
+          removeBackgroundFromCanvas(canvas);
 
-          // Corner background sampling
-          const cornerIndices = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + w - 1) * 4];
-          let bgR = 255, bgG = 255, bgB = 255;
-          if (cornerIndices.length > 0) {
-            bgR = data[cornerIndices[0]];
-            bgG = data[cornerIndices[0] + 1];
-            bgB = data[cornerIndices[0] + 2];
-          }
-
-          const threshold = 65;
-          const isCornerDark = (bgR < 65 && bgG < 65 && bgB < 65);
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
-            if (dist < threshold || (r >= 225 && g >= 225 && b >= 225) || (isCornerDark && r <= 55 && g <= 55 && b <= 55)) {
-              data[i + 3] = 0; // Transparent
-            }
-          }
-          ctx.putImageData(imgData, 0, 0);
           const transparentPng = canvas.toDataURL('image/png');
           setModalPhotoValue(transparentPng);
           showAppToast("Fond uni supprimé avec succès ! Format sans fond (transparent) actif.", "success");
@@ -5134,6 +5155,7 @@
 
     async function syncFullPartnersToCloud(list) {
       if (!Array.isArray(list)) return;
+      window.cachedPartnersList = list;
       try { localStorage.setItem('ictgc_partners_cache', JSON.stringify(list)); } catch(e){}
       if (window.firestoreDb && window.fs) {
         try {
@@ -5145,16 +5167,20 @@
           console.warn("Firestore sync partners siteContent error:", err);
         }
         try {
-          const batch = window.fs.writeBatch(window.firestoreDb);
-          list.forEach(p => {
+          for (const p of list) {
             if (p.id) {
-              const ref = window.fs.doc(window.firestoreDb, "partners", p.id);
-              batch.set(ref, p, { merge: true });
+              await window.fs.setDoc(window.fs.doc(window.firestoreDb, "partners", p.id), {
+                id: p.id,
+                name: p.name || '',
+                logo: p.logo || '',
+                category: p.category || 'Sponsor',
+                website: p.website || '',
+                description: p.description || ''
+              }, { merge: true });
             }
-          });
-          await batch.commit();
+          }
         } catch (err) {
-          console.warn("Firestore sync partners error:", err);
+          console.warn("Firestore sync individual partners error:", err);
         }
       }
     }
@@ -5261,6 +5287,48 @@
       }, { ratio: '1:1' });
     }
     window.cropPartnerModalLogo = cropPartnerModalLogo;
+
+    function removePartnerModalLogoBackground() {
+      const input = document.getElementById('partner-logo-input');
+      const val = input ? input.value : '';
+      if (!val) {
+        showAppToast("Veuillez d'abord choisir ou déposer un logo.", "info");
+        return;
+      }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const maxDim = 480;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+
+          removeBackgroundFromCanvas(canvas);
+
+          const transparentPng = canvas.toDataURL('image/png');
+          if (input) input.value = transparentPng;
+          updatePartnerLogoPreview(transparentPng);
+          showAppToast("Fond uni du logo supprimé avec succès !", "success");
+        } catch(err) {
+          console.warn("Partner logo background removal error:", err);
+          showAppToast("Impossible de supprimer le fond de ce logo.", "error");
+        }
+      };
+      img.onerror = () => showAppToast("Erreur lors de la lecture du logo.", "error");
+      img.src = val;
+    }
+    window.removePartnerModalLogoBackground = removePartnerModalLogoBackground;
+
 
     function cropPartnerLogo(partnerId) {
       const list = window.cachedPartnersList || defaultPartners;
