@@ -959,13 +959,9 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Images de l'action (Jusqu'à 4 photos)</label>
-          <div class="space-y-2">
-            <input type="url" name="img_1" placeholder="URL Image 1 (https://...)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
-            <input type="url" name="img_2" placeholder="URL Image 2 (optionnelle)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
-            <input type="url" name="img_3" placeholder="URL Image 3 (optionnelle)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
-            <input type="url" name="img_4" placeholder="URL Image 4 (optionnelle)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
-          </div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Photos de l'Action (Album sans limite)</label>
+          <textarea name="action_images_bulk" rows="3" placeholder="Collez une ou plusieurs URLs d'images (séparées par une nouvelle ligne ou virgule)..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+          <p class="text-[10px] text-slate-500 mt-1">💡 Vous pourrez également importer des photos en masse par glisser-déposer une fois l'action publiée.</p>
         </div>
 
         <div class="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
@@ -1198,6 +1194,128 @@
     </div>
   </div>
 
+  <!-- Modal: Visionneuse d'Album / Lightbox Interactif -->
+  <div id="action-album-lightbox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/95 backdrop-blur-md select-none">
+    <div class="relative w-full max-w-5xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+      
+      <!-- Top Bar -->
+      <div class="px-4 sm:px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between gap-3 text-white">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-0.5">
+            <span id="lightbox-category-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">Action</span>
+            <span id="lightbox-counter" class="text-xs font-bold text-slate-400">Photo 1 sur 1</span>
+          </div>
+          <h3 id="lightbox-action-title" class="text-sm sm:text-base font-extrabold text-white truncate">Titre de l'action</h3>
+        </div>
+        
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button onclick="downloadCurrentLightboxPhoto()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors" title="Télécharger cette photo">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          </button>
+          <button onclick="closeActionAlbumLightbox()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors text-base font-bold" title="Fermer (Échap)">✕</button>
+        </div>
+      </div>
+
+      <!-- Main Photo Stage -->
+      <div class="relative flex-1 flex items-center justify-center p-2 sm:p-6 min-h-[300px] sm:min-h-[460px] max-h-[66vh] bg-slate-950/70 overflow-hidden">
+        <button onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo précédente (←)">
+          ◀
+        </button>
+
+        <img id="lightbox-main-img" src="" alt="Photo Album" class="max-w-full max-h-[60vh] object-contain rounded-xl shadow-2xl transition-all duration-200" />
+
+        <button onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo suivante (→)">
+          ▶
+        </button>
+      </div>
+
+      <!-- Filmstrip Thumbnails -->
+      <div id="lightbox-filmstrip-container" class="px-4 py-3 bg-slate-900 border-t border-slate-800/80 overflow-x-auto flex gap-2 items-center justify-center">
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Gestionnaire d'Album & Import en Masse -->
+  <div id="action-album-manager-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-sm select-none">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col overflow-hidden">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-shrink-0">
+        <div>
+          <h3 id="album-manager-title" class="text-base sm:text-lg font-black text-slate-900">Gérer l'Album Photos</h3>
+          <p id="album-manager-subtitle" class="text-xs text-slate-500">Ajoutez, réordonnez ou importez des photos en masse sans aucune limite</p>
+        </div>
+        <button onclick="closeActionAlbumManager()" class="text-slate-400 hover:text-slate-600 text-base font-bold p-1">✕</button>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
+        
+        <!-- Bulk Dropzone -->
+        <div id="bulk-album-dropzone"
+             ondragover="handleBulkDropOver(event)"
+             ondragleave="handleBulkDropLeave(event)"
+             ondrop="handleBulkDrop(event)"
+             onclick="triggerBulkFileInput()"
+             class="border-2 border-dashed border-blue-300 hover:border-blue-600 rounded-2xl p-6 text-center cursor-pointer transition-all bg-blue-50/40 hover:bg-blue-50/70 group">
+          <input type="file" id="bulk-album-file-input" accept="image/*" multiple class="hidden" onchange="handleBulkFileInputChange(event)" />
+          <div class="pointer-events-none flex flex-col items-center">
+            <span class="text-3xl mb-1.5 group-hover:scale-110 transition-transform">📁 📸</span>
+            <p class="text-xs sm:text-sm font-extrabold text-slate-900">Glissez-déposez plusieurs photos ici</p>
+            <p class="text-[11px] text-slate-600 mt-0.5">ou cliquez pour choisir un lot complet depuis votre appareil</p>
+            <span class="mt-2 inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
+              ⚡ Importation en masse (1 à 50+ photos) & Compression haute qualité
+            </span>
+          </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div id="bulk-upload-progress" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 font-bold flex items-center justify-between">
+          <span id="bulk-progress-text">Traitement des photos...</span>
+          <div class="w-32 h-2.5 bg-blue-200 rounded-full overflow-hidden">
+            <div id="bulk-progress-bar" class="h-full bg-blue-600 transition-all duration-200" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Bulk URL Importer -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Ou collez des URLs d'images (liens multiples) :</label>
+          <textarea id="bulk-urls-input" rows="2" placeholder="Collez plusieurs URLs séparées par une nouvelle ligne ou virgule..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"></textarea>
+          <div class="mt-2 flex justify-end">
+            <button type="button" onclick="importBulkUrls()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1">
+              <span>+</span> Importer ces URLs
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Photo Grid in Album -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+              <span>🖼️</span> Photos de l'album (<span id="album-photos-count">0</span>)
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium">Utilisez ◀ ▶ pour organiser l'ordre</span>
+          </div>
+
+          <div id="album-manager-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2 flex-shrink-0">
+        <button type="button" onclick="closeActionAlbumManager()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+          Annuler
+        </button>
+        <button type="button" onclick="saveActionAlbumManager()" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all flex items-center gap-1.5">
+          <span>💾</span> Enregistrer & Synchroniser l'Album
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   
   <!-- Modal: Organiser et Réordonner le Bureau -->
   <div id="reorder-bureau-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
@@ -1299,7 +1417,13 @@
         beneficiary_unit: "familles nécessiteuses",
         description: "Distribution massive de paniers alimentaires complets pour soutenir les familles vulnérables durant le mois saint.",
         collaborating_clubs: ["Interact Club Anastasia", "Interact Club Sidi Bou", "Interact Club Inner City"],
-        images: ["/assets/logos/club-team-banner.jpg"]
+        images: [
+          "/assets/logos/club-team-banner.jpg",
+          "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?auto=format&fit=crop&w=1200&q=80",
+          "/assets/logos/tb-logo.jpg"
+        ]
       },
       {
         id: "action-rentree-scolaire",
@@ -1310,7 +1434,10 @@
         beneficiary_unit: "écoliers équipés",
         description: "Campagne de collecte et don de cartables garnis, livres et fournitures scolaires pour lutter contre le décrochage scolaire.",
         collaborating_clubs: ["Interact Club Saint-Germain", "Interact Club Maxula Prates", "Interact Club Monastir", "Interact Club Ruspina Monastir"],
-        images: []
+        images: [
+          "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=80"
+        ]
       },
       {
         id: "action-hiver-au-chaud",
@@ -1633,56 +1760,127 @@
       if (!bento) return;
       bento.innerHTML = data.map((a, i) => {
         const isLarge = i === 0 || i === 1;
-        const images = (a.images || []).filter(img => img && img.trim().length > 0).slice(0, 4);
+        const images = (a.images || []).filter(img => img && img.trim().length > 0);
+        const actionId = a.id || `action-${i}`;
+        const safeTitle = (a.title || '').replace(/'/g, "\\'");
+
+        // Render Album Preview depending on photo count
+        let albumPreviewHtml = '';
+        if (images.length === 0) {
+          albumPreviewHtml = isAdminLoggedIn ? `
+            <div class="mb-4">
+              <button onclick="openActionAlbumManager('${actionId}')" class="w-full py-4 px-3 rounded-2xl border-2 border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/60 hover:bg-blue-50/40 text-slate-500 hover:text-blue-700 text-xs font-bold flex flex-col items-center justify-center gap-1 transition-all">
+                <span class="text-xl">📸</span>
+                <span>Ajouter des photos à cet album (import en masse supporté)</span>
+              </button>
+            </div>
+          ` : '';
+        } else if (images.length === 1) {
+          albumPreviewHtml = `
+            <div class="mb-4">
+              <div class="relative rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 cursor-pointer group shadow-2xs h-48 sm:h-56" onclick="openActionAlbumLightbox('${actionId}', 0)">
+                <img src="${images[0]}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
+                  <span class="text-white text-xs font-bold flex items-center gap-1.5"><span>🔍</span> Agrandir la photo</span>
+                  <span class="text-[10px] bg-white/20 backdrop-blur-xs text-white px-2.5 py-0.5 rounded-full font-bold">1 photo</span>
+                </div>
+              </div>
+            </div>
+          `;
+        } else if (images.length === 2) {
+          albumPreviewHtml = `
+            <div class="mb-4">
+              <div class="grid grid-cols-2 gap-2.5">
+                ${images.map((img, idx) => `
+                  <div class="h-36 sm:h-44 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 relative group cursor-pointer shadow-2xs" onclick="openActionAlbumLightbox('${actionId}', ${idx})">
+                    <img src="${img}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span class="text-white text-xs font-bold bg-slate-900/80 px-2.5 py-1 rounded-lg">🔍 Agrandir</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (images.length === 3) {
+          albumPreviewHtml = `
+            <div class="mb-4">
+              <div class="grid grid-cols-3 gap-2">
+                ${images.map((img, idx) => `
+                  <div class="h-28 sm:h-36 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 relative group cursor-pointer shadow-2xs" onclick="openActionAlbumLightbox('${actionId}', ${idx})">
+                    <img src="${img}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span class="text-white text-xs font-bold">🔍</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          const remaining = images.length - 3;
+          albumPreviewHtml = `
+            <div class="mb-4">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                ${images.slice(0, 4).map((img, idx) => {
+                  const isLastSlot = (idx === 3 && images.length > 4);
+                  return `
+                    <div class="h-24 sm:h-28 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 relative group cursor-pointer shadow-2xs" onclick="openActionAlbumLightbox('${actionId}', ${idx})">
+                      <img src="${img}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      ${isLastSlot ? `
+                        <div class="absolute inset-0 bg-slate-950/80 hover:bg-slate-950/90 transition-colors flex flex-col items-center justify-center text-white p-1">
+                          <span class="text-base sm:text-lg font-black tracking-tight leading-none">+${remaining}</span>
+                          <span class="text-[9px] uppercase tracking-wider font-extrabold text-blue-200 mt-1">photos</span>
+                        </div>
+                      ` : `
+                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <span class="text-white text-xs font-bold">🔍</span>
+                        </div>
+                      `}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
 
         return `
-          <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+          <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-5 sm:p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between h-full">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span data-edit-key="action-cat-${a.id || i}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span data-edit-key="action-cat-${actionId}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
                   ${a.category}
                 </span>
                 <div class="flex items-center gap-2">
-                  <span data-edit-key="action-loc-${a.id || i}" class="editable-field text-xs text-slate-400 font-medium">${a.location}</span>
+                  <span data-edit-key="action-loc-${actionId}" class="editable-field text-xs text-slate-400 font-semibold">${a.location}</span>
                   ${isAdminLoggedIn ? `
-                    <button onclick="deleteActionDoc('${a.id || i}')" class="text-slate-400 hover:text-rose-600 transition-colors p-1" title="Supprimer l'action">
+                    <button onclick="deleteActionDoc('${actionId}')" class="text-slate-400 hover:text-rose-600 transition-colors p-1" title="Supprimer l'action">
                       🗑️
                     </button>
                   ` : ''}
                 </div>
               </div>
-              <h3 data-edit-key="action-title-${a.id || i}" class="editable-field text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
-              <p data-edit-key="action-desc-${a.id || i}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
-              
-              <div class="space-y-2 mb-4">
-                ${images.length > 0 ? `
-                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    ${images.map((img, imgIdx) => `
-                      <div class="h-24 rounded-xl overflow-hidden border border-slate-100 bg-slate-100 relative group">
-                        <img src="${img}" alt="${a.title}" class="w-full h-full object-cover hover:scale-105 transition-transform" />
-                        ${isAdminLoggedIn ? `
-                          <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
-                            <button onclick="openActionPhotoModal('${a.id || i}', '${(a.title || '').replace(/'/g, "\\'")}', ${imgIdx})" class="px-2 py-1 bg-white text-slate-900 text-[10px] font-bold rounded-lg shadow">
-                              Changer
-                            </button>
-                            <button onclick="removeActionPhoto('${a.id || i}', ${imgIdx})" class="px-1.5 py-1 bg-rose-600 text-white text-[10px] font-bold rounded-lg shadow">
-                              ✕
-                            </button>
-                          </div>
-                        ` : ''}
-                      </div>
-                    `).join('')}
-                  </div>
-                ` : ''}
 
-                ${isAdminLoggedIn ? `
-                  <div class="flex items-center justify-between pt-1">
-                    <button onclick="openActionPhotoModal('${a.id || i}', '${(a.title || '').replace(/'/g, "\\'")}', ${images.length})" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
-                      <span>📷</span> Gérer Photos (${images.length}/4) ${images.length < 4 ? '+ Ajouter' : ''}
+              <h3 data-edit-key="action-title-${actionId}" class="editable-field text-lg font-black text-slate-900 mb-2 leading-snug">${a.title}</h3>
+              <p data-edit-key="action-desc-${actionId}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
+              
+              <!-- Album Preview -->
+              ${albumPreviewHtml}
+
+              <!-- Album Controls Bar -->
+              ${images.length > 0 ? `
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pt-1">
+                  <button onclick="openActionAlbumLightbox('${actionId}', 0)" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition-all border border-blue-200/70 shadow-2xs">
+                    <span>🖼️</span> Voir l'album (${images.length} photo${images.length > 1 ? 's' : ''})
+                  </button>
+                  ${isAdminLoggedIn ? `
+                    <button onclick="openActionAlbumManager('${actionId}')" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition-all border border-slate-200 shadow-2xs" title="Gérer ou importer des photos en masse">
+                      <span>⚙️</span> Gérer l'album / Importer en masse
                     </button>
-                  </div>
-                ` : ''}
-              </div>
+                  ` : ''}
+                </div>
+              ` : ''}
 
               ${a.beneficiaries_count > 0 ? `
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">
@@ -2768,22 +2966,39 @@
       });
     }
 
-    let syncToastTimer = null;
-    function showSyncToast(msg = '✓ Synchronisé en direct dans le Cloud') {
+    let appToastTimer = null;
+    function showAppToast(msg = '✓ Synchronisé en direct dans le Cloud', type = 'success', duration = 3000) {
       let toast = document.getElementById('auto-sync-toast');
       if (!toast) {
         toast = document.createElement('div');
         toast.id = 'auto-sync-toast';
-        toast.className = 'fixed top-5 right-5 z-50 bg-slate-900/95 text-emerald-400 border border-slate-700 px-4 py-2 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 pointer-events-none transition-all duration-300 opacity-0 translate-y-[-10px]';
         document.body.appendChild(toast);
       }
-      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${msg}`;
-      toast.classList.remove('opacity-0', 'translate-y-[-10px]');
-      clearTimeout(syncToastTimer);
-      syncToastTimer = setTimeout(() => {
+
+      let bgClass = 'bg-slate-900/95 text-emerald-400 border-slate-700 shadow-emerald-950/20';
+      let icon = '<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>';
+      if (type === 'error') {
+        bgClass = 'bg-rose-950/95 text-rose-300 border-rose-800 shadow-rose-950/30';
+        icon = '<span class="text-sm flex-shrink-0">⚠️</span>';
+      } else if (type === 'info') {
+        bgClass = 'bg-slate-900/95 text-sky-400 border-sky-800 shadow-sky-950/20';
+        icon = '<span class="text-sm flex-shrink-0">ℹ️</span>';
+      }
+
+      toast.className = `fixed top-5 right-5 z-50 ${bgClass} border px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 pointer-events-none transition-all duration-300 opacity-0 translate-y-[-10px]`;
+      toast.innerHTML = `${icon} <span class="leading-tight">${msg}</span>`;
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+      });
+
+      clearTimeout(appToastTimer);
+      appToastTimer = setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-y-[-10px]');
-      }, 2500);
+      }, duration);
     }
+    window.showAppToast = showAppToast;
+    window.showSyncToast = showAppToast;
 
     async function autoSaveSingleElement(el) {
       if (!isAdminLoggedIn) return;
@@ -2984,12 +3199,16 @@
       const form = e.target;
       const formData = new FormData(form);
 
-      const images = [
+      const bulkRaw = formData.get('action_images_bulk') || '';
+      const bulkList = bulkRaw.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0 && (s.startsWith('http') || s.startsWith('data:image') || s.startsWith('/')));
+      const legacyImages = [
         formData.get('img_1'),
         formData.get('img_2'),
         formData.get('img_3'),
         formData.get('img_4')
       ].filter(u => u && u.trim().length > 0);
+
+      const images = [...bulkList, ...legacyImages];
 
       const newAction = {
         title: formData.get('action_title'),
@@ -3006,8 +3225,13 @@
 
       if (window.firestoreDb && window.fs) {
         try {
-          await window.fs.addDoc(window.fs.collection(window.firestoreDb, "actions"), newAction);
-          alert("Action enregistrée et synchronisée sur Cloud Firestore !");
+          const docRef = await window.fs.addDoc(window.fs.collection(window.firestoreDb, "actions"), newAction);
+          newAction.id = docRef.id;
+          const currentList = window.cachedActionsList || [...defaultActions];
+          currentList.unshift(newAction);
+          renderActions(currentList);
+          syncFullActionsToCloud(currentList);
+          showAppToast("Action publiée et synchronisée sur Cloud Firestore !", "success");
           closeAddActionModal();
           form.reset();
           return;
@@ -3016,10 +3240,14 @@
         }
       }
 
-      defaultActions.unshift({ id: `act-${Date.now()}`, ...newAction });
-      renderActions(defaultActions);
+      const currentList = window.cachedActionsList || defaultActions;
+      newAction.id = `act-${Date.now()}`;
+      currentList.unshift(newAction);
+      renderActions(currentList);
+      syncFullActionsToCloud(currentList);
       closeAddActionModal();
       form.reset();
+      showAppToast("Action ajoutée et publiée avec succès !", "success");
     }
 
     async function handleRecruitmentSubmit(e) {
@@ -3240,7 +3468,7 @@
         const compressed = await compressImageFile(file);
         setModalPhotoValue(compressed);
       } catch (err) {
-        alert(err.message || 'Erreur lors de la compression de la photo.');
+        showAppToast(err.message || 'Erreur lors de la compression de la photo.', 'error');
       }
     }
     window.handlePhotoFileInputChange = handlePhotoFileInputChange;
@@ -3270,7 +3498,7 @@
           const compressed = await compressImageFile(file);
           setModalPhotoValue(compressed);
         } catch (err) {
-          alert(err.message || 'Erreur lors de la compression de l\'image glissée.');
+          showAppToast(err.message || 'Erreur lors de la compression de l\'image glissée.', 'error');
         }
       }
     }
@@ -3315,7 +3543,7 @@
         renderBureau(currentList);
         syncFullBureauToCloud(currentList);
         closePhotoManagerModal();
-        alert("Photo du membre enregistrée avec succès !");
+        showAppToast("Photo du membre enregistrée avec succès !", "success");
       } else if (target.type === 'action') {
         const currentList = window.cachedActionsList || [...defaultActions];
         const action = currentList.find(a => (a.id || '') === target.id);
@@ -3327,7 +3555,7 @@
           } else if (photoVal) {
             action.images.push(photoVal);
           }
-          action.images = action.images.filter(Boolean).slice(0, 4);
+          action.images = action.images.filter(Boolean);
 
           if (window.firestoreDb && window.fs && target.id) {
             try {
@@ -3342,13 +3570,13 @@
           syncFullActionsToCloud(currentList);
         }
         closePhotoManagerModal();
-        alert("Photos de l\'action enregistrées avec succès !");
+        showAppToast("Photos de l'action enregistrées avec succès !", "success");
       }
     }
     window.savePhotoManagerModal = savePhotoManagerModal;
 
     async function removeActionPhoto(actionId, imgIdx) {
-      if (!confirm("Voulez-vous retirer cette photo de l\'action ?")) return;
+      if (!confirm("Voulez-vous retirer cette photo de l'action ?")) return;
       const currentList = window.cachedActionsList || [...defaultActions];
       const action = currentList.find(a => (a.id || '') === actionId);
       if (action && Array.isArray(action.images)) {
@@ -3364,6 +3592,7 @@
         }
         renderActions(currentList);
         syncFullActionsToCloud(currentList);
+        showAppToast("Photo retirée de l'action.", "info");
       }
     }
     window.removeActionPhoto = removeActionPhoto;
@@ -3381,8 +3610,362 @@
       const filtered = currentList.filter(a => (a.id || '') !== actionId);
       renderActions(filtered);
       syncFullActionsToCloud(filtered);
+      showAppToast("Action supprimée définitivement.", "info");
     }
     window.deleteActionDoc = deleteActionDoc;
+
+    // --- Action Album Lightbox Controller ---
+    let currentLightboxAction = null;
+    let currentLightboxIndex = 0;
+
+    function openActionAlbumLightbox(actionId, photoIndex = 0) {
+      const currentActions = window.cachedActionsList || defaultActions;
+      const action = currentActions.find(a => (a.id || '') === actionId);
+      if (!action) return;
+      const images = (action.images || []).filter(img => img && img.trim().length > 0);
+      if (images.length === 0) {
+        if (isAdminLoggedIn) openActionAlbumManager(actionId);
+        return;
+      }
+
+      currentLightboxAction = action;
+      currentLightboxIndex = Math.max(0, Math.min(photoIndex, images.length - 1));
+
+      const modal = document.getElementById('action-album-lightbox-modal');
+      const catBadge = document.getElementById('lightbox-category-badge');
+      const titleEl = document.getElementById('lightbox-action-title');
+
+      if (catBadge) catBadge.textContent = action.category || 'Action Phare';
+      if (titleEl) titleEl.textContent = action.title || 'Album Photos';
+
+      updateLightboxDisplay();
+      if (modal) modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    window.openActionAlbumLightbox = openActionAlbumLightbox;
+
+    function closeActionAlbumLightbox() {
+      const modal = document.getElementById('action-album-lightbox-modal');
+      if (modal) modal.classList.add('hidden');
+      currentLightboxAction = null;
+      currentLightboxIndex = 0;
+      document.body.style.overflow = '';
+    }
+    window.closeActionAlbumLightbox = closeActionAlbumLightbox;
+
+    function updateLightboxDisplay() {
+      if (!currentLightboxAction) return;
+      const images = (currentLightboxAction.images || []).filter(img => img && img.trim().length > 0);
+      if (images.length === 0) {
+        closeActionAlbumLightbox();
+        return;
+      }
+      if (currentLightboxIndex >= images.length) currentLightboxIndex = images.length - 1;
+      if (currentLightboxIndex < 0) currentLightboxIndex = 0;
+
+      const counterEl = document.getElementById('lightbox-counter');
+      const mainImg = document.getElementById('lightbox-main-img');
+      const filmstrip = document.getElementById('lightbox-filmstrip-container');
+
+      if (counterEl) counterEl.textContent = `Photo ${currentLightboxIndex + 1} sur ${images.length}`;
+      if (mainImg) {
+        mainImg.src = images[currentLightboxIndex];
+        mainImg.alt = `${currentLightboxAction.title} - Photo ${currentLightboxIndex + 1}`;
+      }
+
+      if (filmstrip) {
+        filmstrip.innerHTML = images.map((img, idx) => {
+          const isActive = idx === currentLightboxIndex;
+          return `
+            <button type="button" onclick="jumpToLightboxPhoto(${idx})" class="relative flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer ${isActive ? 'border-blue-400 ring-2 ring-blue-500/40 scale-105' : 'border-slate-700/80 opacity-60 hover:opacity-100 hover:border-slate-500'}">
+              <img src="${img}" alt="Miniature ${idx + 1}" class="w-full h-full object-cover" />
+              <span class="absolute bottom-0 right-0 bg-slate-950/80 text-[9px] text-white font-black px-1 rounded-tl-sm">${idx + 1}</span>
+            </button>
+          `;
+        }).join('');
+        const activeThumb = filmstrip.children[currentLightboxIndex];
+        if (activeThumb && activeThumb.scrollIntoView) {
+          activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    }
+    window.updateLightboxDisplay = updateLightboxDisplay;
+
+    function prevLightboxPhoto() {
+      if (!currentLightboxAction) return;
+      const images = (currentLightboxAction.images || []).filter(img => img && img.trim().length > 0);
+      if (images.length <= 1) return;
+      currentLightboxIndex = (currentLightboxIndex - 1 + images.length) % images.length;
+      updateLightboxDisplay();
+    }
+    window.prevLightboxPhoto = prevLightboxPhoto;
+
+    function nextLightboxPhoto() {
+      if (!currentLightboxAction) return;
+      const images = (currentLightboxAction.images || []).filter(img => img && img.trim().length > 0);
+      if (images.length <= 1) return;
+      currentLightboxIndex = (currentLightboxIndex + 1) % images.length;
+      updateLightboxDisplay();
+    }
+    window.nextLightboxPhoto = nextLightboxPhoto;
+
+    function jumpToLightboxPhoto(idx) {
+      if (!currentLightboxAction) return;
+      currentLightboxIndex = idx;
+      updateLightboxDisplay();
+    }
+    window.jumpToLightboxPhoto = jumpToLightboxPhoto;
+
+    function downloadCurrentLightboxPhoto() {
+      if (!currentLightboxAction) return;
+      const images = (currentLightboxAction.images || []).filter(img => img && img.trim().length > 0);
+      const currentImg = images[currentLightboxIndex];
+      if (!currentImg) return;
+      const a = document.createElement('a');
+      a.href = currentImg;
+      a.download = `ICTGC-${(currentLightboxAction.title || 'action').replace(/[^a-zA-Z0-9_-]/g, '_')}-photo-${currentLightboxIndex + 1}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    window.downloadCurrentLightboxPhoto = downloadCurrentLightboxPhoto;
+
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('action-album-lightbox-modal');
+      if (!modal || modal.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeActionAlbumLightbox();
+      else if (e.key === 'ArrowLeft') prevLightboxPhoto();
+      else if (e.key === 'ArrowRight') nextLightboxPhoto();
+    });
+
+    // --- Action Album Manager & Bulk Importer ---
+    let activeAlbumActionId = null;
+    let workingAlbumImages = [];
+
+    function openActionAlbumManager(actionId) {
+      activeAlbumActionId = actionId;
+      const currentActions = window.cachedActionsList || defaultActions;
+      const action = currentActions.find(a => (a.id || '') === actionId);
+      if (!action) return;
+
+      workingAlbumImages = Array.isArray(action.images) ? [...action.images.filter(Boolean)] : [];
+
+      const titleEl = document.getElementById('album-manager-title');
+      const subtitleEl = document.getElementById('album-manager-subtitle');
+      if (titleEl) titleEl.textContent = `Album : ${action.title || 'Action Phare'}`;
+      if (subtitleEl) subtitleEl.textContent = `${action.category || 'Action'} • ${action.location || 'Tunisie'}`;
+
+      const bulkInput = document.getElementById('bulk-urls-input');
+      if (bulkInput) bulkInput.value = '';
+
+      renderAlbumManagerGrid();
+
+      const modal = document.getElementById('action-album-manager-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    window.openActionAlbumManager = openActionAlbumManager;
+
+    function closeActionAlbumManager() {
+      const modal = document.getElementById('action-album-manager-modal');
+      if (modal) modal.classList.add('hidden');
+      activeAlbumActionId = null;
+      workingAlbumImages = [];
+      const progressBox = document.getElementById('bulk-upload-progress');
+      if (progressBox) progressBox.classList.add('hidden');
+    }
+    window.closeActionAlbumManager = closeActionAlbumManager;
+
+    function renderAlbumManagerGrid() {
+      const grid = document.getElementById('album-manager-grid');
+      const countEl = document.getElementById('album-photos-count');
+      if (countEl) countEl.textContent = workingAlbumImages.length;
+      if (!grid) return;
+
+      if (workingAlbumImages.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-8 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            <p class="text-xs font-semibold">Aucune photo dans cet album pour le moment.</p>
+            <p class="text-[11px] text-slate-400 mt-1">Glissez-déposez des photos ci-dessus ou collez des liens pour commencer.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = workingAlbumImages.map((img, idx) => `
+        <div class="relative group rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 shadow-2xs h-32 flex flex-col justify-between">
+          <img src="${img}" alt="Photo ${idx + 1}" class="w-full h-full object-cover" />
+          
+          <div class="absolute top-1.5 left-1.5 right-1.5 flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-900/80 text-white backdrop-blur-xs">
+              #${idx + 1}
+            </span>
+            <button type="button" onclick="removeWorkingAlbumPhoto(${idx})" class="w-6 h-6 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center justify-center shadow-md transition-all hover:scale-105" title="Supprimer cette photo">
+              ✕
+            </button>
+          </div>
+
+          <div class="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between bg-slate-950/75 backdrop-blur-xs p-1 rounded-xl opacity-90 group-hover:opacity-100 transition-opacity">
+            <button type="button" onclick="moveWorkingAlbumPhoto(${idx}, -1)" ${idx === 0 ? 'disabled class="opacity-30 text-white px-1.5 text-xs"' : 'class="hover:text-blue-400 text-white px-1.5 text-xs font-black transition-colors"'} title="Déplacer vers la gauche">
+              ◀
+            </button>
+            <span class="text-[9px] font-bold text-slate-300">${idx === 0 ? 'Couverture' : 'Ordre ' + (idx + 1)}</span>
+            <button type="button" onclick="moveWorkingAlbumPhoto(${idx}, 1)" ${idx === workingAlbumImages.length - 1 ? 'disabled class="opacity-30 text-white px-1.5 text-xs"' : 'class="hover:text-blue-400 text-white px-1.5 text-xs font-black transition-colors"'} title="Déplacer vers la droite">
+              ▶
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+    window.renderAlbumManagerGrid = renderAlbumManagerGrid;
+
+    function removeWorkingAlbumPhoto(idx) {
+      if (idx < 0 || idx >= workingAlbumImages.length) return;
+      workingAlbumImages.splice(idx, 1);
+      renderAlbumManagerGrid();
+      showAppToast("Photo retirée de l'album en cours.", "info", 2000);
+    }
+    window.removeWorkingAlbumPhoto = removeWorkingAlbumPhoto;
+
+    function moveWorkingAlbumPhoto(idx, dir) {
+      const targetIdx = idx + dir;
+      if (targetIdx < 0 || targetIdx >= workingAlbumImages.length) return;
+      const item = workingAlbumImages.splice(idx, 1)[0];
+      workingAlbumImages.splice(targetIdx, 0, item);
+      renderAlbumManagerGrid();
+    }
+    window.moveWorkingAlbumPhoto = moveWorkingAlbumPhoto;
+
+    function triggerBulkFileInput() {
+      const fi = document.getElementById('bulk-album-file-input');
+      if (fi) fi.click();
+    }
+    window.triggerBulkFileInput = triggerBulkFileInput;
+
+    function handleBulkDropOver(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('bulk-album-dropzone');
+      if (dropzone) dropzone.classList.add('border-blue-600', 'bg-blue-100/60');
+    }
+    window.handleBulkDropOver = handleBulkDropOver;
+
+    function handleBulkDropLeave(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('bulk-album-dropzone');
+      if (dropzone) dropzone.classList.remove('border-blue-600', 'bg-blue-100/60');
+    }
+    window.handleBulkDropLeave = handleBulkDropLeave;
+
+    async function handleBulkDrop(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('bulk-album-dropzone');
+      if (dropzone) dropzone.classList.remove('border-blue-600', 'bg-blue-100/60');
+
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        await processBulkFiles(Array.from(e.dataTransfer.files));
+      }
+    }
+    window.handleBulkDrop = handleBulkDrop;
+
+    async function handleBulkFileInputChange(e) {
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+      await processBulkFiles(Array.from(files));
+      e.target.value = '';
+    }
+    window.handleBulkFileInputChange = handleBulkFileInputChange;
+
+    async function processBulkFiles(files) {
+      const imageFiles = files.filter(f => f.type && f.type.startsWith('image/'));
+      if (imageFiles.length === 0) {
+        showAppToast("Aucun fichier image valide sélectionné.", "error");
+        return;
+      }
+
+      const progressBox = document.getElementById('bulk-upload-progress');
+      const progressText = document.getElementById('bulk-progress-text');
+      const progressBar = document.getElementById('bulk-progress-bar');
+
+      if (progressBox) progressBox.classList.remove('hidden');
+      let completed = 0;
+
+      for (let i = 0; i < imageFiles.length; i++) {
+        const file = imageFiles[i];
+        if (progressText) progressText.textContent = `Optimisation : ${i + 1} / ${imageFiles.length} (${file.name})...`;
+        if (progressBar) progressBar.style.width = `${Math.round(((i + 1) / imageFiles.length) * 100)}%`;
+
+        try {
+          const compressed = await compressImageFile(file, 1200, 1200, 0.85);
+          workingAlbumImages.push(compressed);
+          completed++;
+          renderAlbumManagerGrid();
+        } catch (err) {
+          console.warn("Erreur compression fichier:", file.name, err);
+        }
+      }
+
+      if (progressBox) {
+        setTimeout(() => {
+          progressBox.classList.add('hidden');
+          if (progressBar) progressBar.style.width = '0%';
+        }, 1200);
+      }
+
+      showAppToast(`✅ ${completed} photo${completed > 1 ? 's' : ''} ajoutée${completed > 1 ? 's' : ''} à l'album !`, "success");
+    }
+    window.processBulkFiles = processBulkFiles;
+
+    function importBulkUrls() {
+      const input = document.getElementById('bulk-urls-input');
+      if (!input) return;
+      const raw = input.value.trim();
+      if (!raw) return;
+
+      const urls = raw.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0 && (s.startsWith('http') || s.startsWith('data:image') || s.startsWith('/')));
+      if (urls.length === 0) {
+        showAppToast("Aucune URL valide trouvée.", "error");
+        return;
+      }
+
+      workingAlbumImages.push(...urls);
+      input.value = '';
+      renderAlbumManagerGrid();
+      showAppToast(`✅ ${urls.length} photo${urls.length > 1 ? 's' : ''} ajoutée${urls.length > 1 ? 's' : ''} via URLs !`, "success");
+    }
+    window.importBulkUrls = importBulkUrls;
+
+    async function saveActionAlbumManager() {
+      if (!activeAlbumActionId) {
+        closeActionAlbumManager();
+        return;
+      }
+
+      const currentList = window.cachedActionsList || [...defaultActions];
+      const action = currentList.find(a => (a.id || '') === activeAlbumActionId);
+      if (!action) {
+        closeActionAlbumManager();
+        return;
+      }
+
+      action.images = [...workingAlbumImages.filter(Boolean)];
+
+      if (window.firestoreDb && window.fs && activeAlbumActionId && !activeAlbumActionId.startsWith('act-')) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", activeAlbumActionId), {
+            images: action.images
+          }, { merge: true });
+        } catch (err) {
+          console.warn("Firestore album update error:", err);
+        }
+      }
+
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentList)); } catch(e){}
+      renderActions(currentList);
+      syncFullActionsToCloud(currentList);
+
+      closeActionAlbumManager();
+      showAppToast(`🎉 Album enregistré avec succès (${action.images.length} photos) !`, "success");
+    }
+    window.saveActionAlbumManager = saveActionAlbumManager;
 
     // --- Add Bureau Member Logic ---
     function openAddBureauMemberModal() {
@@ -3408,7 +3991,7 @@
         const compressed = await compressImageFile(file);
         updateNewBureauPhotoPreview(compressed);
       } catch (err) {
-        alert(err.message || "Erreur lors du traitement de l\'image.");
+        showAppToast(err.message || "Erreur lors du traitement de l'image.", "error");
       }
     }
     window.handleNewBureauFileInputChange = handleNewBureauFileInputChange;
@@ -3438,7 +4021,7 @@
           const compressed = await compressImageFile(file);
           updateNewBureauPhotoPreview(compressed);
         } catch (err) {
-          alert(err.message || "Erreur lors de la compression de l\'image.");
+          showAppToast(err.message || "Erreur lors de la compression de l'image.", "error");
         }
       }
     }
@@ -3469,7 +4052,7 @@
       const photo_url = form.photo_url.value.trim();
 
       if (!fullName || !role) {
-        alert("Veuillez renseigner le nom et le rôle du membre.");
+        showAppToast("Veuillez renseigner le nom et le rôle du membre.", "error");
         return;
       }
 
@@ -3501,7 +4084,7 @@
       closeAddBureauMemberModal();
       form.reset();
       updateNewBureauPhotoPreview('');
-      alert("Nouveau membre du bureau ajouté et publié avec succès !");
+      showAppToast("Nouveau membre du bureau ajouté et publié avec succès !", "success");
     }
     window.handleAddBureauMemberSubmit = handleAddBureauMemberSubmit;
 
