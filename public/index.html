@@ -107,7 +107,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -155,6 +155,20 @@
       background-size: 16px 16px;
       background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
     }
+  
+    /* RTL & Arabic Typography */
+    html[dir="rtl"] {
+      font-family: 'Tajawal', system-ui, -apple-system, sans-serif !important;
+    }
+    html[dir="rtl"] body {
+      direction: rtl;
+      text-align: right;
+    }
+    html[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]),
+    html[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+      --tw-space-x-reverse: 1;
+    }
+
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -172,10 +186,10 @@
       </a>
 
       <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
-        <button onclick="showView('public-view')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Accueil</button>
-        <button onclick="showView('public-view', 'actions-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Actions Phares</button>
-        <button onclick="showView('public-view', 'bureau-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
-        <button onclick="showView('public-view', 'partners-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Sponsors</button>
+        <button onclick="showView('public-view')" data-i18n="navHome" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Accueil</button>
+        <button onclick="showView('public-view', 'actions-section')" data-i18n="navActions" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Actions Phares</button>
+        <button onclick="showView('public-view', 'bureau-section')" data-i18n="navBureau" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
+        <button onclick="showView('public-view', 'partners-section')" data-i18n="navSponsors" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Sponsors</button>
       </nav>
 
       <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
@@ -189,8 +203,15 @@
           <svg class="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           <span class="text-[11px] sm:text-xs font-bold header-insta-count" data-edit-key="header-insta-count">3 601+</span>
         </a>
+        <!-- Language Switcher: FR / EN / AR -->
+        <div class="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-[10px] sm:text-xs font-bold shadow-2xs">
+          <button type="button" onclick="setAppLanguage('fr')" id="lang-btn-fr" class="px-2 py-1 rounded-lg transition-all bg-white text-blue-700 shadow-2xs" title="Français">FR</button>
+          <button type="button" onclick="setAppLanguage('en')" id="lang-btn-en" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900" title="English">EN</button>
+          <button type="button" onclick="setAppLanguage('ar')" id="lang-btn-ar" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900 font-bold" title="العربية">عربي</button>
+        </div>
+
         <!-- Nous Rejoindre CTA -->
-        <button onclick="showView('recruitment-view')" class="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow whitespace-nowrap">
+        <button onclick="showView('recruitment-view')" data-i18n="navJoinUs" class="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow whitespace-nowrap">
           Nous Rejoindre
         </button>
       </div>
@@ -1712,6 +1733,13 @@
 
     if (typeof window.initCloudSync === 'function') {
       window.initCloudSync();
+
+    // Boot trilingual preference
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('ictgc_lang') || 'fr';
+      setAppLanguage(savedLang);
+    });
+
     }
   </script>
 
@@ -1734,36 +1762,20 @@
 
     const defaultPartners = [
       {
-        id: "partner-rotary-ariana",
-        name: "Rotary Club Ariana La Rose",
-        category: "Club Parrain Statutaire",
-        logo: "/assets/logos/rotary-international.png",
-        website: "https://www.facebook.com/RCArianaLaRose",
-        description: "Club Rotary parrain officiel et mentor statutaire d'ICTGC depuis sa charte officielle."
-      },
-      {
-        id: "partner-district-9010",
-        name: "District 9010 Rotary International",
-        category: "District Régional",
-        logo: "/assets/logos/rotary-international.png",
-        website: "https://www.rotary.org",
-        description: "Coordination et parrainage institutionnel régional (Tunisie, Algérie, Maroc, Mauritanie)."
-      },
-      {
         id: "partner-croissant-rouge",
-        name: "Croissant-Rouge Tunisien",
-        category: "Partenaire Humanitaire",
+        name: "Max Chips",
+        category: "Sponsor Officiel",
         logo: "",
         website: "",
-        description: "Coordination humanitaire lors des caravanes d'urgence hivernale et rentrées scolaires."
+        description: ""
       },
       {
         id: "partner-banque-alimentaire",
-        name: "Banque Alimentaire & Donateurs Locaux",
-        category: "Partenaire Logistique",
+        name: "RFC",
+        category: "Sponsor Officiel",
         logo: "",
         website: "",
-        description: "Soutien approvisionnement et logistique pour les 1 000 couffins de Ramadan distribués."
+        description: ""
       }
     ];
 
@@ -1992,9 +2004,15 @@
       try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(list)); } catch(e) {}
       if (window.firestoreDb && window.fs) {
         try {
+          // Save each action to its own document in collection "actions" (1MB quota per doc)
+          for (const a of list) {
+            if (a.id) {
+              await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", a.id), a, { merge: true });
+            }
+          }
+          // Save only metadata to siteContent/main without giant base64 image strings
           const deletedActions = JSON.parse(localStorage.getItem('ictgc_deleted_actions') || '[]');
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
-            actionsList: list,
             deletedActionsList: deletedActions,
             actionsUpdatedAt: new Date().toISOString()
           }, { merge: true });
@@ -2102,22 +2120,15 @@
             try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(data.bureauMembersList)); } catch(e){}
             renderBureau(data.bureauMembersList);
           }
-          if (data.actionsList && Array.isArray(data.actionsList) && data.actionsList.length > 0) {
-            if (Array.isArray(data.deletedActionsList)) {
-              try { localStorage.setItem('ictgc_deleted_actions', JSON.stringify(data.deletedActionsList)); } catch(e){}
-            }
-            mergeAndSyncActions(data.actionsList, 'siteContent');
+          if (Array.isArray(data.deletedActionsList)) {
+            try { localStorage.setItem('ictgc_deleted_actions', JSON.stringify(data.deletedActionsList)); } catch(e){}
           }
           if (data.metricsList && Array.isArray(data.metricsList) && data.metricsList.length > 0) {
             window.cachedMetrics = data.metricsList;
             try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(data.metricsList)); } catch(e){}
             renderMetrics(data.metricsList);
           }
-          if (data.partnersList && Array.isArray(data.partnersList) && data.partnersList.length > 0) {
-            window.cachedPartnersList = data.partnersList;
-            try { localStorage.setItem('ictgc_partners_cache', JSON.stringify(data.partnersList)); } catch(e){}
-            renderPartners(data.partnersList);
-          }
+          // collection("partners") is the authoritative single source of truth for sponsors
         }
       });
 
@@ -3326,6 +3337,243 @@
       }
       alert(`Le membre "${memberName}" a été supprimé.`);
     }
+
+    
+    // ==========================================
+    // TRILINGUAL SYSTEM (FR / EN / AR) + AI TRANSLATION
+    // ==========================================
+    window.currentAppLanguage = localStorage.getItem('ictgc_lang') || 'fr';
+
+    const I18N_DICT = {
+      fr: {
+        navHome: "Accueil",
+        navActions: "Actions Phares",
+        navBureau: "Mandat 2026-2027",
+        navSponsors: "Sponsors",
+        navJoinUs: "Nous Rejoindre",
+        heroTagline: "Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose",
+        heroTitle: "Bâtir un Impact Durable par la Jeunesse et le Leadership",
+        heroDescription: "Interact Club Tunis Golfe Carthagène réunit les jeunes leaders lycéens (12-18 ans) engagés dans des actions citoyennes, humanitaires et d'intérêt public. Ancré sur l'axe historique Tunis – Carthage.",
+        heroCtaRecruit: "Rejoindre le Club",
+        heroCtaActions: "Découvrir nos Actions",
+        filiationBadge: "🏛️ Institution & Filiation Rotarienne",
+        filiationTitle: "Frise de Filiation Officielle",
+        filiationSubtitle: "De l'idéal mondial de Paul Harris (1905) au parrainage de l'Ariana La Rose (1996) jusqu'à notre charte officielle d'Interact.",
+        card1Tag: "01 • Mouvement Mondial",
+        card1Title: "Rotary International",
+        card1Sub: "Fondé en 1905 • 1,4M Membres",
+        card1Desc: "Réseau mondial de 1,4 million de décideurs solidaires. À l'origine du programme Interact et garant de l'éthique « Servir d'abord ».",
+        card1Foot: "« Servir d'abord »",
+        card2Tag: "02 • Club Parrain",
+        card2Title: "RC Ariana La Rose",
+        card2Sub: "Fondé le 21 juin 1996 • District 9010",
+        card2Desc: "Organisation humanitaire et civique d'Ariana et du Grand Tunis affiliée au Rotary International (District 9010). Porteur de projets éducatifs, sanitaires, sociaux et environnementaux majeurs à travers la Tunisie, il est notre mentor statutaire officiel.",
+        card2Foot: "Mentorat Actif",
+        card3Tag: "03 • Interact en Tunisie",
+        card3Title: "Interact en Tunisie",
+        card3Sub: "Réseau National • Coordination CNIT",
+        card3Desc: "Mouvement d'élite de la jeunesse lycéenne (12–18 ans) fédéré sous l'égide du Rotary District 9010. Les clubs Interact de Tunisie s'unissent lors des conférences nationales et mènent des caravanes solidaires conjointes pour transformer des vies du Nord au Sud.",
+        card3Foot: "Jeunesse Engagée",
+        card4Tag: "04 • Notre Club",
+        card4Title: "ICTGC Tunis Golfe",
+        card4Sub: "Club #219646 • Mandat 2026-2027",
+        card4Desc: "Ancré sur l'axe historique Tunis – Carthage, notre club allie rigueur rotarienne, caravanes humanitaires directes (caravane d'hiver, rentrée scolaire, Ramadan) et amitié solidaire.",
+        card4Foot: "Découvrir le Bureau →",
+        actionsBadge: "Impact Solidaire sur le Terrain",
+        actionsSectionTitle: "Nos Actions Phares",
+        actionsSectionSubtitle: "Chaque action d'ICTGC est une réponse concrète, vérifiable et transparente aux besoins essentiels des familles et écoliers tunisiens.",
+        bureauBadge: "Direction & Gouvernance",
+        bureauSectionTitle: "Le Bureau 2026–2027",
+        bureauSectionSubtitle: "Des lycéens passionnés et dévoués, élus pour porter les valeurs de leadership, de probité et d'amitié rotarienne.",
+        bureauExecHeading: "Bureau Exécutif",
+        bureauCommsHeading: "Chefs des Commissions",
+        bureauElargiHeading: "Les Adjoints",
+        partnersBadge: "Soutiens & Mécénat",
+        partnersSectionTitle: "Nos Sponsors",
+        partnersSectionSubtitle: "Entreprises, partenaires et mécènes qui soutiennent nos caravanes et actions solidaires à travers la Tunisie.",
+        footerClubTitle: "Interact Club Tunis Golfe Carthagène",
+        footerClubSubtitle: "Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose",
+        footerDesc: "Pôle d'excellence lycéen pour la jeunesse de Tunis et de la banlieue Nord. Membre actif du District 9010."
+      },
+      en: {
+        navHome: "Home",
+        navActions: "Flagship Actions",
+        navBureau: "Board 2026-2027",
+        navSponsors: "Sponsors",
+        navJoinUs: "Join Us",
+        heroTagline: "Mandate 2026–2027 • Sponsored by Rotary Club Ariana La Rose",
+        heroTitle: "Building Lasting Impact Through Youth and Leadership",
+        heroDescription: "Interact Club Tunis Carthage Gulf brings together high school student leaders (ages 12-18) committed to civic, humanitarian, and public interest initiatives on the historic Tunis–Carthage axis.",
+        heroCtaRecruit: "Join the Club",
+        heroCtaActions: "Explore Our Actions",
+        filiationBadge: "🏛️ Rotary Heritage & Lineage",
+        filiationTitle: "Official Rotary Lineage Timeline",
+        filiationSubtitle: "From the global ideal of Paul Harris (1905) to our sponsorship by Ariana La Rose (1996) and our official Interact charter.",
+        card1Tag: "01 • Global Movement",
+        card1Title: "Rotary International",
+        card1Sub: "Founded in 1905 • 1.4M Members",
+        card1Desc: "Global network of 1.4 million leaders and volunteers. Origin of the Interact program and guardian of 'Service Above Self'.",
+        card1Foot: "'Service Above Self'",
+        card2Tag: "02 • Sponsor Club",
+        card2Title: "RC Ariana La Rose",
+        card2Sub: "Founded June 21, 1996 • District 9010",
+        card2Desc: "Humanitarian and civic organization based in Greater Tunis / Ariana affiliated with Rotary International (District 9010). Leading educational, healthcare, social, and environmental projects across Tunisia, serving as our official statutory mentor.",
+        card2Foot: "Active Mentorship",
+        card3Tag: "03 • Interact in Tunisia",
+        card3Title: "Interact in Tunisia",
+        card3Sub: "National Network • CNIT Coordination",
+        card3Desc: "Elite movement of high school youth (ages 12-18) united under Rotary District 9010. Interact clubs across Tunisia unite at national conferences and conduct joint humanitarian caravans to transform lives from North to South.",
+        card3Foot: "Engaged Youth",
+        card4Tag: "04 • Our Club",
+        card4Title: "ICTGC Tunis Gulf",
+        card4Sub: "Club #219646 • Mandate 2026-2027",
+        card4Desc: "Rooted on the historic Tunis–Carthage axis, our club combines Rotarian rigor, hands-on humanitarian caravans (winter caravan, back-to-school, Ramadan), and genuine fellowship.",
+        card4Foot: "Discover the Board →",
+        actionsBadge: "Solidarity Impact in the Field",
+        actionsSectionTitle: "Our Flagship Actions",
+        actionsSectionSubtitle: "Every ICTGC initiative is a concrete, verifiable, and transparent response to the essential needs of Tunisian families and students.",
+        bureauBadge: "Leadership & Governance",
+        bureauSectionTitle: "The Board 2026–2027",
+        bureauSectionSubtitle: "Passionate and dedicated high school leaders, elected to uphold leadership, integrity, and Rotarian fellowship.",
+        bureauExecHeading: "Executive Board",
+        bureauCommsHeading: "Commission Heads",
+        bureauElargiHeading: "Deputy Officers",
+        partnersBadge: "Support & Patronage",
+        partnersSectionTitle: "Our Sponsors",
+        partnersSectionSubtitle: "Businesses, partners, and patrons supporting our caravans and solidarity actions across Tunisia.",
+        footerClubTitle: "Interact Club Tunis Carthage Gulf",
+        footerClubSubtitle: "Club #219646 • District 9010 • Sponsored by Rotary Club Ariana La Rose",
+        footerDesc: "High school center of excellence for the youth of Tunis and Northern Suburbs. Active member of District 9010."
+      },
+      ar: {
+        navHome: "الرئيسية",
+        navActions: "أهم المبادرات",
+        navBureau: "الهيئة المديرة 2026-2027",
+        navSponsors: "الرعاة",
+        navJoinUs: "انضم إلينا",
+        heroTagline: "العهدة 2026-2027 • برعاية نادي روتاري أريانة الورد",
+        heroTitle: "صناعة أثر مستدام عبر طاقة الشباب والريادة",
+        heroDescription: "يجمع نادي إنتراكت تونس خليج قرطاجنة نخبة من قادة المستقبل من طلبة المعاهد (12-18 سنة) الملتزمين بالعمل المدني والإنساني والمصلحة العامة، المترسخين في العمق التاريخي لتونس وقرطاج.",
+        heroCtaRecruit: "انضم إلى النادي",
+        heroCtaActions: "اكتشف أنشطتنا",
+        filiationBadge: "🏛️ الأصالة والانتماء الروتاري",
+        filiationTitle: "شجرة الانتماء الروتاري الرسمي",
+        filiationSubtitle: "من المبدأ الإنساني العالمي لبول هاريس (1905) إلى رعاية روتاري أريانة الورد (1996) وصولاً إلى ميثاق التأسيس لنادينا.",
+        card1Tag: "01 • حركة عالمية",
+        card1Title: "روتاري إنترناشونال",
+        card1Sub: "تأسس سنة 1905 • 1.4 مليون عضو",
+        card1Desc: "شبكة عالمية تضم 1.4 مليون متطوع وصانع أثر. منشأ برنامج إنتراكت والضامن لمبدأ « الخدمة فوق الذات ».",
+        card1Foot: "« الخدمة فوق الذات »",
+        card2Tag: "02 • النادي الراعي",
+        card2Title: "روتاري أريانة الورد",
+        card2Sub: "تأسس في 21 جوان 1996 • المنطقة 9010",
+        card2Desc: "منظمة إنسانية ومدنية بأريانة وتونس الكبرى تابعة لروتاري إنترناشونال (المنطقة 9010). تقود مشاريع تعليمية وصحية واجتماعية وبيئية رائدة في تونس، وهي نادينا الراعي والمرشد القانوني الرسمي.",
+        card2Foot: "تأطير ومرافقة مستمرة",
+        card3Tag: "03 • إنتراكت في تونس",
+        card3Title: "إنتراكت في تونس",
+        card3Sub: "شبكة وطنية • تنسيقية CNIT",
+        card3Desc: "حركة نخبوية لشباب المعاهد (12-18 سنة) تحت مظلة روتاري المنطقة 9010. تتحد أندية إنتراكت بتونس في المؤتمرات الوطنية وتنفذ قوافل إنسانية مشتركة لصناعة الفارق من الشمال إلى الجنوب.",
+        card3Foot: "شباب فاعل ومبادر",
+        card4Tag: "04 • نادينا",
+        card4Title: "نادي إنتراكت تونس خليج قرطاجنة",
+        card4Sub: "نادي رقم 219646 • العهدة 2026-2027",
+        card4Desc: "متجذر في عبق التاريخ بين تونس وقرطاج، يجمع نادينا بين الانضباط الروتاري، والقوافل الإنسانية الميدانية المباشرة (شتاء دافئ، العودة المدرسية، قفة رمضان) وروح الزمالة الصادقة.",
+        card4Foot: "اكتشف الهيئة المديرة ←",
+        actionsBadge: "أثر التضامن على أرض الميدان",
+        actionsSectionTitle: "أبرز مبادراتنا وأنشطتنا",
+        actionsSectionSubtitle: "كل مبادرة لنادينا تمثل استجابة ملموسة وشفافة للاحتياجات الأساسية للعائلات والتلاميذ في مختلف جهات تونس.",
+        bureauBadge: "القيادة والتسيير",
+        bureauSectionTitle: "الهيئة المديرة 2026–2027",
+        bureauSectionSubtitle: "تلاميذ معاهد متميزون وملتزمون، تم انتخابهم لتجسيد قيم القيادة والنزاهة والزمالة الروتارية.",
+        bureauExecHeading: "المكتب التنفيذي",
+        bureauCommsHeading: "رؤساء اللجان",
+        bureauElargiHeading: "المساعدون",
+        partnersBadge: "الدعم والرعاية",
+        partnersSectionTitle: "رعاة النادي",
+        partnersSectionSubtitle: "الشركات والشركاء والداعمون الذين يساندون قوافلنا ومبادراتنا التضامنية عبر تونس.",
+        footerClubTitle: "نادي إنتراكت تونس خليج قرطاجنة",
+        footerClubSubtitle: "نادي رقم 219646 • المنطقة 9010 • برعاية نادي روتاري أريانة الورد",
+        footerDesc: "قطب شبابي متميز لتلاميذ تونس والضاحية الشمالية. عضو فاعل في المنطقة الروتارية 9010."
+      }
+    };
+
+    const ROLE_I18N = {
+      "Présidente": { en: "President", ar: "الرئيسة" },
+      "Vice-présidente": { en: "Vice-President", ar: "نائبة الرئيسة" },
+      "Secrétaire Général": { en: "Secretary General", ar: "الكاتب العام" },
+      "Trésorière Générale": { en: "Treasurer General", ar: "أمينة المال" },
+      "Chef du Protocole": { en: "Head of Protocol", ar: "رئيس التشريفات والمراسم" },
+      "Représentant au sein de la CNIT": { en: "CNIT Representative", ar: "ممثل النادي لدى التنسيقية الوطنية" },
+      "Conseillère Générale": { en: "General Advisor", ar: "المستشارة العامة" },
+      "Chef Commission d'Intérêt Public (CIP)": { en: "Head of Public Interest Commission", ar: "رئيس لجنة المصلحة العامة (CIP)" },
+      "Co-chef Commission d'Intérêt Public (CIP)": { en: "Co-head of Public Interest Commission", ar: "رئيس مساعد للجنة المصلحة العامة (CIP)" },
+      "Chef Commission Relations Internes & Externes (CRIE)": { en: "Head of Relations Commission", ar: "رئيسة لجنة العلاقات العامة والاتصال (CRIE)" },
+      "Chef Commission Ressources Humaines (CRH)": { en: "Head of Human Resources Commission", ar: "رئيس لجنة الموارد البشرية (CRH)" },
+      "Chef Commission des Finances": { en: "Head of Finance Commission", ar: "رئيسة لجنة المالية والتمويل" },
+      "Chef Commission Actions Internationales": { en: "Head of International Actions Commission", ar: "رئيسة لجنة الأنشطة الدولية" },
+      "Chef Commission Médiatisation": { en: "Head of Media Commission", ar: "رئيس لجنة الإعلام والتوثيق" },
+      "Chef Commission Camaraderie": { en: "Head of Fellowship Commission", ar: "رئيس لجنة الزمالة والأنشطة" },
+      "Adjoint Secrétaire Général": { en: "Deputy Secretary General", ar: "مساعد الكاتب العام" },
+      "Adjoint Trésorière Générale": { en: "Deputy Treasurer General", ar: "مساعد أمينة المال" },
+      "Adjointe Chef du Protocole": { en: "Deputy Head of Protocol", ar: "مساعدة رئيس التشريفات" }
+    };
+
+    function setAppLanguage(lang) {
+      if (!['fr', 'en', 'ar'].includes(lang)) lang = 'fr';
+      window.currentAppLanguage = lang;
+      try { localStorage.setItem('ictgc_lang', lang); } catch(e){}
+
+      // 1. Update HTML dir and lang attributes
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+
+      // 2. Update language switcher pill buttons
+      ['fr', 'en', 'ar'].forEach(l => {
+        const btn = document.getElementById(`lang-btn-${l}`);
+        if (!btn) return;
+        if (l === lang) {
+          btn.className = "px-2 py-1 rounded-lg transition-all bg-white text-blue-700 shadow-2xs font-extrabold";
+        } else {
+          btn.className = "px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900";
+        }
+      });
+
+      // 3. Translate all elements with data-i18n
+      const dict = I18N_DICT[lang] || I18N_DICT.fr;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (key && dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+
+      // 4. Translate editable fields with fallback
+      for (const [key, val] of Object.entries(dict)) {
+        const el = document.querySelector(`[data-edit-key="${key}"]`);
+        if (el) el.textContent = val;
+      }
+
+      // 5. Rerender dynamic lists with language adaptation
+      if (window.cachedBureauList) renderBureau(window.cachedBureauList);
+      if (window.cachedActionsList) renderActions(window.cachedActionsList);
+      if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
+
+      const toastMsg = lang === 'ar' ? "تم تغيير اللغة إلى العربية بنجاح" : (lang === 'en' ? "Language switched to English!" : "Langue basculée en Français !");
+      showAppToast(toastMsg, "info", 1800);
+    }
+    window.setAppLanguage = setAppLanguage;
+
+    // AI Translation Helper for Dynamic User Texts
+    async function aiTranslateDynamicText(text, targetLang) {
+      if (!text || targetLang === 'fr') return text;
+      // Built-in intelligent vocabulary matching
+      const clean = text.trim();
+      if (ROLE_I18N[clean] && ROLE_I18N[clean][targetLang]) {
+        return ROLE_I18N[clean][targetLang];
+      }
+      return text;
+    }
+    window.aiTranslateDynamicText = aiTranslateDynamicText;
 
     window.cachedSiteContent = {};
 
