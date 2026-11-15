@@ -12,7 +12,41 @@
       _w.apply(console, args);
     };
 
-    (function() {
+        function generateNameAvatar(name, role) {
+      var cleanName = (name || 'Membre').trim();
+      var parts = cleanName.split(/\s+/).filter(Boolean);
+      var initials = (parts.map(function(n){ return n.charAt(0); }).slice(0, 2).join('') || 'M').toUpperCase();
+      
+      var hash = 0;
+      for (var i = 0; i < cleanName.length; i++) hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
+      var palettes = [
+        ['#1e3a8a', '#2563eb'],
+        ['#0f766e', '#0d9488'],
+        ['#4338ca', '#6366f1'],
+        ['#831843', '#db2777'],
+        ['#1e293b', '#475569'],
+        ['#0369a1', '#0284c7']
+      ];
+      var p = palettes[Math.abs(hash) % palettes.length];
+      
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">' +
+        '<defs>' +
+          '<linearGradient id="grad-' + Math.abs(hash) + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+            '<stop offset="0%" stop-color="' + p[0] + '" />' +
+            '<stop offset="100%" stop-color="' + p[1] + '" />' +
+          '</linearGradient>' +
+        '</defs>' +
+        '<rect width="400" height="400" fill="url(#grad-' + Math.abs(hash) + ')" />' +
+        '<circle cx="200" cy="155" r="82" fill="rgba(255,255,255,0.18)" />' +
+        '<text x="200" y="185" font-family="Plus Jakarta Sans, sans-serif" font-size="76" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">' + initials + '</text>' +
+        '<text x="200" y="295" font-family="Inter, sans-serif" font-size="20" font-weight="800" fill="#ffffff" text-anchor="middle">' + cleanName + '</text>' +
+        (role ? '<text x="200" y="325" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.8)" text-anchor="middle">' + role + '</text>' : '') +
+      '</svg>';
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    window.generateNameAvatar = generateNameAvatar;
+
+(function() {
       try {
         var raw = localStorage.getItem('ictgc_site_content');
         if (raw) {
@@ -1430,11 +1464,22 @@
     window.generateNameAvatar = generateNameAvatar;
 
     function renderBureauCard(m, i, roleColorClass = 'text-blue-600') {
-      const memberName = m.fullName || m.full_name || 'Membre';
-      const defaultAvatar = generateNameAvatar(memberName, m.role || '');
-      const photo = (m.photo_url || m.photo || '').trim() || defaultAvatar;
-      const isCustomPhoto = Boolean((m.photo_url || m.photo || '').trim());
       const mId = m.id || i;
+      let memberName = m.fullName || m.full_name || 'Membre';
+      let memberRole = m.role || '';
+
+      if (window.cachedSiteContent) {
+        if (window.cachedSiteContent[`bureau-name-${mId}`]) {
+          memberName = window.cachedSiteContent[`bureau-name-${mId}`].trim() || memberName;
+        }
+        if (window.cachedSiteContent[`bureau-role-${mId}`]) {
+          memberRole = window.cachedSiteContent[`bureau-role-${mId}`].trim() || memberRole;
+        }
+      }
+
+      const isCustomPhoto = Boolean((m.photo_url || m.photo || '').trim());
+      const defaultAvatar = generateNameAvatar(memberName, memberRole);
+      const photo = isCustomPhoto ? (m.photo_url || m.photo).trim() : defaultAvatar;
       const safeName = memberName.replace(/'/g, "\\'");
       const tier = getMemberTier(m);
 
@@ -2063,6 +2108,19 @@
         if (!el._autoSaveBound) {
           el._autoSaveBound = true;
           el.addEventListener('blur', () => autoSaveSingleElement(el));
+          el.addEventListener('input', () => {
+            const k = el.getAttribute('data-edit-key');
+            if (k && k.startsWith('bureau-name-')) {
+              const memberId = k.replace('bureau-name-', '');
+              const imgEl = document.getElementById(`bureau-img-${memberId}`);
+              if (imgEl && imgEl.getAttribute('data-has-custom') !== 'true') {
+                const roleEl = document.querySelector(`[data-edit-key="bureau-role-${memberId}"]`);
+                const rText = roleEl ? roleEl.innerText.trim() : '';
+                imgEl.src = generateNameAvatar(el.innerText.trim(), rText);
+                imgEl.alt = el.innerText.trim();
+              }
+            }
+          });
           el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
