@@ -16,5 +16,8 @@
     "crm"
   ],
   "author": "Interact Club Tunis Golfe Carthagène",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^13.3.0"
+  }
 }

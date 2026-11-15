@@ -576,6 +576,30 @@
   </footer>
 
   <!-- ======================================================================== -->
+  <!-- FIREBASE CLOUD FIRESTORE v10 SDK -->
+  <!-- ======================================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYwIszncVzLT_VFPt965kpm5Pu32vPX-E",
+      authDomain: "ictgc-club.firebaseapp.com",
+      projectId: "ictgc-club",
+      storageBucket: "ictgc-club.firebasestorage.app",
+      messagingSenderId: "121934416271",
+      appId: "1:121934416271:web:a03c81920f31c3436b23fa",
+      measurementId: "G-B5CJH5LXDY"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.firestoreDb = db;
+    window.fs = { collection, addDoc, doc, updateDoc, onSnapshot, getDocs, setDoc };
+    console.log("Connected to online Firebase Cloud Firestore (ictgc-club)");
+  </script>
+
+  <!-- ======================================================================== -->
   <!-- CLIENT JAVASCRIPT APP LOGIC -->
   <!-- ======================================================================== -->
   <script>
@@ -886,6 +910,20 @@
       const form = e.target;
       const formData = new FormData(form);
       const payload = Object.fromEntries(formData.entries());
+
+      // Sync online directly to Cloud Firestore
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.addDoc(window.fs.collection(window.firestoreDb, "candidates"), {
+            ...payload,
+            status: "pending",
+            submittedAt: new Date().toISOString()
+          });
+          console.log("Candidate saved to online Cloud Firestore!");
+        } catch (fsErr) {
+          console.warn("Firestore direct write error:", fsErr);
+        }
+      }
 
       try {
         const res = await fetch('/api/candidates', {
