@@ -377,12 +377,12 @@
             </p>
           </div>
           <div id="admin-actions-controls" class="hidden">
-            <button onclick="openAddActionModal()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-all">
-              + Ajouter une Action
+            <button onclick="openAddActionModal()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+              <span>➕</span> Ajouter une Action
             </button>
           </div>
         </div>
-        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense"></div>
       </section>
 
       <section id="bureau-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1547,13 +1547,95 @@
     }
     window.syncFullBureauToCloud = syncFullBureauToCloud;
 
+    function mergeAndSyncActions(incomingList, source = 'generic') {
+      if (!incomingList || !Array.isArray(incomingList)) return window.cachedActionsList || defaultActions;
+
+      let deletedIds = new Set(JSON.parse(localStorage.getItem('ictgc_deleted_actions') || '[]'));
+      if (window.cachedSiteContent && Array.isArray(window.cachedSiteContent.deletedActionsList)) {
+        window.cachedSiteContent.deletedActionsList.forEach(id => deletedIds.add(id));
+      }
+
+      const currentList = window.cachedActionsList && window.cachedActionsList.length > 0
+        ? window.cachedActionsList
+        : [...defaultActions];
+
+      const actionMap = new Map();
+
+      // 1. Seed base default actions
+      defaultActions.forEach((act, idx) => {
+        const id = act.id || `action-default-${idx}`;
+        if (!deletedIds.has(id)) {
+          let imgs = act.images || [];
+          if (typeof imgs === 'string') imgs = [imgs];
+          else if (!Array.isArray(imgs)) imgs = [];
+          actionMap.set(id, { ...act, id, images: imgs.filter(Boolean) });
+        }
+      });
+
+      // 2. Overlay existing list (carries edits, albums, newly added items)
+      currentList.forEach((act, idx) => {
+        const id = act.id || act._id || `act-${idx}`;
+        if (!deletedIds.has(id)) {
+          const prev = actionMap.get(id) || {};
+          let imgs = act.images || prev.images || [];
+          if (typeof imgs === 'string') imgs = [imgs];
+          else if (!Array.isArray(imgs)) imgs = [];
+          actionMap.set(id, {
+            ...prev,
+            ...act,
+            id,
+            images: imgs.filter(Boolean)
+          });
+        }
+      });
+
+      // 3. Overlay incomingList (from cloud Firestore or form submission)
+      incomingList.forEach((act, idx) => {
+        const id = act.id || act._id || `act-incoming-${Date.now()}-${idx}`;
+        if (!deletedIds.has(id)) {
+          const prev = actionMap.get(id) || {};
+          let imgs = act.images || prev.images || [];
+          if (typeof imgs === 'string') imgs = [imgs];
+          else if (!Array.isArray(imgs)) imgs = [];
+          actionMap.set(id, {
+            ...prev,
+            ...act,
+            id,
+            images: imgs.filter(Boolean)
+          });
+        }
+      });
+
+      const merged = Array.from(actionMap.values());
+
+      // Deduplicate actions that might share the same normalized title under different IDs
+      const seenTitles = new Set();
+      const deduplicated = [];
+      for (const act of merged) {
+        const titleKey = (act.title || '').trim().toLowerCase();
+        if (titleKey && seenTitles.has(titleKey)) {
+          continue;
+        }
+        if (titleKey) seenTitles.add(titleKey);
+        deduplicated.push(act);
+      }
+
+      window.cachedActionsList = deduplicated;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(deduplicated)); } catch(e){}
+      renderActions(deduplicated);
+      return deduplicated;
+    }
+    window.mergeAndSyncActions = mergeAndSyncActions;
+
     async function syncFullActionsToCloud(list) {
       window.cachedActionsList = list;
       try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(list)); } catch(e) {}
       if (window.firestoreDb && window.fs) {
         try {
+          const deletedActions = JSON.parse(localStorage.getItem('ictgc_deleted_actions') || '[]');
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
             actionsList: list,
+            deletedActionsList: deletedActions,
             actionsUpdatedAt: new Date().toISOString()
           }, { merge: true });
         } catch(err) {
@@ -1603,7 +1685,7 @@
           if (Array.isArray(parsed) && parsed.length > 0) initialActions = parsed;
         }
       } catch(e) {}
-      renderActions(initialActions);
+      mergeAndSyncActions(initialActions, 'init');
 
       let initialBureau = defaultBureau;
       try {
@@ -1645,9 +1727,10 @@
             renderBureau(data.bureauMembersList);
           }
           if (data.actionsList && Array.isArray(data.actionsList) && data.actionsList.length > 0) {
-            window.cachedActionsList = data.actionsList;
-            try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(data.actionsList)); } catch(e){}
-            renderActions(data.actionsList);
+            if (Array.isArray(data.deletedActionsList)) {
+              try { localStorage.setItem('ictgc_deleted_actions', JSON.stringify(data.deletedActionsList)); } catch(e){}
+            }
+            mergeAndSyncActions(data.actionsList, 'siteContent');
           }
           if (data.metricsList && Array.isArray(data.metricsList) && data.metricsList.length > 0) {
             window.cachedMetrics = data.metricsList;
@@ -1672,8 +1755,7 @@
         if (!snap.empty) {
           const items = [];
           snap.forEach(d => items.push({ id: d.id, ...d.data() }));
-          try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(items)); } catch(e){}
-          renderActions(items);
+          mergeAndSyncActions(items, 'firestore-collection');
         }
       });
 
@@ -1754,15 +1836,38 @@
     }
 
     function renderActions(data) {
+      if (!Array.isArray(data)) return;
       window.cachedActionsList = data;
       try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(data)); } catch(e){}
       const bento = document.getElementById('actions-bento');
       if (!bento) return;
+
+      if (data.length === 0) {
+        bento.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400 bg-white rounded-3xl border border-dashed border-slate-200">
+            <span class="text-3xl mb-2 block">🤝</span>
+            <p class="text-sm font-bold text-slate-700">Aucune action affichée pour le moment.</p>
+            ${isAdminLoggedIn ? `
+              <button onclick="openAddActionModal()" class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs">
+                + Ajouter la première action
+              </button>
+            ` : ''}
+          </div>
+        `;
+        return;
+      }
+
       bento.innerHTML = data.map((a, i) => {
-        const isLarge = i === 0 || i === 1;
-        const images = (a.images || []).filter(img => img && img.trim().length > 0);
+        const isLarge = (i === 0);
+        let rawImages = a.images;
+        if (typeof rawImages === 'string') rawImages = [rawImages];
+        else if (!Array.isArray(rawImages)) rawImages = [];
+        const images = rawImages.filter(img => typeof img === 'string' && img.trim().length > 0);
         const actionId = a.id || `action-${i}`;
-        const safeTitle = (a.title || '').replace(/'/g, "\\'");
+        const category = (a.category || 'Action Solidaire').trim();
+        const location = (a.location || 'Tunisie').trim();
+        const title = (a.title || 'Action Phare').trim();
+        const description = (a.description || 'Action solidaire menée par les membres de l\'Interact Club Tunis Golfe Carthagène.').trim();
 
         // Render Album Preview depending on photo count
         let albumPreviewHtml = '';
@@ -1774,12 +1879,17 @@
                 <span>Ajouter des photos à cet album (import en masse supporté)</span>
               </button>
             </div>
-          ` : '';
+          ` : `
+            <div class="mb-4 py-5 px-4 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-100 flex items-center justify-center gap-2 text-slate-400">
+              <span class="text-base">🤝</span>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Action Solidaire ICTGC</span>
+            </div>
+          `;
         } else if (images.length === 1) {
           albumPreviewHtml = `
             <div class="mb-4">
               <div class="relative rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 cursor-pointer group shadow-2xs h-48 sm:h-56" onclick="openActionAlbumLightbox('${actionId}', 0)">
-                <img src="${images[0]}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src="${images[0]}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
                   <span class="text-white text-xs font-bold flex items-center gap-1.5"><span>🔍</span> Agrandir la photo</span>
                   <span class="text-[10px] bg-white/20 backdrop-blur-xs text-white px-2.5 py-0.5 rounded-full font-bold">1 photo</span>
@@ -1793,7 +1903,7 @@
               <div class="grid grid-cols-2 gap-2.5">
                 ${images.map((img, idx) => `
                   <div class="h-36 sm:h-44 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 relative group cursor-pointer shadow-2xs" onclick="openActionAlbumLightbox('${actionId}', ${idx})">
-                    <img src="${img}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <img src="${img}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <span class="text-white text-xs font-bold bg-slate-900/80 px-2.5 py-1 rounded-lg">🔍 Agrandir</span>
                     </div>
@@ -1808,7 +1918,7 @@
               <div class="grid grid-cols-3 gap-2">
                 ${images.map((img, idx) => `
                   <div class="h-28 sm:h-36 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 relative group cursor-pointer shadow-2xs" onclick="openActionAlbumLightbox('${actionId}', ${idx})">
-                    <img src="${img}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <img src="${img}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <span class="text-white text-xs font-bold">🔍</span>
                     </div>
@@ -1826,7 +1936,7 @@
                   const isLastSlot = (idx === 3 && images.length > 4);
                   return `
                     <div class="h-24 sm:h-28 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 relative group cursor-pointer shadow-2xs" onclick="openActionAlbumLightbox('${actionId}', ${idx})">
-                      <img src="${img}" alt="${a.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img src="${img}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                       ${isLastSlot ? `
                         <div class="absolute inset-0 bg-slate-950/80 hover:bg-slate-950/90 transition-colors flex flex-col items-center justify-center text-white p-1">
                           <span class="text-base sm:text-lg font-black tracking-tight leading-none">+${remaining}</span>
@@ -1846,14 +1956,14 @@
         }
 
         return `
-          <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-5 sm:p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between h-full">
+          <div data-action-id="${actionId}" class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-5 sm:p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
                 <span data-edit-key="action-cat-${actionId}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
-                  ${a.category}
+                  ${category}
                 </span>
                 <div class="flex items-center gap-2">
-                  <span data-edit-key="action-loc-${actionId}" class="editable-field text-xs text-slate-400 font-semibold">${a.location}</span>
+                  <span data-edit-key="action-loc-${actionId}" class="editable-field text-xs text-slate-400 font-semibold">${location}</span>
                   ${isAdminLoggedIn ? `
                     <button onclick="deleteActionDoc('${actionId}')" class="text-slate-400 hover:text-rose-600 transition-colors p-1" title="Supprimer l'action">
                       🗑️
@@ -1862,8 +1972,8 @@
                 </div>
               </div>
 
-              <h3 data-edit-key="action-title-${actionId}" class="editable-field text-lg font-black text-slate-900 mb-2 leading-snug">${a.title}</h3>
-              <p data-edit-key="action-desc-${actionId}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
+              <h3 data-edit-key="action-title-${actionId}" class="editable-field text-lg font-black text-slate-900 mb-2 leading-snug">${title}</h3>
+              <p data-edit-key="action-desc-${actionId}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${description}</p>
               
               <!-- Album Preview -->
               ${albumPreviewHtml}
@@ -3211,43 +3321,55 @@
       const images = [...bulkList, ...legacyImages];
 
       const newAction = {
-        title: formData.get('action_title'),
-        category: formData.get('action_category'),
-        location: formData.get('action_location'),
+        id: `act-${Date.now()}`,
+        title: (formData.get('action_title') || '').trim(),
+        category: (formData.get('action_category') || 'Action Solidaire').trim(),
+        location: (formData.get('action_location') || 'Tunisie').trim(),
         beneficiaries_count: parseInt(formData.get('action_beneficiaries'), 10) || 0,
-        beneficiary_unit: formData.get('action_unit') || '',
-        description: formData.get('action_description'),
+        beneficiary_unit: (formData.get('action_unit') || '').trim(),
+        description: (formData.get('action_description') || '').trim(),
         images: images,
         collaborating_clubs: [],
         status: "Completed",
         createdAt: new Date().toISOString()
       };
 
+      if (!newAction.title) {
+        showAppToast("Veuillez renseigner un titre pour l'action.", "error");
+        return;
+      }
+
       if (window.firestoreDb && window.fs) {
         try {
           const docRef = await window.fs.addDoc(window.fs.collection(window.firestoreDb, "actions"), newAction);
-          newAction.id = docRef.id;
-          const currentList = window.cachedActionsList || [...defaultActions];
-          currentList.unshift(newAction);
-          renderActions(currentList);
-          syncFullActionsToCloud(currentList);
-          showAppToast("Action publiée et synchronisée sur Cloud Firestore !", "success");
-          closeAddActionModal();
-          form.reset();
-          return;
+          if (docRef && docRef.id) newAction.id = docRef.id;
         } catch (err) {
           console.warn("Firestore save action error:", err);
         }
       }
 
-      const currentList = window.cachedActionsList || defaultActions;
-      newAction.id = `act-${Date.now()}`;
+      // Prepend to current list and merge safely
+      const currentList = window.cachedActionsList || [...defaultActions];
       currentList.unshift(newAction);
-      renderActions(currentList);
-      syncFullActionsToCloud(currentList);
+      const updated = mergeAndSyncActions(currentList, 'user-create');
+      syncFullActionsToCloud(updated || currentList);
+
       closeAddActionModal();
       form.reset();
-      showAppToast("Action ajoutée et publiée avec succès !", "success");
+      showAppToast("Action publiée et synchronisée avec succès !", "success");
+
+      // Switch to public view and scroll directly to the newly added action so it is never missed
+      showView('public-view', 'actions-section');
+      setTimeout(() => {
+        const newCard = document.querySelector(`[data-action-id="${newAction.id}"]`);
+        if (newCard) {
+          newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          newCard.classList.add('ring-4', 'ring-emerald-400', 'shadow-2xl', 'scale-[1.02]');
+          setTimeout(() => {
+            newCard.classList.remove('ring-4', 'ring-emerald-400', 'shadow-2xl', 'scale-[1.02]');
+          }, 3000);
+        }
+      }, 400);
     }
 
     async function handleRecruitmentSubmit(e) {
@@ -3599,15 +3721,25 @@
 
     async function deleteActionDoc(actionId) {
       if (!confirm("Êtes-vous sûr de vouloir supprimer définitivement cette action phare ?")) return;
-      if (window.firestoreDb && window.fs && actionId && !actionId.startsWith('action-')) {
+
+      const deletedActions = JSON.parse(localStorage.getItem('ictgc_deleted_actions') || '[]');
+      if (!deletedActions.includes(actionId)) {
+        deletedActions.push(actionId);
+        try { localStorage.setItem('ictgc_deleted_actions', JSON.stringify(deletedActions)); } catch(e){}
+      }
+
+      if (window.firestoreDb && window.fs && actionId && !actionId.startsWith('action-') && !actionId.startsWith('act-')) {
         try {
           await window.fs.deleteDoc(window.fs.doc(window.firestoreDb, "actions", actionId));
         } catch (err) {
           console.warn("Firestore delete action error:", err);
         }
       }
+
       const currentList = window.cachedActionsList || defaultActions;
       const filtered = currentList.filter(a => (a.id || '') !== actionId);
+      window.cachedActionsList = filtered;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(filtered)); } catch(e){}
       renderActions(filtered);
       syncFullActionsToCloud(filtered);
       showAppToast("Action supprimée définitivement.", "info");
