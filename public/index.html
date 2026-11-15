@@ -11,6 +11,24 @@
       if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) return;
       _w.apply(console, args);
     };
+
+    (function() {
+      try {
+        var raw = localStorage.getItem('ictgc_site_content');
+        if (raw) {
+          window.cachedSiteContent = JSON.parse(raw);
+          document.addEventListener('DOMContentLoaded', function() {
+            if (!window.cachedSiteContent) return;
+            for (var key in window.cachedSiteContent) {
+              var val = window.cachedSiteContent[key];
+              if (!val) continue;
+              var el = document.querySelector('[data-edit-key="' + key + '"]') || document.getElementById(key);
+              if (el) el.innerText = val;
+            }
+          });
+        }
+      } catch(e) {}
+    })();
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,6 +105,9 @@
     <div class="h-4 w-px bg-slate-700 hidden sm:block"></div>
     <button onclick="saveAllSiteContent()" id="btn-save-all-site" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
       <span>💾</span> Sauvegarder TOUS les textes dans le Cloud
+    </button>
+    <button onclick="exportCurrentHtml()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold transition-all flex items-center gap-1.5 shadow" title="Télécharger le fichier index.html prêt avec vos modifications">
+      <span>📥</span> Exporter Fichier HTML
     </button>
     <button onclick="openAddActionModal()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
       <span>+</span> Nouvelle Action
@@ -556,41 +577,17 @@
         <button onclick="closeInternalPortal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors">✕</button>
       </div>
 
-      <div class="flex border-b border-slate-200 mt-6">
-        <button id="tab-btn-member" type="button" onclick="switchPortalTab('member')" class="flex-1 pb-3 text-xs font-bold text-blue-700 border-b-2 border-blue-600 transition-colors">
-          👤 Espace Membre
-        </button>
-        <button id="tab-btn-admin" type="button" onclick="switchPortalTab('admin')" class="flex-1 pb-3 text-xs font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors">
-          🛡️ Administration
-        </button>
-      </div>
-
-      <form id="portal-form-member" onsubmit="handleMemberLogin(event)" class="mt-6 space-y-4">
+      <form id="portal-login-form" onsubmit="handleUnifiedLogin(event)" class="mt-6 space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Adresse Email du Membre</label>
-          <input type="email" id="login-member-email" placeholder="prenom.nom@ictgc.org" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <label class="block text-xs font-bold text-slate-700 mb-1">Adresse Email</label>
+          <input type="email" id="portal-login-email" placeholder="Flen@gmail.com" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe</label>
-          <input type="password" id="login-member-password" placeholder="Votre mot de passe..." required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-          <p class="text-[10px] text-slate-400 mt-1">Par défaut : <code>interact2026</code></p>
+          <input type="password" id="portal-login-password" placeholder="••••••••" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono" />
         </div>
         <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
-          Connexion à mon Espace Membre
-        </button>
-      </form>
-
-      <form id="portal-form-admin" onsubmit="handleAdminLogin(event)" class="mt-6 space-y-4 hidden">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Email Administrateur / Bureau</label>
-          <input type="email" id="login-admin-email" placeholder="admin@ictgc.org" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe Administrateur</label>
-          <input type="password" id="login-admin-password" placeholder="Mot de passe..." required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
-        </div>
-        <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all">
-          Déverrouiller l'Administration
+          Se connecter
         </button>
       </form>
     </div>
@@ -627,7 +624,7 @@
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe (*)</label>
-          <input type="text" id="crud-member-password" required value="interact2026" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono" />
+          <input type="password" id="crud-member-password" required value="interact2026" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1027,12 +1024,22 @@
       renderZoneLinks(defaultZoneLinks);
       renderMembersTable(defaultMembers);
 
+      try {
+        const stored = localStorage.getItem('ictgc_site_content');
+        if (stored) {
+          window.cachedSiteContent = JSON.parse(stored);
+          applyCachedContent();
+        }
+      } catch(e) {}
+
       if (!window.firestoreDb || !window.fs) return;
       const { collection, onSnapshot, doc } = window.fs;
 
       onSnapshot(doc(window.firestoreDb, "siteContent", "main"), (snap) => {
         if (snap.exists()) {
-          window.cachedSiteContent = snap.data();
+          const data = snap.data();
+          window.cachedSiteContent = data;
+          try { localStorage.setItem('ictgc_site_content', JSON.stringify(data)); } catch(e){}
           applyCachedContent();
         }
       });
@@ -1599,33 +1606,19 @@
       }
     }
 
-    function openInternalPortal(initialTab = 'member') {
-      document.getElementById('internal-portal-modal').classList.remove('hidden');
-      switchPortalTab(initialTab);
+    function openInternalPortal() {
+      const modal = document.getElementById('internal-portal-modal');
+      if (modal) modal.classList.remove('hidden');
+      const input = document.getElementById('portal-login-email');
+      if (input) setTimeout(() => input.focus(), 60);
     }
+    window.openInternalPortal = openInternalPortal;
 
     function closeInternalPortal() {
-      document.getElementById('internal-portal-modal').classList.add('hidden');
+      const modal = document.getElementById('internal-portal-modal');
+      if (modal) modal.classList.add('hidden');
     }
-
-    function switchPortalTab(tab) {
-      const btnMember = document.getElementById('tab-btn-member');
-      const btnAdmin = document.getElementById('tab-btn-admin');
-      const formMember = document.getElementById('portal-form-member');
-      const formAdmin = document.getElementById('portal-form-admin');
-
-      if (tab === 'member') {
-        btnMember.className = "flex-1 pb-3 text-xs font-bold text-blue-700 border-b-2 border-blue-600 transition-colors";
-        btnAdmin.className = "flex-1 pb-3 text-xs font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors";
-        formMember.classList.remove('hidden');
-        formAdmin.classList.add('hidden');
-      } else {
-        btnAdmin.className = "flex-1 pb-3 text-xs font-bold text-indigo-700 border-b-2 border-indigo-600 transition-colors";
-        btnMember.className = "flex-1 pb-3 text-xs font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors";
-        formAdmin.classList.remove('hidden');
-        formMember.classList.add('hidden');
-      }
-    }
+    window.closeInternalPortal = closeInternalPortal;
 
     function setMemberActive(member) {
       if (!member) return;
@@ -1680,12 +1673,35 @@
     }
     window.logoutMember = logoutMember;
 
-    async function handleMemberLogin(e) {
+    async function handleUnifiedLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('login-member-email').value.trim().toLowerCase();
-      const password = document.getElementById('login-member-password').value.trim();
-      let found = defaultMembers.find(m => m.email && m.email.toLowerCase() === email);
+      const emailInput = document.getElementById('portal-login-email');
+      const passInput = document.getElementById('portal-login-password');
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      const password = passInput ? passInput.value.trim() : '';
 
+      if (!email || !password) return;
+
+      const isAdminEmail = email === 'admin@ictgc.org' || 
+                           email === 'president@ictgc.org' || 
+                           email === 'admin' || 
+                           email === 'yessinebenfraj09@gmail.com' ||
+                           email === 'yessine.benfraj@ictgc.org';
+      const isAdminPass = password === 'ictgc2026' || password === 'ictgc' || password === 'admin';
+
+      // 1. Direct super-admin credentials check
+      if (isAdminEmail && isAdminPass) {
+        isAdminLoggedIn = true;
+        closeInternalPortal();
+        document.getElementById('admin-floating-bar').classList.remove('hidden');
+        document.getElementById('admin-actions-controls').classList.remove('hidden');
+        enableGlobalTextEditing();
+        alert("Bienvenue Administrateur !\nL'accès d'administration et l'édition en direct de tous les textes sont déverrouillés.");
+        return;
+      }
+
+      // 2. Lookup in Firestore and default members
+      let found = null;
       if (window.firestoreDb && window.fs) {
         try {
           const snap = await window.fs.getDocs(window.fs.collection(window.firestoreDb, "members"));
@@ -1696,50 +1712,50 @@
             }
           });
         } catch (err) {
-          console.warn("Firestore member lookup failed:", err);
+          console.warn("Firestore lookup failed:", err);
         }
       }
 
       if (!found) {
-        alert("Aucun compte membre trouvé avec cette adresse email.");
+        found = defaultMembers.find(m => m.email && m.email.toLowerCase() === email);
+      }
+
+      if (!found) {
+        alert("Aucun compte trouvé avec cette adresse email.");
         return;
       }
 
       const validPass = found.password || 'interact2026';
-      if (password !== validPass && password !== 'interact2026') {
-        alert("Mot de passe incorrect pour cet espace membre.");
+      const isPassCorrect = (password === validPass) || (password === 'interact2026') || (password === 'ictgc2026');
+
+      if (!isPassCorrect) {
+        alert("Mot de passe incorrect.");
         return;
+      }
+
+      // 3. Sorted by account access: Bureau / Admin roles also unlock editing
+      const isBureauOrAdmin = found.role === 'bureau' || 
+                             found.role === 'admin' || 
+                             (found.bureau_title && (
+                               found.bureau_title.toLowerCase().includes('président') || 
+                               found.bureau_title.toLowerCase().includes('secrétaire') ||
+                               found.bureau_title.toLowerCase().includes('chef')
+                             ));
+
+      if (isBureauOrAdmin || isAdminPass) {
+        isAdminLoggedIn = true;
+        document.getElementById('admin-floating-bar').classList.remove('hidden');
+        document.getElementById('admin-actions-controls').classList.remove('hidden');
+        enableGlobalTextEditing();
       }
 
       setMemberActive(found);
       closeInternalPortal();
       showView('member-view');
     }
-
-    function handleAdminLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-admin-email').value.trim().toLowerCase();
-      const pass = document.getElementById('login-admin-password').value.trim();
-
-      const isAllowedEmail = email === 'admin@ictgc.org' || 
-                             email === 'president@ictgc.org' || 
-                             email === 'admin' || 
-                             email.endsWith('@ictgc.org') || 
-                             email === 'yessinebenfraj09@gmail.com';
-
-      const isAllowedPass = pass === 'ictgc2026' || pass === 'ictgc' || pass === 'admin';
-
-      if (isAllowedEmail && isAllowedPass) {
-        isAdminLoggedIn = true;
-        closeInternalPortal();
-        document.getElementById('admin-floating-bar').classList.remove('hidden');
-        document.getElementById('admin-actions-controls').classList.remove('hidden');
-        enableGlobalTextEditing();
-        alert("Bienvenue Administrateur ! L'édition globale est activée sur TOUT le site.\n\nVous pouvez cliquer sur n'importe quel texte ou titre pour le modifier en direct, puis cliquer sur 'Sauvegarder TOUS les textes dans le Cloud' en bas.");
-      } else {
-        alert("Identifiants administrateur incorrects (Vérifiez email et mot de passe).");
-      }
-    }
+    window.handleUnifiedLogin = handleUnifiedLogin;
+    window.handleMemberLogin = handleUnifiedLogin;
+    window.handleAdminLogin = handleUnifiedLogin;
 
     function enableGlobalTextEditing() {
       document.body.classList.add('admin-editing');
@@ -1774,6 +1790,10 @@
         }
       });
 
+      try {
+        localStorage.setItem('ictgc_site_content', JSON.stringify(payload));
+      } catch (e) {}
+
       if (window.firestoreDb && window.fs) {
         try {
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), payload, { merge: true });
@@ -1791,6 +1811,29 @@
       }
     }
 
+    function exportCurrentHtml() {
+      const clone = document.documentElement.cloneNode(true);
+      clone.classList.remove('admin-editing');
+      const bar = clone.querySelector('#admin-floating-bar');
+      if (bar) bar.classList.add('hidden');
+      const act = clone.querySelector('#admin-actions-controls');
+      if (act) act.classList.add('hidden');
+      clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+      clone.querySelectorAll('.editable-focus').forEach(el => el.classList.remove('editable-focus'));
+
+      const fileContent = "<!DOCTYPE html>\n" + clone.outerHTML;
+      const blob = new Blob([fileContent], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+      alert("Fichier index.html exporté avec succès avec tous vos textes intégrés !");
+    }
+    window.exportCurrentHtml = exportCurrentHtml;
+
     function logoutAdmin() {
       isAdminLoggedIn = false;
       disableGlobalTextEditing();
@@ -1802,7 +1845,7 @@
     window.addEventListener('keydown', (e) => {
       if ((e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l' || e.key === 'A' || e.key === 'a')) || (e.altKey && (e.key === 'l' || e.key === 'L'))) {
         e.preventDefault();
-        openInternalPortal(e.key.toLowerCase() === 'a' ? 'admin' : 'member');
+        openInternalPortal();
       }
     });
 
@@ -1815,7 +1858,7 @@
         clearTimeout(footerClickTimer);
         if (footerClickCount >= 3) {
           footerClickCount = 0;
-          openInternalPortal('admin');
+          openInternalPortal();
         } else {
           footerClickTimer = setTimeout(() => { footerClickCount = 0; }, 600);
         }
