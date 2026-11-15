@@ -938,6 +938,26 @@
           </select>
         </div>
 
+        <div class="bg-rose-50/60 p-3 rounded-2xl border border-rose-100">
+          <label class="block text-xs font-bold text-rose-900 mb-1 flex items-center justify-between">
+            <span>Commission Associée (Pour Binôme / Duo de Co-responsables)</span>
+            <span class="text-[10px] text-rose-600 font-semibold">Optionnel</span>
+          </label>
+          <input type="text" name="commission_name" list="commissions-datalist" placeholder="Ex: Commission d'Intérêt Public (CIP)" class="w-full px-3 py-2 border border-rose-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none bg-white" />
+          <datalist id="commissions-datalist">
+            <option value="Commission d'Intérêt Public (CIP)">
+            <option value="Commission Relations Internes & Externes (CRIE)">
+            <option value="Commission Ressources Humaines (CRH)">
+            <option value="Commission des Finances">
+            <option value="Commission Actions Internationales">
+            <option value="Commission Médiatisation">
+            <option value="Commission Camaraderie">
+          </datalist>
+          <p class="text-[10px] text-slate-500 mt-1.5 flex items-center gap-1">
+            <span>🤝</span> Les personnes partageant la même commission sont automatiquement regroupées sous une carte conjointe (Binôme).
+          </p>
+        </div>
+
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Photo Officielle (Optionnelle)</label>
           
@@ -1198,12 +1218,13 @@
       { id: "bm-7", fullName: "Yasmine Chaabani", role: "Conseillère Générale", tier: "executif", photo_url: "", bio: "Apporte conseils méthodologiques et orientation stratégique au Bureau Exécutif." },
       
       // Chefs des Commissions
-      { id: "bm-chef-1", fullName: "Omar Jerbi", role: "Chef Commission d'Intérêt Public (CIP)", tier: "commission", photo_url: "", bio: "Pilote les caravanes humanitaires, les distributions de dons et les actions d'impact solidaire." },
-      { id: "bm-chef-2", fullName: "Selima Ben Salem", role: "Chef Commission Relations Internes & Externes (CRIE)", tier: "commission", photo_url: "", bio: "Développe les partenariats interclubs et coordonne les relations publiques et institutionnelles." },
-      { id: "bm-chef-3", fullName: "Rayen Dridi", role: "Chef Commission Ressources Humaines (CRH)", tier: "commission", photo_url: "", bio: "Gère l'intégration, la cohésion d'équipe, le suivi de présence et le bien-être des membres." },
-      { id: "bm-chef-4", fullName: "Zeineb Khelil", role: "Chef Commission des Finances", tier: "commission", photo_url: "", bio: "Coordonne les collectes de fonds, les ventes de pâtisseries et le sponsoring d'actions." },
-      { id: "bm-chef-5", fullName: "Kenza Trabelsi", role: "Chef Commission Actions Internationales", tier: "commission", photo_url: "", bio: "Supervise les échanges interculturels et les projets conjoints avec les clubs étrangers." },
-      { id: "bm-chef-6", fullName: "Mehdi Ghorbel", role: "Chef Commission Médiatisation", tier: "commission", photo_url: "", bio: "Assure la couverture photo/vidéo des actions et la gestion du feed Instagram." },
+      { id: "bm-chef-1", fullName: "Omar Jerbi", role: "Chef Commission d'Intérêt Public (CIP)", tier: "commission", commission_name: "Commission d'Intérêt Public (CIP)", photo_url: "", bio: "Pilote les caravanes humanitaires, les distributions de dons et les actions d'impact solidaire." },
+      { id: "bm-chef-1b", fullName: "Aziz Belhadj", role: "Co-chef Commission d'Intérêt Public (CIP)", tier: "commission", commission_name: "Commission d'Intérêt Public (CIP)", photo_url: "", bio: "Co-pilote les actions humanitaires et les collectes solidaires." },
+      { id: "bm-chef-2", fullName: "Selima Ben Salem", role: "Chef Commission Relations Internes & Externes (CRIE)", tier: "commission", commission_name: "Commission Relations Internes & Externes (CRIE)", photo_url: "", bio: "Développe les partenariats interclubs et coordonne les relations publiques et institutionnelles." },
+      { id: "bm-chef-3", fullName: "Rayen Dridi", role: "Chef Commission Ressources Humaines (CRH)", tier: "commission", commission_name: "Commission Ressources Humaines (CRH)", photo_url: "", bio: "Gère l'intégration, la cohésion d'équipe, le suivi de présence et le bien-être des membres." },
+      { id: "bm-chef-4", fullName: "Zeineb Khelil", role: "Chef Commission des Finances", tier: "commission", commission_name: "Commission des Finances", photo_url: "", bio: "Coordonne les collectes de fonds, les ventes de pâtisseries et le sponsoring d'actions." },
+      { id: "bm-chef-5", fullName: "Kenza Trabelsi", role: "Chef Commission Actions Internationales", tier: "commission", commission_name: "Commission Actions Internationales", photo_url: "", bio: "Supervise les échanges interculturels et les projets conjoints avec les clubs étrangers." },
+      { id: "bm-chef-6", fullName: "Mehdi Ghorbel", role: "Chef Commission Médiatisation", tier: "commission", commission_name: "Commission Médiatisation", photo_url: "", bio: "Assure la couverture photo/vidéo des actions et la gestion du feed Instagram." },
 
       // Les Adjoints
       { id: "bm-8", fullName: "Youssef Neffati", role: "Adjoint Secrétaire Général", tier: "elargi", photo_url: "", bio: "Assiste le Secrétariat Général dans la gestion administrative et l'archivage numérique." },
@@ -1561,6 +1582,143 @@
       return 'executif';
     }
 
+    function normalizeCommissionKey(member) {
+      if (member.commission_name && member.commission_name.trim()) {
+        return member.commission_name.trim();
+      }
+      const r = (member.role || '').trim();
+      if (!r) return 'Commission Générale';
+      
+      let norm = r.replace(/^(co-?chef(fe)?|chef(fe)?|co-?responsable|responsable|vice-?responsable|coordinateur|coordinatrice)\s*(de\s*la|du|des|d'|d’)?\s*/i, '').trim();
+      if (!norm) return r;
+      
+      const lower = norm.toLowerCase();
+      if (lower.includes("intérêt public") || lower.includes("interet public") || lower.includes("cip")) {
+        return "Commission d'Intérêt Public (CIP)";
+      }
+      if (lower.includes("relations internes") || lower.includes("crie")) {
+        return "Commission Relations Internes & Externes (CRIE)";
+      }
+      if (lower.includes("ressources humaines") || lower.includes("crh")) {
+        return "Commission Ressources Humaines (CRH)";
+      }
+      if (lower.includes("finance")) {
+        return "Commission des Finances";
+      }
+      if (lower.includes("international")) {
+        return "Commission Actions Internationales";
+      }
+      if (lower.includes("médias") || lower.includes("mediatisation") || lower.includes("médiatisation") || lower.includes("communication")) {
+        return "Commission Médiatisation";
+      }
+      if (lower.includes("camaraderie")) {
+        return "Commission Camaraderie";
+      }
+      
+      return norm;
+    }
+    window.normalizeCommissionKey = normalizeCommissionKey;
+
+    function renderCommissionDuoCard(group, grpIdx) {
+      const membersHtml = group.members.map((m, idx) => {
+        const mId = m.id || `duo-${grpIdx}-${idx}`;
+        let memberName = m.fullName || m.full_name || 'Membre';
+        let memberRole = m.role || '';
+        if (window.cachedSiteContent) {
+          if (window.cachedSiteContent[`bureau-name-${mId}`]) memberName = window.cachedSiteContent[`bureau-name-${mId}`].trim() || memberName;
+          if (window.cachedSiteContent[`bureau-role-${mId}`]) memberRole = window.cachedSiteContent[`bureau-role-${mId}`].trim() || memberRole;
+        }
+        const isCustomPhoto = Boolean((m.photo_url || m.photo || '').trim());
+        const defaultAvatar = generateNameAvatar(memberName, memberRole);
+        const photo = isCustomPhoto ? (m.photo_url || m.photo).trim() : defaultAvatar;
+        const safeName = memberName.replace(/'/g, "\\'");
+        const tier = getMemberTier(m);
+
+        return `
+          <div class="bg-slate-50/80 rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 flex flex-col justify-between hover:bg-white hover:border-rose-300 transition-all">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span data-edit-key="bureau-role-${mId}" class="editable-field text-[10px] font-extrabold uppercase tracking-wide text-rose-600 block line-clamp-1">
+                  ${memberRole}
+                </span>
+                ${isAdminLoggedIn ? `
+                  <div class="flex items-center gap-1">
+                    <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold" title="Modifier la photo">📷</button>
+                    <button onclick="deleteBureauMember('${mId}', '${safeName}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold" title="Retirer du bureau">🗑️</button>
+                  </div>
+                ` : ''}
+              </div>
+              <h5 data-edit-key="bureau-name-${mId}" class="editable-field text-xs sm:text-sm font-extrabold text-slate-900 leading-tight line-clamp-1 mb-2">
+                ${memberName}
+              </h5>
+              <div class="w-full h-36 sm:h-44 rounded-xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
+                <img id="bureau-img-${mId}" src="${photo}" alt="${memberName}" data-has-custom="${isCustomPhoto}" class="w-full h-full object-cover object-top hover:scale-105 transition-transform" />
+                ${isAdminLoggedIn ? `
+                  <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-1">
+                    <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="px-2 py-1 bg-white text-slate-900 font-bold text-[10px] rounded-lg shadow hover:bg-slate-50">
+                      Changer Photo
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            ${isAdminLoggedIn ? `
+              <div class="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px]">
+                <div class="flex items-center gap-1">
+                  <button onclick="moveBureauMember('${mId}', -1)" class="px-1.5 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded" title="Déplacer vers la gauche">◀</button>
+                  <button onclick="moveBureauMember('${mId}', 1)" class="px-1.5 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded" title="Déplacer vers la droite">▶</button>
+                </div>
+                <select onchange="changeMemberSection('${mId}', this.value)" class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[9px] font-bold text-slate-700 focus:outline-none">
+                  <option value="executif" ${tier === 'executif' ? 'selected' : ''}>Exéc.</option>
+                  <option value="commission" ${tier === 'commission' ? 'selected' : ''}>Comm.</option>
+                  <option value="adjoint" ${tier === 'adjoint' ? 'selected' : ''}>Adj.</option>
+                </select>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="w-[330px] sm:w-[560px] md:w-[600px] flex-shrink-0 snap-start bg-white rounded-3xl p-4 sm:p-5 border-2 border-rose-200/90 shadow-sm hover:shadow-md hover:border-rose-400 transition-all flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-amber-500 to-rose-600"></div>
+          
+          <div>
+            <div class="mb-3 pb-2.5 border-b border-rose-100 flex items-center justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200 shadow-2xs">
+                    <span>🤝</span> Binôme de Commission
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-bold">${group.members.length} Co-responsables</span>
+                </div>
+                <h4 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-1.5 leading-snug">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-600 ring-2 ring-rose-200 flex-shrink-0"></span>
+                  ${group.commissionName}
+                </h4>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 sm:gap-4 relative items-stretch">
+              ${membersHtml}
+              <div class="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-rose-600 to-amber-500 text-white items-center justify-center font-black text-xs shadow-md border-2 border-white z-10 pointer-events-none select-none">
+                &
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-rose-100 flex items-center justify-between text-[10px] text-slate-400 font-medium">
+            <span class="flex items-center gap-1 text-rose-700 font-bold">
+              <span>✨</span> Direction conjointe
+            </span>
+            <span class="hidden sm:inline text-slate-400">Interact Club Tunis Golfe Carthagène</span>
+          </div>
+        </div>
+      `;
+    }
+    window.renderCommissionDuoCard = renderCommissionDuoCard;
+
     function renderBureau(data) {
       window.cachedBureauList = data;
       try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(data)); } catch(e){}
@@ -1591,9 +1749,32 @@
       if (execGrid) {
         execGrid.innerHTML = exec.map((m, i) => renderBureauCard(m, m.id || `exec-${i}`, 'text-blue-600')).join('');
       }
+
       if (commissionGrid) {
-        commissionGrid.innerHTML = commission.map((m, i) => renderBureauCard(m, m.id || `comm-${i}`, 'text-rose-600')).join('');
+        // Group commission members by their commission name to identify pairs/binômes
+        const commissionGroups = [];
+        const groupMap = new Map();
+
+        commission.forEach(m => {
+          const key = normalizeCommissionKey(m);
+          if (!groupMap.has(key)) {
+            const grp = { commissionName: key, members: [] };
+            groupMap.set(key, grp);
+            commissionGroups.push(grp);
+          }
+          groupMap.get(key).members.push(m);
+        });
+
+        commissionGrid.innerHTML = commissionGroups.map((group, grpIdx) => {
+          if (group.members.length === 1) {
+            const m = group.members[0];
+            return renderBureauCard(m, m.id || `comm-${grpIdx}`, 'text-rose-600');
+          } else {
+            return renderCommissionDuoCard(group, grpIdx);
+          }
+        }).join('');
       }
+
       if (elargiGrid) {
         elargiGrid.innerHTML = adjoints.map((m, i) => renderBureauCard(m, m.id || `adj-${i}`, 'text-amber-700')).join('');
       }
@@ -1601,6 +1782,106 @@
       applyCachedContent();
       if (isAdminLoggedIn) enableGlobalTextEditing();
     }
+
+    async function moveBureauMember(id, direction) {
+      const list = [...(window.cachedBureauList || defaultBureau)];
+      const idx = list.findIndex(m => (m.id || '') === id);
+      if (idx === -1) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= list.length) return;
+      
+      const temp = list[idx];
+      list[idx] = list[targetIdx];
+      list[targetIdx] = temp;
+      
+      window.cachedBureauList = list;
+      try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(list)); } catch(e){}
+      renderBureau(list);
+    }
+    window.moveBureauMember = moveBureauMember;
+
+    async function changeMemberSection(id, newTier) {
+      const list = [...(window.cachedBureauList || defaultBureau)];
+      const member = list.find(m => (m.id || '') === id);
+      if (!member) return;
+      
+      member.tier = newTier;
+      window.cachedBureauList = list;
+      try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(list)); } catch(e){}
+      
+      if (window.firestoreDb && window.fs && id && !id.startsWith('exec-') && !id.startsWith('comm-') && !id.startsWith('adj-')) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", id), { tier: newTier }, { merge: true });
+        } catch(err) {
+          console.warn("Firestore update tier error:", err);
+        }
+      }
+      
+      renderBureau(list);
+    }
+    window.changeMemberSection = changeMemberSection;
+
+    function openReorderBureauModal() {
+      const modal = document.getElementById('reorder-bureau-modal');
+      const content = document.getElementById('reorder-modal-content');
+      if (!modal || !content) return;
+      
+      const list = window.cachedBureauList || defaultBureau;
+      const exec = [];
+      const comm = [];
+      const adj = [];
+      
+      list.forEach(m => {
+        const tier = getMemberTier(m);
+        if (tier === 'commission') comm.push(m);
+        else if (tier === 'adjoint') adj.push(m);
+        else exec.push(m);
+      });
+      
+      function renderTierSection(title, items, badgeColor) {
+        if (!items.length) return '';
+        return `
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full ${badgeColor}"></span>
+              ${title} (${items.length})
+            </h4>
+            <div class="space-y-2">
+              ${items.map((m, idx) => `
+                <div class="bg-white rounded-xl p-2.5 border border-slate-200 flex items-center justify-between gap-3 shadow-2xs">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="text-xs font-bold text-slate-400 w-5 text-center">${idx + 1}</span>
+                    <div class="min-w-0">
+                      <p class="text-xs font-bold text-slate-900 truncate">${m.fullName || m.full_name || 'Membre'}</p>
+                      <p class="text-[10px] text-slate-500 truncate">${m.role || ''}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button onclick="moveBureauMember('${m.id}', -1); openReorderBureauModal();" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors">▲</button>
+                    <button onclick="moveBureauMember('${m.id}', 1); openReorderBureauModal();" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors">▼</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      
+      content.innerHTML = `
+        ${renderTierSection('Bureau Exécutif', exec, 'bg-blue-600')}
+        ${renderTierSection('Chefs des Commissions', comm, 'bg-rose-600')}
+        ${renderTierSection('Les Adjoints', adj, 'bg-amber-500')}
+      `;
+      
+      modal.classList.remove('hidden');
+    }
+    window.openReorderBureauModal = openReorderBureauModal;
+
+    function closeReorderBureauModal() {
+      const modal = document.getElementById('reorder-bureau-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+    window.closeReorderBureauModal = closeReorderBureauModal;
 
     function renderLeaderboard(data) {
       const container = document.getElementById('leaderboard-container');
@@ -2832,6 +3113,7 @@
       const fullName = form.full_name.value.trim();
       const role = form.role.value.trim();
       const tier = form.tier.value;
+      const commission_name = form.commission_name ? form.commission_name.value.trim() : '';
       const photo_url = form.photo_url.value.trim();
 
       if (!fullName || !role) {
@@ -2844,6 +3126,7 @@
         full_name: fullName,
         role: role,
         tier: tier,
+        commission_name: commission_name || "",
         photo_url: photo_url || "",
         created_at: new Date().toISOString()
       };
