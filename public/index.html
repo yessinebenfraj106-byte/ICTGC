@@ -253,11 +253,11 @@
           <div id="bureau-commission-grid" class="flex gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
         </div>
 
-        <!-- 3. Bureau Élargi & Adjoints -->
+        <!-- 3. Les Adjoints -->
         <div>
           <div class="flex items-center justify-between mb-4">
-            <h3 data-edit-key="bureauElargiHeading" class="editable-field text-lg font-bold text-slate-800 flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Bureau Élargi & Adjoints
+            <h3 data-edit-key="bureauAdjointsHeading" class="editable-field text-lg font-bold text-slate-800 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Les Adjoints
             </h3>
             <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
               <span>↔</span> Défilement horizontal
@@ -673,7 +673,7 @@
               <option value="member">Membre actif</option>
               <option value="executif">Bureau Exécutif</option>
               <option value="commission">Chef de Commission</option>
-              <option value="elargi">Bureau Élargi & Adjoint</option>
+              <option value="elargi">Les Adjoints</option>
             </select>
           </div>
         </div>
@@ -894,7 +894,7 @@
           <select name="tier" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
             <option value="executif">Bureau Exécutif</option>
             <option value="commission">Chefs des Commissions</option>
-            <option value="elargi">Bureau Élargi & Adjoints</option>
+            <option value="elargi">Les Adjoints</option>
           </select>
         </div>
 
@@ -1140,7 +1140,7 @@
       { id: "bm-chef-5", fullName: "Kenza Trabelsi", role: "Chef Commission Actions Internationales", tier: "commission", photo_url: "", bio: "Supervise les échanges interculturels et les projets conjoints avec les clubs étrangers." },
       { id: "bm-chef-6", fullName: "Mehdi Ghorbel", role: "Chef Commission Médiatisation", tier: "commission", photo_url: "", bio: "Assure la couverture photo/vidéo des actions et la gestion du feed Instagram." },
 
-      // Bureau Élargi & Adjoints
+      // Les Adjoints
       { id: "bm-8", fullName: "Youssef Neffati", role: "Adjoint Secrétaire Général", tier: "elargi", photo_url: "", bio: "Assiste le Secrétariat Général dans la gestion administrative et l'archivage numérique." },
       { id: "bm-9", fullName: "Iyed Tlili", role: "Adjoint Trésorière Générale", tier: "elargi", photo_url: "", bio: "Appuie la Trésorerie dans le suivi des caisses d'actions et le recouvrement des cotisations." },
       { id: "bm-10", fullName: "Yasmine Missaoui", role: "Adjointe Chef du Protocole", tier: "elargi", photo_url: "", bio: "Assiste l'organisation des cérémonies et la logistique événementielle." }
@@ -1422,6 +1422,18 @@
       `;
     }
 
+    function getMemberTier(b) {
+      const t = (b.tier || '').toLowerCase().trim();
+      if (t === 'commission' || t === 'commissions' || t === 'chefs') return 'commission';
+      if (t === 'elargi' || t === 'adjoint' || t === 'adjoints') return 'adjoint';
+      if (t === 'executif' || t === 'exec') return 'executif';
+
+      const r = (b.role || '').toLowerCase();
+      if (r.includes('adjoint')) return 'adjoint';
+      if (r.includes('commission')) return 'commission';
+      return 'executif';
+    }
+
     function renderBureau(data) {
       window.cachedBureauList = data;
       try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(data)); } catch(e){}
@@ -1429,18 +1441,34 @@
       const commissionGrid = document.getElementById('bureau-commission-grid');
       const elargiGrid = document.getElementById('bureau-elargi-grid');
 
-      const exec = data.filter(b => b.tier === 'executif' || (!b.tier && !b.role.toLowerCase().includes('chef')));
-      const commission = data.filter(b => b.tier === 'commission' || b.role.toLowerCase().includes('chef'));
-      const elargi = data.filter(b => b.tier === 'elargi');
+      const exec = [];
+      const commission = [];
+      const adjoints = [];
+      const seenIds = new Set();
+
+      data.forEach(m => {
+        const idKey = m.id || `${m.fullName || m.full_name || ''}-${m.role || ''}`;
+        if (seenIds.has(idKey)) return;
+        seenIds.add(idKey);
+
+        const tier = getMemberTier(m);
+        if (tier === 'commission') {
+          commission.push(m);
+        } else if (tier === 'adjoint') {
+          adjoints.push(m);
+        } else {
+          exec.push(m);
+        }
+      });
 
       if (execGrid) {
-        execGrid.innerHTML = exec.map((m, i) => renderBureauCard(m, `exec-${i}`, 'text-blue-600')).join('');
+        execGrid.innerHTML = exec.map((m, i) => renderBureauCard(m, m.id || `exec-${i}`, 'text-blue-600')).join('');
       }
       if (commissionGrid) {
-        commissionGrid.innerHTML = commission.map((m, i) => renderBureauCard(m, `comm-${i}`, 'text-rose-600')).join('');
+        commissionGrid.innerHTML = commission.map((m, i) => renderBureauCard(m, m.id || `comm-${i}`, 'text-rose-600')).join('');
       }
       if (elargiGrid) {
-        elargiGrid.innerHTML = elargi.map((m, i) => renderBureauCard(m, `elargi-${i}`, 'text-amber-700')).join('');
+        elargiGrid.innerHTML = adjoints.map((m, i) => renderBureauCard(m, m.id || `adj-${i}`, 'text-amber-700')).join('');
       }
 
       applyCachedContent();
@@ -2694,7 +2722,7 @@
     async function deleteBureauMember(id, name) {
       if (!confirm(`Êtes-vous sûr de vouloir retirer "${name}" du bureau ?`)) return;
 
-      if (window.firestoreDb && window.fs && id && !id.startsWith('bm-')) {
+      if (window.firestoreDb && window.fs && id) {
         try {
           await window.fs.deleteDoc(window.fs.doc(window.firestoreDb, "bureauMembers", id));
         } catch (err) {
@@ -2704,6 +2732,8 @@
 
       const current = window.cachedBureauList || defaultBureau;
       const filtered = current.filter(b => (b.id || '') !== id);
+      window.cachedBureauList = filtered;
+      try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(filtered)); } catch(e){}
       renderBureau(filtered);
     }
     window.deleteBureauMember = deleteBureauMember;
