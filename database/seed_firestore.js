@@ -42,18 +42,28 @@ async function seedOnlineFirestore() {
     await setDoc(doc(db, "mandates", id), docData);
   }
 
-  // 4. Bureau Members
+  // 4. Bureau Members & Chefs des Commissions
   const bureau = [
-    { id: "bm-1", fullName: "Yasmine Cherif", role: "Présidente", tier: "executif", bio: "Coordonne la stratégie du club, préside les réunions statutaires et représente le club auprès du Rotary parrain." },
-    { id: "bm-2", fullName: "Nour Tajouri", role: "Vice-présidente", tier: "executif", bio: "Assiste la présidence dans la coordination des commissions et supervise la bonne exécution des actions phares." },
-    { id: "bm-3", fullName: "Yessine Ben Fraj", role: "Secrétaire Général", tier: "executif", bio: "Rédige les procès-verbaux, assure la communication institutionnelle et la tenue des registres officiels." },
-    { id: "bm-4", fullName: "Eya Houas", role: "Trésorière Générale", tier: "executif", bio: "Gère la trésorerie, assure le suivi des cotisations et la conformité financière des collectes de fonds." },
-    { id: "bm-5", fullName: "Mohamed Ayoub Masmoudi", role: "Chef du Protocole", tier: "executif", bio: "Veille au respect des règles protocolaires rotariennes, à l'organisation des réunions et des cérémonies." },
-    { id: "bm-6", fullName: "Skander Mellouli", role: "Représentant au sein de la CNIT", tier: "executif", bio: "Représente le club à l'échelle nationale auprès de la Coordination Nationale des Interact en Tunisie." },
-    { id: "bm-7", fullName: "Yasmine Chaabani", role: "Conseillère Générale", tier: "executif", bio: "Apporte conseils méthodologiques et orientation stratégique au Bureau Exécutif." },
-    { id: "bm-8", fullName: "Youssef Neffati", role: "Adjoint Secrétaire Général", tier: "elargi", bio: "Assiste le Secrétariat Général dans la gestion administrative et l'archivage numérique." },
-    { id: "bm-9", fullName: "Iyed Tlili", role: "Adjoint Trésorière Générale", tier: "elargi", bio: "Appuie la Trésorerie dans le suivi des caisses d'actions et le recouvrement des cotisations." },
-    { id: "bm-10", fullName: "Yasmine Missaoui", role: "Adjointe Chef du Protocole", tier: "elargi", bio: "Assiste l'organisation des cérémonies et la logistique événementielle." }
+    { id: "bm-1", fullName: "Yasmine Cherif", role: "Présidente", tier: "executif", photo_url: "", bio: "Coordonne la stratégie du club, préside les réunions statutaires et représente le club auprès du Rotary parrain." },
+    { id: "bm-2", fullName: "Nour Tajouri", role: "Vice-présidente", tier: "executif", photo_url: "", bio: "Assiste la présidence dans la coordination des commissions et supervise la bonne exécution des actions phares." },
+    { id: "bm-3", fullName: "Yessine Ben Fraj", role: "Secrétaire Général", tier: "executif", photo_url: "", bio: "Rédige les procès-verbaux, assure la communication institutionnelle et la tenue des registres officiels." },
+    { id: "bm-4", fullName: "Eya Houas", role: "Trésorière Générale", tier: "executif", photo_url: "", bio: "Gère la trésorerie, assure le suivi des cotisations et la conformité financière des collectes de fonds." },
+    { id: "bm-5", fullName: "Mohamed Ayoub Masmoudi", role: "Chef du Protocole", tier: "executif", photo_url: "", bio: "Veille au respect des règles protocolaires rotariennes, à l'organisation des réunions et des cérémonies." },
+    { id: "bm-6", fullName: "Skander Mellouli", role: "Représentant au sein de la CNIT", tier: "executif", photo_url: "", bio: "Représente le club à l'échelle nationale auprès de la Coordination Nationale des Interact en Tunisie." },
+    { id: "bm-7", fullName: "Yasmine Chaabani", role: "Conseillère Générale", tier: "executif", photo_url: "", bio: "Apporte conseils méthodologiques et orientation stratégique au Bureau Exécutif." },
+    
+    // Chefs des Commissions
+    { id: "bm-chef-1", fullName: "Omar Jerbi", role: "Chef Commission d'Intérêt Public (CIP)", tier: "commission", photo_url: "", bio: "Pilote les caravanes humanitaires, les distributions de dons et les actions d'impact solidaire." },
+    { id: "bm-chef-2", fullName: "Selima Ben Salem", role: "Chef Commission Relations Internes & Externes (CRIE)", tier: "commission", photo_url: "", bio: "Développe les partenariats interclubs et coordonne les relations publiques et institutionnelles." },
+    { id: "bm-chef-3", fullName: "Rayen Dridi", role: "Chef Commission Ressources Humaines (CRH)", tier: "commission", photo_url: "", bio: "Gère l'intégration, la cohésion d'équipe, le suivi de présence et le bien-être des membres." },
+    { id: "bm-chef-4", fullName: "Zeineb Khelil", role: "Chef Commission des Finances", tier: "commission", photo_url: "", bio: "Coordonne les collectes de fonds, les ventes de pâtisseries et le sponsoring d'actions." },
+    { id: "bm-chef-5", fullName: "Kenza Trabelsi", role: "Chef Commission Actions Internationales", tier: "commission", photo_url: "", bio: "Supervise les échanges interculturels et les projets conjoints avec les clubs étrangers." },
+    { id: "bm-chef-6", fullName: "Mehdi Ghorbel", role: "Chef Commission Médiatisation", tier: "commission", photo_url: "", bio: "Assure la couverture photo/vidéo des actions et la gestion du feed Instagram." },
+
+    // Bureau Élargi & Adjoints
+    { id: "bm-8", fullName: "Youssef Neffati", role: "Adjoint Secrétaire Général", tier: "elargi", photo_url: "", bio: "Assiste le Secrétariat Général dans la gestion administrative et l'archivage numérique." },
+    { id: "bm-9", fullName: "Iyed Tlili", role: "Adjoint Trésorière Générale", tier: "elargi", photo_url: "", bio: "Appuie la Trésorerie dans le suivi des caisses d'actions et le recouvrement des cotisations." },
+    { id: "bm-10", fullName: "Yasmine Missaoui", role: "Adjointe Chef du Protocole", tier: "elargi", photo_url: "", bio: "Assiste l'organisation des cérémonies et la logistique événementielle." }
   ];
   for (const b of bureau) {
     const { id, ...rest } = b;
