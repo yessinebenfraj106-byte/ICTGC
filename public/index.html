@@ -136,12 +136,12 @@
     .admin-editing [contenteditable="true"]:hover { outline: 2px dashed #005DAA; background: rgba(238, 242, 255, 0.6); }
     .admin-editing [contenteditable="true"]:focus { outline: 2px solid #005DAA; background: #EEF2FF; }
     .checkerboard-bg {
-      background-color: #0f172a;
+      background-color: #ffffff;
       background-image: 
-        linear-gradient(45deg, #1e293b 25%, transparent 25%), 
-        linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
-        linear-gradient(45deg, transparent 75%, #1e293b 75%), 
-        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+        linear-gradient(45deg, #f1f5f9 25%, transparent 25%), 
+        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #f1f5f9 75%), 
+        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
       background-size: 16px 16px;
       background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
     }
@@ -175,7 +175,7 @@
         <button onclick="showView('public-view')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Accueil</button>
         <button onclick="showView('public-view', 'actions-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Actions Phares</button>
         <button onclick="showView('public-view', 'bureau-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
-        <button onclick="showView('public-view', 'partners-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Partenaires</button>
+        <button onclick="showView('public-view', 'partners-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Sponsors</button>
       </nav>
 
       <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
@@ -473,16 +473,16 @@
       <!-- Section Sponsors & Partenaires Officiels -->
       <section id="partners-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto mb-10">
-          <span data-edit-key="partnersBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-amber-600">Alliances & Soutiens</span>
+          <span data-edit-key="partnersBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-amber-600">Soutiens & Mécénat</span>
           <h2 data-edit-key="partnersSectionTitle" class="editable-field text-2xl sm:text-3xl font-extrabold text-[#081226] mt-1">
-            Partenaires & Sponsors
+            Nos Sponsors
           </h2>
           <p data-edit-key="partnersSectionSubtitle" class="editable-field text-sm text-slate-500 mt-2">
-            Ils croient en l'énergie de notre jeunesse et soutiennent activement nos projets humanitaires et éducatifs à travers la Tunisie.
+            Entreprises, partenaires et mécènes qui soutiennent nos caravanes et actions solidaires à travers la Tunisie.
           </p>
           <div id="admin-partners-controls" class="hidden mt-4 flex items-center justify-center gap-3">
             <button onclick="openAddPartnerModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5">
-              <span>➕</span> Ajouter un Partenaire / Sponsor
+              <span>➕</span> Ajouter un Sponsor
             </button>
           </div>
         </div>
@@ -1252,6 +1252,9 @@
           <div class="flex items-center justify-between mb-1">
             <span class="text-xs font-bold text-slate-700">Aperçu sélectionné :</span>
             <div class="flex items-center gap-2">
+              <button type="button" onclick="removeBackgroundFromCurrentModalPhoto()" class="text-xs font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1" title="Supprime automatiquement le fond noir ou blanc de la photo">
+                <span>🪄</span> Sans Fond (Détourer)
+              </button>
               <button type="button" onclick="cropCurrentPhotoModal()" class="text-xs font-bold text-amber-600 hover:text-amber-800 flex items-center gap-1">
                 <span>✂️</span> Recadrer & Pivoter
               </button>
@@ -1462,16 +1465,16 @@
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <div>
-          <h3 id="add-partner-title" class="text-base font-bold text-slate-900">Ajouter un Partenaire / Sponsor</h3>
-          <p class="text-xs text-slate-500">Mécènes, clubs parrains et partenaires d'impact solidaire</p>
+          <h3 id="add-partner-title" class="text-base font-bold text-slate-900">Ajouter / Modifier un Sponsor</h3>
+          <p class="text-xs text-slate-500">Affichage du logo et du nom du sponsor sur la page d'accueil</p>
         </div>
         <button onclick="closeAddPartnerModal()" class="text-slate-400 hover:text-slate-600 text-base font-bold">✕</button>
       </div>
 
       <form onsubmit="handleSavePartner(event)" class="mt-4 space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Nom du Partenaire / Organisation (*)</label>
-          <input type="text" id="partner-name-input" name="partner_name" placeholder="Ex: Rotary Club Ariana La Rose, Entreprise X..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nom du Sponsor (*)</label>
+          <input type="text" id="partner-name-input" name="partner_name" placeholder="Ex: Nom de l'entreprise ou du mécène" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1520,7 +1523,7 @@
             Annuler
           </button>
           <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition-all">
-            Enregistrer le Partenaire
+            Enregistrer le Sponsor
           </button>
         </div>
       </form>
@@ -4645,14 +4648,14 @@
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, cw, ch);
 
-      // Draw subtle transparency checkerboard behind image
+      // Draw subtle light transparency checkerboard behind image
       const box = getCropperBox(cw, ch);
       const checkerSize = 14;
-      for (let x = box.x; x < box.x + box.w; x += checkerSize) {
-        for (let y = box.y; y < box.y + box.h; y += checkerSize) {
+      for (let x = box.x; x < box.w + box.x; x += checkerSize) {
+        for (let y = box.y; y < box.h + box.y; y += checkerSize) {
           const w = Math.min(checkerSize, box.x + box.w - x);
           const h = Math.min(checkerSize, box.y + box.h - y);
-          ctx.fillStyle = ((Math.floor(x / checkerSize) + Math.floor(y / checkerSize)) % 2 === 0) ? '#1e293b' : '#0f172a';
+          ctx.fillStyle = ((Math.floor(x / checkerSize) + Math.floor(y / checkerSize)) % 2 === 0) ? '#f8fafc' : '#e2e8f0';
           ctx.fillRect(x, y, w, h);
         }
       }
@@ -4861,15 +4864,15 @@
           bgB = data[cornerIndices[0] + 2];
         }
 
-        const threshold = 40;
-        const isCornerDark = (bgR < 50 && bgG < 50 && bgB < 50);
+        const threshold = 65;
+        const isCornerDark = (bgR < 65 && bgG < 65 && bgB < 65);
         for (let i = 0; i < data.length; i += 4) {
           const r = data[i];
           const g = data[i + 1];
           const b = data[i + 2];
           const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
-          // If close to corner background tone OR pure white OR pure black
-          if (dist < threshold || (r >= 235 && g >= 235 && b >= 235) || (isCornerDark && r <= 35 && g <= 35 && b <= 35)) {
+          // If close to corner background tone OR near-white OR near-black
+          if (dist < threshold || (r >= 225 && g >= 225 && b >= 225) || (isCornerDark && r <= 55 && g <= 55 && b <= 55)) {
             data[i + 3] = 0; // Transparent
           }
         }
@@ -4979,6 +4982,67 @@
     }
     window.cropCurrentPhotoModal = cropCurrentPhotoModal;
 
+    function removeBackgroundFromCurrentModalPhoto() {
+      if (!window.currentModalPhotoValue) {
+        showAppToast("Veuillez d'abord choisir ou déposer une image.", "info");
+        return;
+      }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const maxDim = 480;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+
+          // Corner background sampling
+          const cornerIndices = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + w - 1) * 4];
+          let bgR = 255, bgG = 255, bgB = 255;
+          if (cornerIndices.length > 0) {
+            bgR = data[cornerIndices[0]];
+            bgG = data[cornerIndices[0] + 1];
+            bgB = data[cornerIndices[0] + 2];
+          }
+
+          const threshold = 65;
+          const isCornerDark = (bgR < 65 && bgG < 65 && bgB < 65);
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
+            if (dist < threshold || (r >= 225 && g >= 225 && b >= 225) || (isCornerDark && r <= 55 && g <= 55 && b <= 55)) {
+              data[i + 3] = 0; // Transparent
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+          const transparentPng = canvas.toDataURL('image/png');
+          setModalPhotoValue(transparentPng);
+          showAppToast("Fond uni supprimé avec succès ! Format sans fond (transparent) actif.", "success");
+        } catch(err) {
+          console.warn("Background removal error:", err);
+          showAppToast("Impossible de supprimer le fond de cette image.", "error");
+        }
+      };
+      img.onerror = () => showAppToast("Erreur lors de la lecture de l'image.", "error");
+      img.src = window.currentModalPhotoValue;
+    }
+    window.removeBackgroundFromCurrentModalPhoto = removeBackgroundFromCurrentModalPhoto;
+
+
     function cropWorkingAlbumPhoto(idx) {
       if (!workingAlbumImages[idx]) return;
       openImageCropper(workingAlbumImages[idx], (newUrl) => {
@@ -5027,56 +5091,39 @@
 
       grid.innerHTML = data.map((p, i) => {
         const partnerId = p.id || `partner-${i}`;
-        const name = (p.name || 'Partenaire').trim();
-        const category = (p.category || 'Partenaire Officiel').trim();
+        const name = (p.name || 'Sponsor').trim();
         const logo = (p.logo || '').trim();
-        const website = (p.website || '').trim();
-        const description = (p.description || '').trim();
 
         const logoHtml = logo ? `
           <img src="${logo}" alt="${name}" class="max-h-16 max-w-full object-contain filter group-hover:scale-105 transition-transform" />
         ` : `
-          <div class="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-2xl text-amber-700 font-black">
+          <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-xl text-amber-700 font-black">
             ${name.charAt(0).toUpperCase()}
           </div>
         `;
 
         return `
-          <div class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-amber-400 transition-all flex flex-col justify-between group relative overflow-hidden text-center items-center">
-            <div class="w-full flex flex-col items-center">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200 mb-3 block">
-                ${category}
-              </span>
-              
-              <div class="h-20 w-full flex items-center justify-center p-2 mb-2 bg-slate-50/50 rounded-2xl border border-slate-100">
+          <div class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-amber-400 transition-all flex flex-col justify-between items-center text-center group relative overflow-hidden h-full">
+            <div class="w-full flex flex-col items-center flex-1 justify-center">
+              <div class="h-24 w-full flex items-center justify-center p-3 mb-2 bg-slate-50/50 rounded-2xl border border-slate-100 group-hover:bg-amber-50/20 transition-colors">
                 ${logoHtml}
               </div>
-
-              <h4 class="text-sm font-extrabold text-[#081226] leading-snug mb-1 mt-1">${name}</h4>
-              ${description ? `<p class="text-[11px] text-slate-500 leading-tight mb-2">${description}</p>` : ''}
+              <h4 class="text-xs sm:text-sm font-extrabold text-[#081226] leading-snug mt-1">${name}</h4>
             </div>
 
-            <div class="w-full mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-2">
-              ${website ? `
-                <a href="${website}" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1">
-                  <span>🌐</span> Visiter
-                </a>
-              ` : ''}
-
-              ${isAdminLoggedIn ? `
-                <div class="flex items-center gap-1.5 ml-auto">
-                  <button type="button" onclick="cropPartnerLogo('${partnerId}')" class="text-xs text-amber-600 hover:text-amber-800 p-1 font-bold" title="Recadrer / Ajuster le logo">
-                    ✂️
-                  </button>
-                  <button type="button" onclick="openAddPartnerModal('${partnerId}')" class="text-xs text-blue-600 hover:text-blue-800 p-1 font-bold" title="Modifier">
-                    ✏️
-                  </button>
-                  <button type="button" onclick="deletePartnerDoc('${partnerId}')" class="text-xs text-rose-500 hover:text-rose-700 p-1" title="Supprimer">
-                    🗑️
-                  </button>
-                </div>
-              ` : ''}
-            </div>
+            ${isAdminLoggedIn ? `
+              <div class="w-full mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-center gap-2">
+                <button type="button" onclick="cropPartnerLogo('${partnerId}')" class="text-xs text-amber-600 hover:text-amber-800 p-1 font-bold flex items-center gap-0.5" title="Recadrer / Ajuster le logo">
+                  <span>✂️</span> <span class="text-[10px]">Cadrer</span>
+                </button>
+                <button type="button" onclick="openAddPartnerModal('${partnerId}')" class="text-xs text-blue-600 hover:text-blue-800 p-1 font-bold flex items-center gap-0.5" title="Modifier le nom ou le logo">
+                  <span>✏️</span> <span class="text-[10px]">Modifier</span>
+                </button>
+                <button type="button" onclick="deletePartnerDoc('${partnerId}')" class="text-xs text-rose-500 hover:text-rose-700 p-1 font-bold flex items-center gap-0.5" title="Supprimer">
+                  <span>🗑️</span>
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
       }).join('');
