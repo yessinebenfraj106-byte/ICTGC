@@ -17,46 +17,71 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function seedOnlineFirestore() {
-  console.log("Connecting to Firestore project: ictgc-club...");
+  console.log("Syncing all collections to Firestore project: ictgc-club...");
   const seedFile = path.join(__dirname, "firestore_seed.json");
-  const rawData = fs.readFileSync(seedFile, "utf-8");
-  const data = JSON.parse(rawData);
+  const data = JSON.parse(fs.readFileSync(seedFile, "utf-8"));
 
   // 1. Club Profile
   for (const [id, docData] of Object.entries(data.clubProfile || {})) {
     await setDoc(doc(db, "clubProfile", id), docData);
-    console.log(`Uploaded clubProfile: ${id}`);
   }
 
-  // 2. Mandates
+  // 2. Site Content (for live inline editing)
+  await setDoc(doc(db, "siteContent", "main"), {
+    heroTagline: "Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose",
+    heroTitle: "La Jeunesse au Service de la Communauté",
+    heroDescription: "Depuis mars 2017 (charte officielle le 7 janvier 2019), l'Interact Club Tunis Golfe Carthagène rassemble des jeunes engagés de 12 à 18 ans pour transformer des vies à travers des actions solidaires durables.",
+    actionsSectionTitle: "Nos Actions Phares",
+    actionsSectionSubtitle: "Caravanes humanitaires, rentrées scolaires et initiatives solidaires vérifiées",
+    bureauSectionTitle: "Bureau du Mandat 2026–2027",
+    bureauSectionSubtitle: "Réunion statutaire constitutive du 1er août 2026"
+  }, { merge: true });
+
+  // 3. Mandates
   for (const [id, docData] of Object.entries(data.mandates || {})) {
     await setDoc(doc(db, "mandates", id), docData);
-    console.log(`Uploaded mandate: ${id}`);
   }
 
-  // 3. Commissions
+  // 4. Bureau Members
+  const bureau = [
+    { id: "bm-1", fullName: "Yasmine Cherif", role: "Présidente", tier: "executif", bio: "Coordonne la stratégie du club, préside les réunions statutaires et représente le club auprès du Rotary parrain." },
+    { id: "bm-2", fullName: "Nour Tajouri", role: "Vice-présidente", tier: "executif", bio: "Assiste la présidence dans la coordination des commissions et supervise la bonne exécution des actions phares." },
+    { id: "bm-3", fullName: "Yessine Ben Fraj", role: "Secrétaire Général", tier: "executif", bio: "Rédige les procès-verbaux, assure la communication institutionnelle et la tenue des registres officiels." },
+    { id: "bm-4", fullName: "Eya Houas", role: "Trésorière Générale", tier: "executif", bio: "Gère la trésorerie, assure le suivi des cotisations et la conformité financière des collectes de fonds." },
+    { id: "bm-5", fullName: "Mohamed Ayoub Masmoudi", role: "Chef du Protocole", tier: "executif", bio: "Veille au respect des règles protocolaires rotariennes, à l'organisation des réunions et des cérémonies." },
+    { id: "bm-6", fullName: "Skander Mellouli", role: "Représentant au sein de la CNIT", tier: "executif", bio: "Représente le club à l'échelle nationale auprès de la Coordination Nationale des Interact en Tunisie." },
+    { id: "bm-7", fullName: "Yasmine Chaabani", role: "Conseillère Générale", tier: "executif", bio: "Apporte conseils méthodologiques et orientation stratégique au Bureau Exécutif." },
+    { id: "bm-8", fullName: "Youssef Neffati", role: "Adjoint Secrétaire Général", tier: "elargi", bio: "Assiste le Secrétariat Général dans la gestion administrative et l'archivage numérique." },
+    { id: "bm-9", fullName: "Iyed Tlili", role: "Adjoint Trésorière Générale", tier: "elargi", bio: "Appuie la Trésorerie dans le suivi des caisses d'actions et le recouvrement des cotisations." },
+    { id: "bm-10", fullName: "Yasmine Missaoui", role: "Adjointe Chef du Protocole", tier: "elargi", bio: "Assiste l'organisation des cérémonies et la logistique événementielle." }
+  ];
+  for (const b of bureau) {
+    const { id, ...rest } = b;
+    await setDoc(doc(db, "bureauMembers", id), rest);
+  }
+
+  // 5. Commissions
   for (const [id, docData] of Object.entries(data.commissions || {})) {
     await setDoc(doc(db, "commissions", id), docData);
-    console.log(`Uploaded commission: ${id}`);
   }
 
-  // 4. Metrics
+  // 6. Metrics
   for (const [id, docData] of Object.entries(data.metrics || {})) {
     await setDoc(doc(db, "metrics", id), docData);
-    console.log(`Uploaded metric: ${id}`);
   }
 
-  // 5. Flagship Actions
+  // 7. Flagship Actions (with up to 4 images support)
   const actions = [
     {
       id: "action-couffin-ramadan",
       title: "Couffin de Ramadan (Koffet Romdhan)",
       category: "Intérêt Public & Solidarité",
       location: "Mahdia, Tunisie",
-      beneficiaries: 1000,
-      beneficiaryUnit: "familles nécessiteuses",
+      beneficiaries_count: 1000,
+      beneficiary_unit: "familles nécessiteuses",
       description: "Distribution massive de paniers alimentaires complets pour soutenir les familles vulnérables durant le mois saint.",
-      collaboratingClubs: ["Interact Club Anastasia", "Interact Club Sidi Bou", "Interact Club Inner City"],
+      collaborating_clubs: ["Interact Club Anastasia", "Interact Club Sidi Bou", "Interact Club Inner City"],
+      images: ["/assets/logos/club-team-banner.jpg"],
       status: "Completed"
     },
     {
@@ -64,10 +89,11 @@ async function seedOnlineFirestore() {
       title: "Rentrée Scolaire Solidaire",
       category: "Éducation & Jeunesse",
       location: "Nabeul, Tunisie",
-      beneficiaries: 800,
-      beneficiaryUnit: "écoliers équipés",
+      beneficiaries_count: 800,
+      beneficiary_unit: "écoliers équipés",
       description: "Campagne de collecte et don de cartables garnis, livres et fournitures scolaires pour lutter contre le décrochage scolaire.",
-      collaboratingClubs: ["Interact Club Saint-Germain", "Interact Club Maxula Prates", "Interact Club Monastir", "Interact Club Ruspina Monastir"],
+      collaborating_clubs: ["Interact Club Saint-Germain", "Interact Club Maxula Prates", "Interact Club Monastir", "Interact Club Ruspina Monastir"],
+      images: [],
       status: "Completed"
     },
     {
@@ -75,10 +101,11 @@ async function seedOnlineFirestore() {
       title: "Hiver au Chaud",
       category: "Urgence Hivernale & Aide Sociale",
       location: "Testour, Tunisie",
-      beneficiaries: 120,
-      beneficiaryUnit: "familles réchauffées",
+      beneficiaries_count: 120,
+      beneficiary_unit: "familles réchauffées",
       description: "Caravane d'aide d'urgence apportant couvertures en laine, chauffages, vêtements chauds et denrées aux foyers ruraux isolés.",
-      collaboratingClubs: [],
+      collaborating_clubs: [],
+      images: [],
       status: "Completed"
     },
     {
@@ -86,10 +113,11 @@ async function seedOnlineFirestore() {
       title: "Action Aïd El-Fitr",
       category: "Solidarité Enfance",
       location: "Grand Tunis, Tunisie",
-      beneficiaries: 20,
-      beneficiaryUnit: "familles avec enfants",
+      beneficiaries_count: 20,
+      beneficiary_unit: "familles avec enfants",
       description: "Achat et distribution de vêtements neufs pour l'Aïd, chaussures et jouets pour offrir la joie de la fête aux enfants défavorisés.",
-      partnerAssociation: "Association Diar Essabil",
+      partner_association: "Association Diar Essabil",
+      images: [],
       status: "Completed"
     },
     {
@@ -97,36 +125,58 @@ async function seedOnlineFirestore() {
       title: "Midnight Sun",
       category: "Culture, Loisirs & Autofinancement",
       location: "Grand Tunis, Tunisie",
-      beneficiaries: 0,
+      beneficiaries_count: 0,
       description: "Événement festif estival avec pool party et DJ dont les bénéfices intégraux financent les actions humanitaires du club.",
+      images: [],
       status: "Completed"
     }
   ];
   for (const act of actions) {
     const { id, ...rest } = act;
     await setDoc(doc(db, "actions", id), rest);
-    console.log(`Uploaded action: ${id}`);
   }
 
-  // 6. Active Members
+  // 8. Active Members
   const members = [
-    { id: "mem-1", firstName: "Yasmine", lastName: "Cherif", role: "Présidente", currentMonthPoints: 120, lifetimePoints: 450, cotisationAssessedTND: 100, cotisationPaidTND: 100, email: "yasmine.cherif@ictgc.org" },
-    { id: "mem-2", firstName: "Nour", lastName: "Tajouri", role: "Vice-présidente", currentMonthPoints: 95, lifetimePoints: 380, cotisationAssessedTND: 100, cotisationPaidTND: 100, email: "nour.tajouri@ictgc.org" },
-    { id: "mem-3", firstName: "Yessine", lastName: "Ben Fraj", role: "Secrétaire Général", currentMonthPoints: 85, lifetimePoints: 320, cotisationAssessedTND: 100, cotisationPaidTND: 100, email: "yessine.benfraj@ictgc.org" },
-    { id: "mem-4", firstName: "Eya", lastName: "Houas", role: "Trésorière Générale", currentMonthPoints: 70, lifetimePoints: 310, cotisationAssessedTND: 100, cotisationPaidTND: 100, email: "eya.houas@ictgc.org" },
-    { id: "mem-5", firstName: "Omar", lastName: "Jerbi", role: "Co-chef Commission Intérêt Public", currentMonthPoints: 60, lifetimePoints: 240, cotisationAssessedTND: 100, cotisationPaidTND: 50, email: "omar.jerbi@ictgc.org" }
+    { id: "mem-1", first_name: "Yasmine", last_name: "Cherif", role: "bureau", bureau_title: "Présidente", current_month_points: 120, lifetime_points: 450, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, cotisation_remaining_tnd: 0, email: "yasmine.cherif@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Ressources Humaines"] },
+    { id: "mem-2", first_name: "Nour", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, cotisation_remaining_tnd: 0, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
+    { id: "mem-3", first_name: "Yessine", last_name: "Ben Fraj", role: "bureau", bureau_title: "Secrétaire Général", current_month_points: 85, lifetime_points: 320, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, cotisation_remaining_tnd: 0, email: "yessine.benfraj@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission de Médiatisation"] },
+    { id: "mem-4", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière Générale", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, cotisation_remaining_tnd: 0, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+    { id: "mem-5", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "Co-chef Commission Intérêt Public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 50, cotisation_remaining_tnd: 50, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] }
   ];
   for (const m of members) {
     const { id, ...rest } = m;
     await setDoc(doc(db, "members", id), rest);
-    console.log(`Uploaded member: ${id}`);
   }
 
-  console.log("All data successfully synced to online Cloud Firestore!");
+  // 9. Resource Documents
+  const resources = [
+    { id: "doc-1", title: "Certificat Officiel de Constitution Rotary", category: "Règlements & chartes", file_type: "image", size_formatted: "134 Ko", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Charte officielle signée par Barry Rassin, Président du Rotary International", updated_at: "2019-01-07" },
+    { id: "doc-2", title: "Dossier Standard de Sponsoring & Présentation", category: "Ressources Graphiques", file_type: "pdf", size_formatted: "17.3 Mo", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Dossier officiel de partenariat 20 pages avec historique des actions", updated_at: "2026-08-15" },
+    { id: "doc-3", title: "Procès-Verbal 1ère Réunion Statutaire (2026-2027)", category: "Archives Administratives", file_type: "pdf", size_formatted: "420 Ko", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Procès-verbal de passation et élection du Bureau pour le mandat 2026-2027", updated_at: "2026-08-01" },
+    { id: "doc-4", title: "Pack Logos & Charte Graphique Officielle", category: "Ressources Graphiques", file_type: "archive", size_formatted: "8.4 Mo", preview_url: "https://drive.google.com/drive/folders/1Y3CzK4VZI1qqaRuWVlBdMhzxLbJGJGJL", description: "Logos ICTGC en haute définition, roue Rotary et déclinaisons", updated_at: "2026-07-20" }
+  ];
+  for (const r of resources) {
+    const { id, ...rest } = r;
+    await setDoc(doc(db, "resources", id), rest);
+  }
+
+  // 10. Operational Zone Links
+  const zoneLinks = [
+    { id: "zl-1", action_title: "Caravane Hiver au Chaud 2026", zone_name: "Zone Tunis Nord (La Marsa - Carthage)", messenger_url: "https://m.me/j/AbaC123..." },
+    { id: "zl-2", action_title: "Caravane Hiver au Chaud 2026", zone_name: "Zone Banlieue Sud (Megrine - Rades)", messenger_url: "https://m.me/j/AbaC456..." },
+    { id: "zl-3", action_title: "Rentrée Scolaire 2026", zone_name: "Coordination Convoi Nabeul", messenger_url: "https://m.me/j/AbaC789..." }
+  ];
+  for (const zl of zoneLinks) {
+    const { id, ...rest } = zl;
+    await setDoc(doc(db, "zoneLinks", id), rest);
+  }
+
+  console.log("All collections seeded in online Firestore successfully!");
   process.exit(0);
 }
 
-seedOnlineFirestore().catch((err) => {
-  console.error("Error seeding Firestore:", err);
+seedOnlineFirestore().catch(e => {
+  console.error(e);
   process.exit(1);
 });

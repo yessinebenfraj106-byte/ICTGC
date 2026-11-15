@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interact Club Tunis Golfe Carthagène | District 9010</title>
-  <link rel="icon" type="image/png" href="/assets/logos/logo-bleu-clair.png">
-  <!-- Tailwind CSS -->
+  <link rel="icon" type="image/jpeg" href="/assets/logos/tb-logo.jpg">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -34,59 +32,65 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
     h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .editable-focus:focus { outline: 2px dashed #005DAA; background: #EEF2FF; border-radius: 4px; padding: 2px 4px; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-  <!-- ======================================================================== -->
-  <!-- NAVIGATION BAR -->
-  <!-- ======================================================================== -->
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <!-- Logo Lockup -->
       <a href="#" onclick="showView('public-view'); return false;" class="flex items-center gap-3 group">
-        <img src="/assets/logos/logo-bleu-clair.png" alt="Interact Club Tunis Golfe Carthagène" class="h-11 w-auto object-contain group-hover:scale-105 transition-transform" />
+        <img src="/assets/logos/tb-logo.jpg" alt="ICTGC" class="h-12 w-12 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform" />
         <div>
           <span class="block text-sm font-bold tracking-tight text-slate-900 leading-tight">Interact Club</span>
           <span class="block text-xs font-semibold text-blue-700">Tunis Golfe Carthagène</span>
           <span class="block text-[10px] text-slate-400 font-medium">Club #219646 • District 9010</span>
         </div>
-        <img src="/assets/logos/rotary-international.png" alt="Rotary International" class="h-9 w-auto object-contain hidden lg:block opacity-90 pl-3 border-l border-slate-200" />
+        <img src="/assets/logos/rotary-international.png" alt="Rotary International" class="h-8 w-auto object-contain hidden lg:block opacity-90 pl-3 border-l border-slate-200" />
       </a>
 
-      <!-- Desktop Nav Links -->
       <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
-        <button onclick="showView('public-view')" class="nav-btn px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Accueil</button>
-        <button onclick="showView('public-view', 'actions-section')" class="nav-btn px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Actions Phares</button>
-        <button onclick="showView('public-view', 'bureau-section')" class="nav-btn px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
-        <button onclick="showView('recruitment-view')" class="nav-btn px-4 py-2 rounded-lg text-emerald-700 font-semibold hover:bg-emerald-50 transition-colors">Postuler (/rejoindre)</button>
-        <button onclick="showView('member-view')" class="nav-btn px-4 py-2 rounded-lg text-blue-700 font-semibold hover:bg-blue-50 transition-colors">Espace Membre</button>
+        <button onclick="showView('public-view')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Accueil</button>
+        <button onclick="showView('public-view', 'actions-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Actions Phares</button>
+        <button onclick="showView('public-view', 'bureau-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
+        <button onclick="showView('recruitment-view')" class="px-4 py-2 rounded-lg text-emerald-700 font-semibold hover:bg-emerald-50 transition-colors">Postuler (/rejoindre)</button>
+        <button onclick="showMemberPortal()" class="px-4 py-2 rounded-lg text-blue-700 font-semibold hover:bg-blue-50 transition-colors">Espace Membre</button>
       </nav>
 
-      <!-- Admin & CTA -->
       <div class="flex items-center gap-2">
-        <button onclick="showView('admin-view')" class="px-3 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
-          ⚙️ Admin CRM
-        </button>
-        <button onclick="showView('recruitment-view')" class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <div id="auth-buttons-container" class="flex items-center gap-2">
+          <button onclick="openMemberLoginModal()" class="px-3 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
+            Connexion Membre
+          </button>
+          <button onclick="showAdminPortal()" class="px-3 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+            Admin CRM
+          </button>
+        </div>
+        <button onclick="showView('recruitment-view')" class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all">
           Nous Rejoindre
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ======================================================================== -->
-  <!-- MAIN CONTAINER WITH SPA ROUTING -->
-  <!-- ======================================================================== -->
+  <div id="admin-banner" class="hidden bg-indigo-900 text-white px-4 py-2 text-xs font-medium flex items-center justify-between">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <span>Mode Administrateur Actif</span>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleInlineEdit()" id="btn-toggle-edit" class="px-2.5 py-1 bg-indigo-700 hover:bg-indigo-600 rounded text-xs font-bold transition-colors">
+          Activer Édition de Texte
+        </button>
+        <button onclick="logoutAdmin()" class="underline text-indigo-200 hover:text-white">Déconnexion Admin</button>
+      </div>
+    </div>
+  </div>
+
   <main class="flex-grow">
 
-    <!-- 1. PUBLIC VIEW (Landing, Bento Grid, Actions, Bureau, Metrics) -->
     <div id="public-view" class="space-y-16 pb-20">
       
-      <!-- Hero Section -->
       <section class="relative pt-8 pb-16 overflow-hidden bg-gradient-to-b from-blue-50/70 to-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <!-- Official Rotary & Interact Logos Banner -->
           <div class="flex items-center justify-center gap-6 mb-6">
             <img src="/assets/logos/rotary-international.png" alt="Rotary International" class="h-12 sm:h-14 w-auto object-contain drop-shadow-sm">
             <div class="h-8 w-px bg-slate-300"></div>
@@ -94,15 +98,17 @@
             <div class="h-8 w-px bg-slate-300 hidden sm:block"></div>
             <img src="/assets/logos/create-lasting-impact.png" alt="Create Lasting Impact" class="h-10 sm:h-12 w-auto object-contain drop-shadow-sm hidden sm:block">
           </div>
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 mb-6">
-            <span>✨</span> Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose
+
+          <div id="edit-heroTagline" contenteditable="false" onblur="saveSiteContent('heroTagline', this.innerText)" class="editable-field inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 mb-6">
+            Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose
           </div>
-          <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight">
+          <h1 id="edit-heroTitle" contenteditable="false" onblur="saveSiteContent('heroTitle', this.innerText)" class="editable-field text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight">
             La Jeunesse au Service de la Communauté
           </h1>
-          <p class="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p id="edit-heroDescription" contenteditable="false" onblur="saveSiteContent('heroDescription', this.innerText)" class="editable-field mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Depuis mars 2017 (charte officielle le 7 janvier 2019), l'Interact Club Tunis Golfe Carthagène rassemble des jeunes engagés de 12 à 18 ans pour transformer des vies à travers des actions solidaires durables.
           </p>
+
           <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
             <button onclick="showView('recruitment-view')" class="px-6 py-3.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all hover:shadow-lg">
               Postuler pour le Mandat 2026-2027
@@ -111,60 +117,65 @@
               Découvrir nos Actions Réalisées
             </button>
           </div>
+
+          <div class="mt-12 max-w-4xl mx-auto rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-900">
+            <img src="/assets/logos/club-team-banner.jpg" alt="Famille Interact Club Tunis Golfe Carthagène" class="w-full h-72 sm:h-96 object-cover object-center opacity-90 hover:opacity-100 transition-opacity">
+          </div>
         </div>
       </section>
 
-      <!-- Live Verified Metrics Counters -->
       <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div id="metrics-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <!-- Injected via JS -->
-        </div>
+        <div id="metrics-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
       </section>
 
-      <!-- Bento Grid Flagship Actions -->
       <section id="actions-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-8">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Impact de Terrain</span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Nos Actions Phares</h2>
-            <p class="text-sm text-slate-500 mt-1">Caravanes humanitaires, rentrées scolaires et initiatives solidaires vérifiées</p>
+            <h2 id="edit-actionsSectionTitle" contenteditable="false" onblur="saveSiteContent('actionsSectionTitle', this.innerText)" class="editable-field text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+              Nos Actions Phares
+            </h2>
+            <p id="edit-actionsSectionSubtitle" contenteditable="false" onblur="saveSiteContent('actionsSectionSubtitle', this.innerText)" class="editable-field text-sm text-slate-500 mt-1">
+              Caravanes humanitaires, rentrées scolaires et initiatives solidaires vérifiées
+            </p>
+          </div>
+          <div id="admin-actions-controls" class="hidden">
+            <button onclick="openAddActionModal()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-all">
+              + Ajouter une Action
+            </button>
           </div>
         </div>
-        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Injected via JS -->
-        </div>
+        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
       </section>
 
-      <!-- Bureau Exécutif & Mandat 2026-2027 -->
       <section id="bureau-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto mb-12">
           <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Gouvernance Officielle</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Bureau du Mandat 2026–2027</h2>
-          <p class="text-sm text-slate-500 mt-2">Réunion statutaire constitutive du 1er août 2026</p>
+          <h2 id="edit-bureauSectionTitle" contenteditable="false" onblur="saveSiteContent('bureauSectionTitle', this.innerText)" class="editable-field text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            Bureau du Mandat 2026–2027
+          </h2>
+          <p id="edit-bureauSectionSubtitle" contenteditable="false" onblur="saveSiteContent('bureauSectionSubtitle', this.innerText)" class="editable-field text-sm text-slate-500 mt-2">
+            Réunion statutaire constitutive du 1er août 2026
+          </p>
         </div>
 
         <div class="mb-10">
           <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-blue-600"></span> Bureau Exécutif
           </h3>
-          <div id="bureau-executif-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Injected via JS -->
-          </div>
+          <div id="bureau-executif-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
         <div>
           <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-amber-500"></span> Bureau Élargi & Commissions
           </h3>
-          <div id="bureau-elargi-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <!-- Injected via JS -->
-          </div>
+          <div id="bureau-elargi-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
         </div>
       </section>
 
-      <!-- Sponsors & Media Section -->
       <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-200 text-center">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Ils nous soutiennent & parlent de nous</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Partenaires & Médias</span>
         <div class="mt-6 flex flex-wrap items-center justify-center gap-8 text-sm font-bold text-slate-500">
           <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Tunisie Telecom</span>
           <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Amen Bank</span>
@@ -177,7 +188,6 @@
 
     </div>
 
-    <!-- 2. RECRUITMENT VIEW (Tunnel d'Acquisition: /rejoindre-ictgc) -->
     <div id="recruitment-view" class="hidden max-w-3xl mx-auto px-4 py-12">
       <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
         <div class="text-center pb-8 border-b border-slate-100">
@@ -189,11 +199,9 @@
         </div>
 
         <form id="recruitment-form" onsubmit="handleRecruitmentSubmit(event)" class="mt-8 space-y-8">
-          
-          <!-- Section 1: Informations Personnelles -->
           <div class="space-y-4">
             <h3 class="text-sm font-bold uppercase tracking-wider text-blue-700 flex items-center gap-2">
-              <span>👤</span> 1. Informations Personnelles
+              1. Informations Personnelles
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -210,7 +218,7 @@
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Votre lycée (*)</label>
-                <input type="text" name="high_school" placeholder="Ex: Lycée Gustave Flaubert, Carthage..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                <input type="text" name="high_school" placeholder="Ex: Lycée Gustave Flaubert..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
             </div>
             <div>
@@ -237,10 +245,9 @@
             </div>
           </div>
 
-          <!-- Section 2: Centres d'intérêt et loisirs -->
           <div class="space-y-4 pt-6 border-t border-slate-100">
             <h3 class="text-sm font-bold uppercase tracking-wider text-rose-600 flex items-center gap-2">
-              <span>🎨</span> 2. Centre d'intérêt et loisirs
+              2. Centre d'intérêt et loisirs
             </h3>
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">Quels sont vos loisirs (*)</label>
@@ -253,7 +260,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Décrivez votre personnalité en 3 mots (*)</label>
-                <input type="text" name="personality_three_words" placeholder="Ex: Curieux, empathique, leader" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                <input type="text" name="personality_three_words" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Introverti / Extraverti (*)</label>
@@ -271,15 +278,14 @@
               <input type="text" name="other_clubs_experience" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Talents utiles au club (design, montage, logistique, etc.) (*)</label>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Talents utiles au club (design, montage, etc.) (*)</label>
               <input type="text" name="useful_talents" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
           </div>
 
-          <!-- Section 3: Disponibilité & Engagement -->
           <div class="space-y-4 pt-6 border-t border-slate-100">
             <h3 class="text-sm font-bold uppercase tracking-wider text-amber-600 flex items-center gap-2">
-              <span>⌛</span> 3. Disponibilité & Engagement
+              3. Disponibilité & Engagement
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -293,14 +299,13 @@
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">Contraintes influençant la disponibilité (*)</label>
-              <input type="text" name="availability_constraints" placeholder="Examens, transports, etc." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <input type="text" name="availability_constraints" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
           </div>
 
-          <!-- Section 4: Lettre de motivation -->
           <div class="space-y-4 pt-6 border-t border-slate-100">
             <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-2">
-              <span>📝</span> 4. Lettre de motivation
+              4. Lettre de motivation
             </h3>
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">Que représente Interact pour vous ? (*)</label>
@@ -334,102 +339,80 @@
       </div>
     </div>
 
-    <!-- 3. MEMBER VIEW (Espace Membre) -->
     <div id="member-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
-      <!-- Member Identity Bar & Financial Status -->
       <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div class="flex items-center gap-4">
-          <div class="w-16 h-16 rounded-2xl bg-blue-600 text-white font-black text-2xl flex items-center justify-center shadow-md">
+          <div id="member-avatar-badge" class="w-16 h-16 rounded-2xl bg-blue-600 text-white font-black text-2xl flex items-center justify-center shadow-md">
             YC
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-xl font-extrabold text-slate-900">Yasmine Cherif</h2>
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">Présidente</span>
+              <h2 id="member-display-name" class="text-xl font-extrabold text-slate-900">Yasmine Cherif</h2>
+              <span id="member-display-role" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">Présidente</span>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">yasmine.cherif@ictgc.org • Mandat 2026–2027</p>
-            <div class="mt-2 flex flex-wrap gap-1.5">
-              <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium">Commission d'Intérêt Public</span>
-              <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium">Commission des Relations Internes & Externes</span>
-              <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-semibold">Commission des Ressources Humaines</span>
-            </div>
+            <p id="member-display-email" class="text-xs text-slate-500 mt-0.5">yasmine.cherif@ictgc.org • Mandat 2026–2027</p>
+            <div id="member-display-commissions" class="mt-2 flex flex-wrap gap-1.5"></div>
           </div>
         </div>
 
-        <!-- Financial Balance Tracker -->
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-6">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Cotisation restante</span>
-            <span class="text-2xl font-black text-emerald-600 block">0 TND</span>
-            <span class="text-[10px] text-slate-500">100 TND / 100 TND réglé</span>
+        <div class="flex items-center gap-4">
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-6">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Cotisation restante</span>
+              <span id="member-dues-remaining" class="text-2xl font-black text-emerald-600 block">0 TND</span>
+              <span id="member-dues-status" class="text-[10px] text-slate-500">100 TND / 100 TND réglé</span>
+            </div>
           </div>
-          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
-            ✓
-          </div>
+          <button onclick="logoutMember()" class="p-3 text-xs font-semibold text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+            Déconnexion
+          </button>
         </div>
       </div>
 
-      <!-- Grid: Gamification Leaderboard + Liens Opérationnels -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <!-- Left: Leaderboard Top 3 Podium (2 cols) -->
         <div class="lg:col-span-2">
-          <div id="leaderboard-container">
-            <!-- Injected via JS -->
-          </div>
+          <div id="leaderboard-container"></div>
         </div>
 
-        <!-- Right: Liens Opérationnels Messenger & Sanctions -->
         <div class="space-y-6">
-          
-          <!-- Messenger Groups -->
           <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-900 mb-1 flex items-center gap-2">
-              <span>💬</span> Groupes Messenger de Zone
-            </h3>
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Groupes Messenger de Zone</h3>
             <p class="text-xs text-slate-500 mb-4">Liens opérationnels pour les convois et actions en cours</p>
-            <div id="zone-links-list" class="space-y-2">
-              <!-- Injected via JS -->
-            </div>
+            <div id="zone-links-list" class="space-y-2"></div>
           </div>
 
-          <!-- Sanctions Transparency -->
           <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-900 mb-1 flex items-center gap-2">
-              <span>⚖️</span> Suivi des Sanctions
-            </h3>
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Suivi des Sanctions</h3>
             <p class="text-xs text-slate-500 mb-4">Statut disciplinaire individuel</p>
             <div class="text-xs text-slate-500 p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-2">
               <span class="text-emerald-500 font-bold">✓</span> Aucune sanction enregistrée. Dossier vierge.
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- Bibliothèque Numérique (Resource Library) -->
-      <div id="resource-library-container">
-        <!-- Injected via JS -->
-      </div>
-
+      <div id="resource-library-container"></div>
     </div>
 
-    <!-- 4. ADMIN VIEW (CRM: Candidates, Points, Dues) -->
     <div id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
       <div class="flex items-center justify-between pb-6 border-b border-slate-200">
         <div>
           <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Administration & CRM</span>
           <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Tableau de Bord Administratif</h2>
-          <p class="text-xs text-slate-500">Gestion des candidatures, des commissions et des points de gamification</p>
+          <p class="text-xs text-slate-500">Gestion des candidatures, des commissions, des actions et des points</p>
         </div>
-        <button onclick="refreshAdminData()" class="px-4 py-2 text-xs font-semibold bg-white border border-slate-300 rounded-xl hover:bg-slate-50">
-          Actualiser
-        </button>
+        <div class="flex items-center gap-3">
+          <button onclick="openAddActionModal()" class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm">
+            + Nouvelle Action
+          </button>
+          <button onclick="toggleInlineEdit()" class="px-4 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl">
+            Édition Directe de Texte
+          </button>
+        </div>
       </div>
 
-      <!-- Candidates Review Table -->
       <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
         <h3 class="text-base font-bold text-slate-900 mb-1">Candidatures en Attente (Tunnel /rejoindre-ictgc)</h3>
         <p class="text-xs text-slate-500 mb-6">L'approbation applique automatiquement l'affectation à la CIP et la CRIE + 1 commission élective.</p>
@@ -446,14 +429,11 @@
                 <th class="p-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="candidates-table-body" class="divide-y divide-slate-100">
-              <!-- Injected via JS -->
-            </tbody>
+            <tbody id="candidates-table-body" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Members Points & Dues Manager -->
       <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
         <h3 class="text-base font-bold text-slate-900 mb-1">Gestion des Membres & Attribution des Points</h3>
         <p class="text-xs text-slate-500 mb-6">Ajustez manuellement les points du leaderboard ou suivez les cotisations</p>
@@ -470,9 +450,7 @@
                 <th class="p-3 text-right">Ajuster Points</th>
               </tr>
             </thead>
-            <tbody id="members-table-body" class="divide-y divide-slate-100">
-              <!-- Injected via JS -->
-            </tbody>
+            <tbody id="members-table-body" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
       </div>
@@ -481,9 +459,108 @@
 
   </main>
 
-  <!-- ======================================================================== -->
-  <!-- MODAL: APPROVE CANDIDATE (Commission Allocation Rule) -->
-  <!-- ======================================================================== -->
+  <div id="member-login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Espace Membre</h3>
+          <p class="text-xs text-slate-500">Connexion via votre adresse email</p>
+        </div>
+        <button onclick="closeMemberLoginModal()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+      </div>
+
+      <form onsubmit="handleMemberLogin(event)" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Votre Adresse Email</label>
+          <input type="email" id="login-member-email" placeholder="prenom.nom@ictgc.org" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+        </div>
+        <button type="submit" class="w-full py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all">
+          Accéder à mon Espace
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="admin-login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Connexion Administrateur</h3>
+          <p class="text-xs text-slate-500">Accès CRM et gestion des membres</p>
+        </div>
+        <button onclick="closeAdminLoginModal()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+      </div>
+
+      <form onsubmit="handleAdminLogin(event)" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Code PIN ou Mot de Passe Admin</label>
+          <input type="password" id="admin-pass-input" placeholder="Code d'accès..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+        </div>
+        <button type="submit" class="w-full py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-all">
+          Déverrouiller le CRM
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="add-action-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Ajouter une Action Phare</h3>
+          <p class="text-xs text-slate-500">Publication synchronisée sur Cloud Firestore</p>
+        </div>
+        <button onclick="closeAddActionModal()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+      </div>
+
+      <form onsubmit="handleCreateAction(event)" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Titre de l'action (*)</label>
+          <input type="text" name="action_title" placeholder="Ex: Caravane Hiver au Chaud..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Catégorie (*)</label>
+            <input type="text" name="action_category" placeholder="Solidarité, Éducation..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Lieu (*)</label>
+            <input type="text" name="action_location" placeholder="Ex: Nabeul, Testour..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre de bénéficiaires</label>
+            <input type="number" name="action_beneficiaries" value="0" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Unité</label>
+            <input type="text" name="action_unit" placeholder="familles, écoliers..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Description détaillée (*)</label>
+          <textarea name="action_description" rows="3" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Images de l'action (Jusqu'à 4 photos)</label>
+          <div class="space-y-2">
+            <input type="url" name="img_1" placeholder="URL Image 1 (https://...)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
+            <input type="url" name="img_2" placeholder="URL Image 2 (optionnelle)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
+            <input type="url" name="img_3" placeholder="URL Image 3 (optionnelle)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
+            <input type="url" name="img_4" placeholder="URL Image 4 (optionnelle)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs" />
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+          <button type="button" onclick="closeAddActionModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Annuler</button>
+          <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm">Publier l'Action</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div id="approve-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl border border-slate-200">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -508,28 +585,21 @@
             Sélectionner au moins 1 Commission Élective (*) :
           </label>
           <select id="elective-commission-select" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="comm-fin">Commission des Finances</option>
-            <option value="comm-rh">Commission des Ressources Humaines</option>
-            <option value="comm-cai">Commission des Actions Internationales</option>
-            <option value="comm-media">Commission de Médiatisation</option>
+            <option value="Commission des Finances">Commission des Finances</option>
+            <option value="Commission des Ressources Humaines">Commission des Ressources Humaines</option>
+            <option value="Commission des Actions Internationales">Commission des Actions Internationales</option>
+            <option value="Commission de Médiatisation">Commission de Médiatisation</option>
           </select>
         </div>
 
         <div class="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
-          <button onclick="closeApproveModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-xl">
-            Annuler
-          </button>
-          <button onclick="confirmApproveCandidate()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm">
-            Confirmer l'Approbation
-          </button>
+          <button onclick="closeApproveModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Annuler</button>
+          <button onclick="confirmApproveCandidate()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm">Confirmer</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ======================================================================== -->
-  <!-- MODAL: ADJUST POINTS -->
-  <!-- ======================================================================== -->
   <div id="points-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -557,7 +627,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
@@ -575,9 +644,6 @@
     </div>
   </footer>
 
-  <!-- ======================================================================== -->
-  <!-- FIREBASE CLOUD FIRESTORE v10 SDK -->
-  <!-- ======================================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
@@ -596,24 +662,122 @@
     const db = getFirestore(app);
     window.firestoreDb = db;
     window.fs = { collection, addDoc, doc, updateDoc, onSnapshot, getDocs, setDoc };
-    console.log("Connected to online Firebase Cloud Firestore (ictgc-club)");
+
+    initCloudSync();
   </script>
 
-  <!-- ======================================================================== -->
-  <!-- CLIENT JAVASCRIPT APP LOGIC -->
-  <!-- ======================================================================== -->
   <script>
     let currentApproveCandidateId = null;
     let currentAdjustMemberId = null;
+    let isInlineEditEnabled = false;
+    let currentLoggedMember = null;
+    let isAdminLoggedIn = false;
 
-    // View switching
+    const defaultMetrics = [
+      { key: "beneficiaries_total", label: "Bénéficiaires Directs Soutenus", value_display: "1 940+", subtext: "Familles et enfants équipés ou soutenus lors des caravanes" },
+      { key: "school_kids", label: "Écoliers Dotés de Cartables", value_display: "800", subtext: "Action Rentrée Scolaire (Nabeul)" },
+      { key: "food_baskets", label: "Paniers Alimentaires Distribués", value_display: "1 000", subtext: "Couffin de Ramadan (Mahdia)" },
+      { key: "winter_families", label: "Foyers Réchauffés en Hiver", value_display: "120", subtext: "Hiver au Chaud (Testour)" },
+      { key: "community_reach", label: "Communauté Digitale", value_display: "3 120+", subtext: "Abonnés engagés sur Instagram (@ic.tunisgolfecarthagene)" },
+      { key: "years_active", label: "Années d'Engagement", value_display: "8+", subtext: "Depuis mars 2017 (Charte officielle le 7 janvier 2019)" }
+    ];
+
+    const defaultActions = [
+      {
+        id: "action-couffin-ramadan",
+        title: "Couffin de Ramadan (Koffet Romdhan)",
+        category: "Intérêt Public & Solidarité",
+        location: "Mahdia, Tunisie",
+        beneficiaries_count: 1000,
+        beneficiary_unit: "familles nécessiteuses",
+        description: "Distribution massive de paniers alimentaires complets pour soutenir les familles vulnérables durant le mois saint.",
+        collaborating_clubs: ["Interact Club Anastasia", "Interact Club Sidi Bou", "Interact Club Inner City"],
+        images: ["/assets/logos/club-team-banner.jpg"]
+      },
+      {
+        id: "action-rentree-scolaire",
+        title: "Rentrée Scolaire Solidaire",
+        category: "Éducation & Jeunesse",
+        location: "Nabeul, Tunisie",
+        beneficiaries_count: 800,
+        beneficiary_unit: "écoliers équipés",
+        description: "Campagne de collecte et don de cartables garnis, livres et fournitures scolaires pour lutter contre le décrochage scolaire.",
+        collaborating_clubs: ["Interact Club Saint-Germain", "Interact Club Maxula Prates", "Interact Club Monastir", "Interact Club Ruspina Monastir"],
+        images: []
+      },
+      {
+        id: "action-hiver-au-chaud",
+        title: "Hiver au Chaud",
+        category: "Urgence Hivernale & Aide Sociale",
+        location: "Testour, Tunisie",
+        beneficiaries_count: 120,
+        beneficiary_unit: "familles réchauffées",
+        description: "Caravane d'aide d'urgence apportant couvertures en laine, chauffages, vêtements chauds et denrées aux foyers ruraux isolés.",
+        collaborating_clubs: [],
+        images: []
+      },
+      {
+        id: "action-aid",
+        title: "Action Aïd El-Fitr",
+        category: "Solidarité Enfance",
+        location: "Grand Tunis, Tunisie",
+        beneficiaries_count: 20,
+        beneficiary_unit: "familles avec enfants",
+        description: "Achat et distribution de vêtements neufs pour l'Aïd, chaussures et jouets pour offrir la joie de la fête aux enfants défavorisés.",
+        partner_association: "Association Diar Essabil",
+        images: []
+      },
+      {
+        id: "action-midnight-sun",
+        title: "Midnight Sun",
+        category: "Culture, Loisirs & Autofinancement",
+        location: "Grand Tunis, Tunisie",
+        beneficiaries_count: 0,
+        description: "Événement festif estival avec pool party et DJ dont les bénéfices intégraux financent les actions humanitaires du club.",
+        images: []
+      }
+    ];
+
+    const defaultBureau = [
+      { fullName: "Yasmine Cherif", role: "Présidente", tier: "executif", bio: "Coordonne la stratégie du club, préside les réunions statutaires et représente le club auprès du Rotary parrain." },
+      { fullName: "Nour Tajouri", role: "Vice-présidente", tier: "executif", bio: "Assiste la présidence dans la coordination des commissions et supervise la bonne exécution des actions phares." },
+      { fullName: "Yessine Ben Fraj", role: "Secrétaire Général", tier: "executif", bio: "Rédige les procès-verbaux, assure la communication institutionnelle et la tenue des registres officiels." },
+      { fullName: "Eya Houas", role: "Trésorière Générale", tier: "executif", bio: "Gère la trésorerie, assure le suivi des cotisations et la conformité financière des collectes de fonds." },
+      { fullName: "Mohamed Ayoub Masmoudi", role: "Chef du Protocole", tier: "executif", bio: "Veille au respect des règles protocolaires rotariennes, à l'organisation des réunions et des cérémonies." },
+      { fullName: "Skander Mellouli", role: "Représentant au sein de la CNIT", tier: "executif", bio: "Représente le club à l'échelle nationale auprès de la Coordination Nationale des Interact en Tunisie." },
+      { fullName: "Yasmine Chaabani", role: "Conseillère Générale", tier: "executif", bio: "Apporte conseils méthodologiques et orientation stratégique au Bureau Exécutif." },
+      { fullName: "Youssef Neffati", role: "Adjoint Secrétaire Général", tier: "elargi" },
+      { fullName: "Iyed Tlili", role: "Adjoint Trésorière Générale", tier: "elargi" },
+      { fullName: "Yasmine Missaoui", role: "Adjointe Chef du Protocole", tier: "elargi" }
+    ];
+
+    const defaultMembers = [
+      { id: "mem-1", first_name: "Yasmine", last_name: "Cherif", role: "bureau", bureau_title: "Présidente", current_month_points: 120, lifetime_points: 450, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.cherif@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Ressources Humaines"] },
+      { id: "mem-2", first_name: "Nour", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
+      { id: "mem-3", first_name: "Yessine", last_name: "Ben Fraj", role: "bureau", bureau_title: "Secrétaire Général", current_month_points: 85, lifetime_points: 320, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yessine.benfraj@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission de Médiatisation"] },
+      { id: "mem-4", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière Générale", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+      { id: "mem-5", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "Co-chef Commission Intérêt Public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 50, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] }
+    ];
+
+    const defaultResources = [
+      { id: "doc-1", title: "Certificat Officiel de Constitution Rotary", category: "Règlements & chartes", file_type: "image", size_formatted: "134 Ko", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Charte officielle signée par Barry Rassin, Président du Rotary International", updated_at: "2019-01-07" },
+      { id: "doc-2", title: "Dossier Standard de Sponsoring & Présentation", category: "Ressources Graphiques", file_type: "pdf", size_formatted: "17.3 Mo", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Dossier officiel de partenariat 20 pages avec historique des actions", updated_at: "2026-08-15" },
+      { id: "doc-3", title: "Procès-Verbal 1ère Réunion Statutaire (2026-2027)", category: "Archives Administratives", file_type: "pdf", size_formatted: "420 Ko", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Procès-verbal de passation et élection du Bureau pour le mandat 2026-2027", updated_at: "2026-08-01" },
+      { id: "doc-4", title: "Pack Logos & Charte Graphique Officielle", category: "Ressources Graphiques", file_type: "archive", size_formatted: "8.4 Mo", preview_url: "https://drive.google.com/drive/folders/1Y3CzK4VZI1qqaRuWVlBdMhzxLbJGJGJL", description: "Logos ICTGC en haute définition, roue Rotary et déclinaisons", updated_at: "2026-07-20" }
+    ];
+
+    const defaultZoneLinks = [
+      { id: "zl-1", action_title: "Caravane Hiver au Chaud 2026", zone_name: "Zone Tunis Nord (La Marsa - Carthage)", messenger_url: "https://m.me/j/AbaC123..." },
+      { id: "zl-2", action_title: "Caravane Hiver au Chaud 2026", zone_name: "Zone Banlieue Sud (Megrine - Rades)", messenger_url: "https://m.me/j/AbaC456..." },
+      { id: "zl-3", action_title: "Rentrée Scolaire 2026", zone_name: "Coordination Convoi Nabeul", messenger_url: "https://m.me/j/AbaC789..." }
+    ];
+
     function showView(viewId, targetAnchorId) {
       ['public-view', 'recruitment-view', 'member-view', 'admin-view'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== viewId);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
       if (targetAnchorId) {
         setTimeout(() => {
           const anchor = document.getElementById(targetAnchorId);
@@ -622,287 +786,539 @@
       }
     }
 
-    // Load initial data
-    document.addEventListener('DOMContentLoaded', () => {
-      loadMetrics();
-      loadActions();
-      loadBureau();
-      loadLeaderboard();
-      loadResourceLibrary();
-      loadZoneLinks();
-      loadCandidates();
-      loadMembers();
-    });
+    function initCloudSync() {
+      renderMetrics(defaultMetrics);
+      renderActions(defaultActions);
+      renderBureau(defaultBureau);
+      renderLeaderboard(defaultMembers);
+      renderResourceLibrary(defaultResources);
+      renderZoneLinks(defaultZoneLinks);
+      renderMembersTable(defaultMembers);
 
-    async function loadMetrics() {
-      try {
-        const res = await fetch('/api/metrics');
-        const data = await res.json();
-        const grid = document.getElementById('metrics-grid');
-        grid.innerHTML = data.map(m => `
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
-            <span class="text-xl sm:text-2xl font-black text-slate-900 block">${m.value_display}</span>
-            <span class="text-xs font-bold text-blue-700 block mt-1">${m.label}</span>
-            <span class="text-[10px] text-slate-400 mt-0.5 block leading-tight">${m.subtext}</span>
-          </div>
-        `).join('');
-      } catch (err) { console.error(err); }
+      if (!window.firestoreDb || !window.fs) return;
+      const { collection, onSnapshot, doc } = window.fs;
+
+      onSnapshot(doc(window.firestoreDb, "siteContent", "main"), (snap) => {
+        if (snap.exists()) {
+          const c = snap.data();
+          if (c.heroTagline) document.getElementById('edit-heroTagline').innerText = c.heroTagline;
+          if (c.heroTitle) document.getElementById('edit-heroTitle').innerText = c.heroTitle;
+          if (c.heroDescription) document.getElementById('edit-heroDescription').innerText = c.heroDescription;
+          if (c.actionsSectionTitle) document.getElementById('edit-actionsSectionTitle').innerText = c.actionsSectionTitle;
+          if (c.actionsSectionSubtitle) document.getElementById('edit-actionsSectionSubtitle').innerText = c.actionsSectionSubtitle;
+          if (c.bureauSectionTitle) document.getElementById('edit-bureauSectionTitle').innerText = c.bureauSectionTitle;
+          if (c.bureauSectionSubtitle) document.getElementById('edit-bureauSectionSubtitle').innerText = c.bureauSectionSubtitle;
+        }
+      });
+
+      onSnapshot(collection(window.firestoreDb, "metrics"), (snap) => {
+        if (!snap.empty) {
+          const items = [];
+          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          renderMetrics(items);
+        }
+      });
+
+      onSnapshot(collection(window.firestoreDb, "actions"), (snap) => {
+        if (!snap.empty) {
+          const items = [];
+          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          renderActions(items);
+        }
+      });
+
+      onSnapshot(collection(window.firestoreDb, "bureauMembers"), (snap) => {
+        if (!snap.empty) {
+          const items = [];
+          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          renderBureau(items);
+        }
+      });
+
+      onSnapshot(collection(window.firestoreDb, "members"), (snap) => {
+        if (!snap.empty) {
+          const items = [];
+          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          renderLeaderboard(items);
+          renderMembersTable(items);
+          if (currentLoggedMember) {
+            const updated = items.find(m => m.id === currentLoggedMember.id || m.email === currentLoggedMember.email);
+            if (updated) setMemberActive(updated);
+          }
+        }
+      });
+
+      onSnapshot(collection(window.firestoreDb, "candidates"), (snap) => {
+        const items = [];
+        snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+        renderCandidatesTable(items);
+      });
+
+      onSnapshot(collection(window.firestoreDb, "resources"), (snap) => {
+        if (!snap.empty) {
+          const items = [];
+          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          renderResourceLibrary(items);
+        }
+      });
+
+      onSnapshot(collection(window.firestoreDb, "zoneLinks"), (snap) => {
+        if (!snap.empty) {
+          const items = [];
+          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          renderZoneLinks(items);
+        }
+      });
     }
 
-    async function loadActions() {
-      try {
-        const res = await fetch('/api/actions');
-        const data = await res.json();
-        const bento = document.getElementById('actions-bento');
-        bento.innerHTML = data.map((a, i) => {
-          const isLarge = i === 0 || i === 1;
-          return `
-            <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between gap-2 mb-3">
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    ${a.category}
-                  </span>
-                  <span class="text-xs text-slate-400 font-medium">${a.location}</span>
-                </div>
-                <h3 class="text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
-                <p class="text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
-                ${a.beneficiaries_count > 0 ? `
-                  <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">
-                    <span>Impact :</span> ${a.beneficiaries_count} ${a.beneficiary_unit || 'bénéficiaires'}
-                  </div>
-                ` : ''}
+    function renderMetrics(data) {
+      const grid = document.getElementById('metrics-grid');
+      if (!grid) return;
+      grid.innerHTML = data.map(m => `
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+          <span class="text-xl sm:text-2xl font-black text-slate-900 block">${m.value_display || m.value || ''}</span>
+          <span class="text-xs font-bold text-blue-700 block mt-1">${m.label || ''}</span>
+          <span class="text-[10px] text-slate-400 mt-0.5 block leading-tight">${m.subtext || ''}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderActions(data) {
+      const bento = document.getElementById('actions-bento');
+      if (!bento) return;
+      bento.innerHTML = data.map((a, i) => {
+        const isLarge = i === 0 || i === 1;
+        const images = (a.images || []).filter(img => img && img.trim().length > 0).slice(0, 4);
+
+        return `
+          <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                  ${a.category}
+                </span>
+                <span class="text-xs text-slate-400 font-medium">${a.location}</span>
               </div>
-              ${a.collaborating_clubs && a.collaborating_clubs.length > 0 ? `
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400">
-                  En collaboration avec : ${a.collaborating_clubs.join(', ')}
+              <h3 class="text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
+              
+              ${images.length > 0 ? `
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                  ${images.map(img => `
+                    <div class="h-24 rounded-xl overflow-hidden border border-slate-100 bg-slate-100">
+                      <img src="${img}" alt="${a.title}" class="w-full h-full object-cover hover:scale-105 transition-transform" />
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+              ${a.beneficiaries_count > 0 ? `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">
+                  <span>Impact :</span> ${a.beneficiaries_count} ${a.beneficiary_unit || 'bénéficiaires'}
                 </div>
               ` : ''}
             </div>
-          `;
-        }).join('');
-      } catch (err) { console.error(err); }
-    }
 
-    async function loadBureau() {
-      try {
-        const res = await fetch('/api/bureau');
-        const data = await res.json();
-        
-        const exec = data.filter(b => b.tier === 'executif');
-        const elargi = data.filter(b => b.tier === 'elargi');
-
-        document.getElementById('bureau-executif-grid').innerHTML = exec.map(m => `
-          <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 block mb-1">${m.role}</span>
-            <h4 class="text-sm font-bold text-slate-900">${m.full_name}</h4>
-            <p class="text-xs text-slate-500 mt-2 leading-relaxed line-clamp-3">${m.bio || ''}</p>
-          </div>
-        `).join('');
-
-        document.getElementById('bureau-elargi-grid').innerHTML = elargi.map(m => `
-          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-            <span class="text-[10px] font-bold text-amber-700 block mb-1">${m.role}</span>
-            <h4 class="text-xs font-bold text-slate-800">${m.full_name}</h4>
-          </div>
-        `).join('');
-      } catch (err) { console.error(err); }
-    }
-
-    async function loadLeaderboard() {
-      try {
-        const res = await fetch('/api/leaderboard');
-        const data = await res.json();
-        const top3 = data.slice(0, 3);
-        const first = top3[0];
-        const second = top3[1];
-        const third = top3[2];
-
-        document.getElementById('leaderboard-container').innerHTML = `
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
-            <div class="flex items-center justify-between mb-8">
-              <div>
-                <span class="px-2.5 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold">
-                  🏆 Gamification
-                </span>
-                <h3 class="text-xl font-extrabold text-slate-900 mt-1">Interactien du Mois</h3>
-                <p class="text-xs text-slate-500">Podium des membres les plus engagés</p>
+            ${a.collaborating_clubs && a.collaborating_clubs.length > 0 ? `
+              <div class="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400">
+                En collaboration avec : ${Array.isArray(a.collaborating_clubs) ? a.collaborating_clubs.join(', ') : a.collaborating_clubs}
               </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-3 md:gap-6 items-end pt-4 pb-2">
-              <!-- Rank 2 (Silver) -->
-              <div class="flex flex-col items-center">
-                ${second ? `
-                  <div class="w-14 h-14 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-base mb-2 border-2 border-slate-300 shadow">
-                    ${second.full_name.charAt(0)}
-                  </div>
-                  <span class="text-xs font-bold text-slate-800 text-center line-clamp-1">${second.full_name}</span>
-                  <span class="text-[10px] text-slate-400 mb-2">${second.bureau_title || 'Membre'}</span>
-                  <div class="w-full bg-slate-100 rounded-t-xl p-3 text-center">
-                    <span class="text-sm font-extrabold text-slate-700 block">${second.current_month_points} pts</span>
-                    <span class="text-[9px] text-slate-400 font-bold uppercase">Argent • 2e</span>
-                  </div>
-                ` : ''}
-              </div>
-
-              <!-- Rank 1 (Gold) -->
-              <div class="flex flex-col items-center">
-                ${first ? `
-                  <div class="text-xl mb-1">👑</div>
-                  <div class="w-18 h-18 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center font-black text-xl mb-2 border-3 border-amber-400 shadow-md ring-4 ring-amber-50">
-                    ${first.full_name.charAt(0)}
-                  </div>
-                  <span class="text-xs font-extrabold text-slate-900 text-center line-clamp-1">${first.full_name}</span>
-                  <span class="text-[10px] text-amber-700 font-bold mb-2">${first.bureau_title || 'Membre'}</span>
-                  <div class="w-full bg-gradient-to-t from-amber-200 to-amber-100 border border-amber-300 rounded-t-2xl p-4 text-center">
-                    <span class="text-base font-black text-amber-950 block">${first.current_month_points} pts</span>
-                    <span class="text-[9px] text-amber-900 font-extrabold uppercase">Or • Leader</span>
-                  </div>
-                ` : ''}
-              </div>
-
-              <!-- Rank 3 (Bronze) -->
-              <div class="flex flex-col items-center">
-                ${third ? `
-                  <div class="w-14 h-14 rounded-full bg-orange-100 text-orange-900 flex items-center justify-center font-bold text-base mb-2 border-2 border-orange-300 shadow">
-                    ${third.full_name.charAt(0)}
-                  </div>
-                  <span class="text-xs font-bold text-slate-800 text-center line-clamp-1">${third.full_name}</span>
-                  <span class="text-[10px] text-slate-400 mb-2">${third.bureau_title || 'Membre'}</span>
-                  <div class="w-full bg-orange-50 rounded-t-xl p-3 text-center">
-                    <span class="text-sm font-extrabold text-orange-900 block">${third.current_month_points} pts</span>
-                    <span class="text-[9px] text-orange-700 font-bold uppercase">Bronze • 3e</span>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
+            ` : ''}
           </div>
         `;
-      } catch (err) { console.error(err); }
+      }).join('');
     }
 
-    async function loadResourceLibrary() {
-      try {
-        const res = await fetch('/api/resources');
-        const docs = await res.json();
+    function renderBureau(data) {
+      const execGrid = document.getElementById('bureau-executif-grid');
+      const elargiGrid = document.getElementById('bureau-elargi-grid');
+      if (!execGrid || !elargiGrid) return;
 
-        document.getElementById('resource-library-container').innerHTML = `
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-              <div>
-                <span class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-[10px] font-bold">
-                  📚 Bibliothèque Numérique
-                </span>
-                <h3 class="text-xl font-extrabold text-slate-900 mt-1">Espace Documentaire Officiel</h3>
-                <p class="text-xs text-slate-500">Documents institutionnels, chartes et kits graphiques issus du Drive</p>
-              </div>
-              <a href="https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9?usp=drive_link" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-2">
-                <span>📁</span> Google Drive du Club ↗
-              </a>
+      const exec = data.filter(b => b.tier === 'executif' || !b.tier);
+      const elargi = data.filter(b => b.tier === 'elargi');
+
+      execGrid.innerHTML = exec.map(m => `
+        <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 block mb-1">${m.role}</span>
+          <h4 class="text-sm font-bold text-slate-900">${m.fullName || m.full_name || ''}</h4>
+          <p class="text-xs text-slate-500 mt-2 leading-relaxed line-clamp-3">${m.bio || ''}</p>
+        </div>
+      `).join('');
+
+      elargiGrid.innerHTML = elargi.map(m => `
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-amber-700 block mb-1">${m.role}</span>
+          <h4 class="text-xs font-bold text-slate-800">${m.fullName || m.full_name || ''}</h4>
+        </div>
+      `).join('');
+    }
+
+    function renderLeaderboard(data) {
+      const container = document.getElementById('leaderboard-container');
+      if (!container) return;
+      const top3 = [...data].sort((a, b) => (b.current_month_points || b.currentMonthPoints || 0) - (a.current_month_points || a.currentMonthPoints || 0)).slice(0, 3);
+      const first = top3[0];
+      const second = top3[1];
+      const third = top3[2];
+
+      container.innerHTML = `
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold">
+                🏆 Gamification
+              </span>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Interactien du Mois</h3>
+              <p class="text-xs text-slate-500">Podium des membres les plus engagés</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 md:gap-6 items-end pt-4 pb-2">
+            <div class="flex flex-col items-center">
+              ${second ? `
+                <div class="w-14 h-14 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-base mb-2 border-2 border-slate-300 shadow">
+                  ${(second.first_name || second.firstName || 'M').charAt(0)}
+                </div>
+                <span class="text-xs font-bold text-slate-800 text-center line-clamp-1">${(second.first_name || second.firstName || '') + ' ' + (second.last_name || second.lastName || '')}</span>
+                <span class="text-[10px] text-slate-400 mb-2">${second.bureau_title || second.role || 'Membre'}</span>
+                <div class="w-full bg-slate-100 rounded-t-xl p-3 text-center">
+                  <span class="text-sm font-extrabold text-slate-700 block">${second.current_month_points || second.currentMonthPoints || 0} pts</span>
+                  <span class="text-[9px] text-slate-400 font-bold uppercase">Argent • 2e</span>
+                </div>
+              ` : ''}
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-              ${docs.map(d => `
-                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-all flex flex-col justify-between">
-                  <div>
-                    <div class="flex items-center justify-between mb-2">
-                      <span class="px-2 py-0.5 bg-slate-200 text-slate-700 rounded text-[9px] font-bold uppercase">${d.file_type}</span>
-                      <span class="text-[10px] text-slate-400 font-medium">${d.size_formatted}</span>
-                    </div>
-                    <h4 class="text-xs font-bold text-slate-900 line-clamp-2">${d.title}</h4>
-                    <p class="text-[10px] text-slate-500 mt-1 line-clamp-2">${d.description || ''}</p>
-                  </div>
-                  <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                    <span class="text-slate-400">${d.updated_at}</span>
-                    <a href="${d.preview_url}" target="_blank" class="font-bold text-blue-600 hover:text-blue-800">Aperçu ↗</a>
-                  </div>
+            <div class="flex flex-col items-center">
+              ${first ? `
+                <div class="text-xl mb-1">👑</div>
+                <div class="w-18 h-18 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center font-black text-xl mb-2 border-3 border-amber-400 shadow-md ring-4 ring-amber-50">
+                  ${(first.first_name || first.firstName || 'M').charAt(0)}
                 </div>
+                <span class="text-xs font-extrabold text-slate-900 text-center line-clamp-1">${(first.first_name || first.firstName || '') + ' ' + (first.last_name || first.lastName || '')}</span>
+                <span class="text-[10px] text-amber-700 font-bold mb-2">${first.bureau_title || first.role || 'Membre'}</span>
+                <div class="w-full bg-gradient-to-t from-amber-200 to-amber-100 border border-amber-300 rounded-t-2xl p-4 text-center">
+                  <span class="text-base font-black text-amber-950 block">${first.current_month_points || first.currentMonthPoints || 0} pts</span>
+                  <span class="text-[9px] text-amber-900 font-extrabold uppercase">Or • Leader</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="flex flex-col items-center">
+              ${third ? `
+                <div class="w-14 h-14 rounded-full bg-orange-100 text-orange-900 flex items-center justify-center font-bold text-base mb-2 border-2 border-orange-300 shadow">
+                  ${(third.first_name || third.firstName || 'M').charAt(0)}
+                </div>
+                <span class="text-xs font-bold text-slate-800 text-center line-clamp-1">${(third.first_name || third.firstName || '') + ' ' + (third.last_name || third.lastName || '')}</span>
+                <span class="text-[10px] text-slate-400 mb-2">${third.bureau_title || third.role || 'Membre'}</span>
+                <div class="w-full bg-orange-50 rounded-t-xl p-3 text-center">
+                  <span class="text-sm font-extrabold text-orange-900 block">${third.current_month_points || third.currentMonthPoints || 0} pts</span>
+                  <span class="text-[9px] text-orange-700 font-bold uppercase">Bronze • 3e</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderResourceLibrary(docs) {
+      const container = document.getElementById('resource-library-container');
+      if (!container) return;
+      container.innerHTML = `
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+            <div>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-[10px] font-bold">
+                📚 Bibliothèque Numérique
+              </span>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Espace Documentaire Officiel</h3>
+              <p class="text-xs text-slate-500">Documents institutionnels, chartes et kits graphiques issus du Drive</p>
+            </div>
+            <a href="https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9?usp=drive_link" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-2">
+              <span>📁</span> Google Drive du Club ↗
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            ${docs.map(d => `
+              <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-all flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="px-2 py-0.5 bg-slate-200 text-slate-700 rounded text-[9px] font-bold uppercase">${d.file_type || d.category}</span>
+                    <span class="text-[10px] text-slate-400 font-medium">${d.size_formatted || ''}</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900 line-clamp-2">${d.title}</h4>
+                  <p class="text-[10px] text-slate-500 mt-1 line-clamp-2">${d.description || ''}</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                  <span class="text-slate-400">${d.updated_at || ''}</span>
+                  <a href="${d.preview_url}" target="_blank" class="font-bold text-blue-600 hover:text-blue-800">Aperçu ↗</a>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderZoneLinks(links) {
+      const container = document.getElementById('zone-links-list');
+      if (!container) return;
+      container.innerHTML = links.map(l => `
+        <a href="${l.messenger_url}" target="_blank" class="block p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all">
+          <span class="text-xs font-bold text-slate-900 block">${l.zone_name}</span>
+          <span class="text-[10px] text-slate-500 block">${l.action_title} • Ouvrir ↗</span>
+        </a>
+      `).join('');
+    }
+
+    function renderCandidatesTable(data) {
+      const tbody = document.getElementById('candidates-table-body');
+      if (!tbody) return;
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Aucune candidature enregistrée pour le moment.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(c => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3 font-bold text-slate-900">${c.first_name} ${c.last_name}</td>
+          <td class="p-3">${c.high_school} (${c.address})</td>
+          <td class="p-3">Terrain: ${c.field_availability}/5 | Web: ${c.online_availability}/5</td>
+          <td class="p-3">${c.personality_scale}</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+              ${c.status}
+            </span>
+          </td>
+          <td class="p-3 text-right">
+            ${c.status === 'pending' ? `
+              <button onclick="openApproveModal('${c.id}', '${c.first_name} ${c.last_name}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm">
+                Approuver
+              </button>
+            ` : '<span class="text-slate-400 text-xs">Traité</span>'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderMembersTable(data) {
+      const tbody = document.getElementById('members-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = data.map(m => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3 font-bold text-slate-900">${(m.first_name || m.firstName || '') + ' ' + (m.last_name || m.lastName || '')}</td>
+          <td class="p-3">${m.bureau_title || m.role || 'Membre actif'}</td>
+          <td class="p-3">
+            <div class="flex flex-wrap gap-1">
+              ${(m.assigned_commissions || []).map(comm => `
+                <span class="px-1.5 py-0.5 bg-slate-100 rounded text-[9px] text-slate-700">${comm}</span>
               `).join('')}
             </div>
-          </div>
-        `;
-      } catch (err) { console.error(err); }
+          </td>
+          <td class="p-3 font-bold text-blue-700">${m.current_month_points || m.currentMonthPoints || 0} pts</td>
+          <td class="p-3">
+            <span class="font-semibold text-slate-800">${m.cotisation_paid_tnd || 0} / ${m.cotisation_assessed_tnd || 100} TND</span>
+          </td>
+          <td class="p-3 text-right">
+            <button onclick="openPointsModal('${m.id}', '${(m.first_name || m.firstName || '') + ' ' + (m.last_name || m.lastName || '')}')" class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-bold">
+              +/- Points
+            </button>
+          </td>
+        </tr>
+      `).join('');
     }
 
-    async function loadZoneLinks() {
-      try {
-        const res = await fetch('/api/zone-links');
-        const links = await res.json();
-        document.getElementById('zone-links-list').innerHTML = links.map(l => `
-          <a href="${l.messenger_url}" target="_blank" class="block p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all">
-            <span class="text-xs font-bold text-slate-900 block">${l.zone_name}</span>
-            <span class="text-[10px] text-slate-500 block">${l.action_title} • Ouvrir le groupe ↗</span>
-          </a>
-        `).join('');
-      } catch (err) { console.error(err); }
+    function openMemberLoginModal() {
+      document.getElementById('member-login-modal').classList.remove('hidden');
     }
 
-    async function loadCandidates() {
-      try {
-        const res = await fetch('/api/candidates');
-        const data = await res.json();
-        const tbody = document.getElementById('candidates-table-body');
-        if (data.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Aucune candidature enregistrée pour le moment.</td></tr>`;
-          return;
+    function closeMemberLoginModal() {
+      document.getElementById('member-login-modal').classList.add('hidden');
+    }
+
+    async function handleMemberLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-member-email').value.trim().toLowerCase();
+      let found = defaultMembers.find(m => m.email.toLowerCase() === email);
+
+      if (window.firestoreDb && window.fs) {
+        try {
+          const snap = await window.fs.getDocs(window.fs.collection(window.firestoreDb, "members"));
+          snap.forEach(d => {
+            const data = d.data();
+            if (data.email && data.email.toLowerCase() === email) {
+              found = { id: d.id, ...data };
+            }
+          });
+        } catch (err) {
+          console.warn("Firestore lookup failed:", err);
         }
-        tbody.innerHTML = data.map(c => `
-          <tr class="hover:bg-slate-50">
-            <td class="p-3 font-bold text-slate-900">${c.first_name} ${c.last_name}</td>
-            <td class="p-3">${c.high_school} (${c.address})</td>
-            <td class="p-3">Terrain: ${c.field_availability}/5 | Web: ${c.online_availability}/5</td>
-            <td class="p-3">${c.personality_scale}</td>
-            <td class="p-3">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                ${c.status}
-              </span>
-            </td>
-            <td class="p-3 text-right">
-              ${c.status === 'pending' ? `
-                <button onclick="openApproveModal('${c.id}', '${c.first_name} ${c.last_name}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm">
-                  Approuver
-                </button>
-              ` : '<span class="text-slate-400 text-xs">Traité</span>'}
-            </td>
-          </tr>
-        `).join('');
-      } catch (err) { console.error(err); }
+      }
+
+      if (found) {
+        setMemberActive(found);
+        closeMemberLoginModal();
+        showView('member-view');
+      } else {
+        alert("Aucun compte actif trouvé avec cette adresse email. Veuillez vérifier votre adresse ou postuler via le formulaire de recrutement.");
+      }
     }
 
-    async function loadMembers() {
+    function setMemberActive(member) {
+      currentLoggedMember = member;
+      const initials = ((member.first_name || member.firstName || 'M').charAt(0) + (member.last_name || member.lastName || '').charAt(0)).toUpperCase();
+      document.getElementById('member-avatar-badge').textContent = initials;
+      document.getElementById('member-display-name').textContent = (member.first_name || member.firstName || '') + ' ' + (member.last_name || member.lastName || '');
+      document.getElementById('member-display-role').textContent = member.bureau_title || member.role || 'Membre';
+      document.getElementById('member-display-email').textContent = (member.email || '') + ' • Mandat 2026–2027';
+
+      const commsContainer = document.getElementById('member-display-commissions');
+      const comms = member.assigned_commissions || member.assignedCommissions || ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes"];
+      commsContainer.innerHTML = comms.map(c => `
+        <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium">${c}</span>
+      `).join('');
+
+      const remaining = (member.cotisation_assessed_tnd || 100) - (member.cotisation_paid_tnd || 0);
+      document.getElementById('member-dues-remaining').textContent = `${remaining} TND`;
+      document.getElementById('member-dues-status').textContent = `${member.cotisation_paid_tnd || 0} TND / ${member.cotisation_assessed_tnd || 100} TND réglé`;
+    }
+
+    function logoutMember() {
+      currentLoggedMember = null;
+      showView('public-view');
+    }
+
+    function showMemberPortal() {
+      if (currentLoggedMember) {
+        showView('member-view');
+      } else {
+        openMemberLoginModal();
+      }
+    }
+
+    function showAdminPortal() {
+      if (isAdminLoggedIn) {
+        showView('admin-view');
+      } else {
+        document.getElementById('admin-login-modal').classList.remove('hidden');
+      }
+    }
+
+    function closeAdminLoginModal() {
+      document.getElementById('admin-login-modal').classList.add('hidden');
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById('admin-pass-input').value.trim();
+      if (pass === 'ictgc2026' || pass === 'ictgc' || pass === 'admin') {
+        isAdminLoggedIn = true;
+        closeAdminLoginModal();
+        document.getElementById('admin-banner').classList.remove('hidden');
+        document.getElementById('admin-actions-controls').classList.remove('hidden');
+        showView('admin-view');
+      } else {
+        alert("Code d'accès administrateur incorrect.");
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      isInlineEditEnabled = false;
+      document.getElementById('admin-banner').classList.add('hidden');
+      document.getElementById('admin-actions-controls').classList.add('hidden');
+      disableInlineEdit();
+      showView('public-view');
+    }
+
+    function toggleInlineEdit() {
+      isInlineEditEnabled = !isInlineEditEnabled;
+      const btn = document.getElementById('btn-toggle-edit');
+      if (isInlineEditEnabled) {
+        btn.textContent = "Désactiver Édition";
+        btn.classList.replace('bg-indigo-700', 'bg-emerald-600');
+        enableInlineEdit();
+      } else {
+        btn.textContent = "Activer Édition de Texte";
+        btn.classList.replace('bg-emerald-600', 'bg-indigo-700');
+        disableInlineEdit();
+      }
+    }
+
+    function enableInlineEdit() {
+      document.querySelectorAll('.editable-field').forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+        el.classList.add('editable-focus');
+      });
+    }
+
+    function disableInlineEdit() {
+      document.querySelectorAll('.editable-field').forEach(el => {
+        el.setAttribute('contenteditable', 'false');
+        el.classList.remove('editable-focus');
+      });
+    }
+
+    async function saveSiteContent(fieldKey, value) {
+      if (!isAdminLoggedIn || !window.firestoreDb || !window.fs) return;
       try {
-        const res = await fetch('/api/members');
-        const data = await res.json();
-        const tbody = document.getElementById('members-table-body');
-        tbody.innerHTML = data.map(m => `
-          <tr class="hover:bg-slate-50">
-            <td class="p-3 font-bold text-slate-900">${m.first_name} ${m.last_name}</td>
-            <td class="p-3">${m.bureau_title || 'Membre actif'}</td>
-            <td class="p-3">
-              <div class="flex flex-wrap gap-1">
-                ${(m.assigned_commissions || []).map(comm => `
-                  <span class="px-1.5 py-0.5 bg-slate-100 rounded text-[9px] text-slate-700">${comm}</span>
-                `).join('')}
-              </div>
-            </td>
-            <td class="p-3 font-bold text-blue-700">${m.current_month_points} pts</td>
-            <td class="p-3">
-              <span class="font-semibold text-slate-800">${m.cotisation_paid_tnd} / ${m.cotisation_assessed_tnd} TND</span>
-              ${m.cotisation_remaining_tnd > 0 ? `
-                <span class="text-[10px] text-rose-600 font-bold block">Reste : ${m.cotisation_remaining_tnd} TND</span>
-              ` : `
-                <span class="text-[10px] text-emerald-600 font-bold block">À jour</span>
-              `}
-            </td>
-            <td class="p-3 text-right">
-              <button onclick="openPointsModal('${m.id}', '${m.first_name} ${m.last_name}')" class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-bold">
-                +/- Points
-              </button>
-            </td>
-          </tr>
-        `).join('');
-      } catch (err) { console.error(err); }
+        await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
+          [fieldKey]: value.trim()
+        }, { merge: true });
+      } catch (err) {
+        console.warn("Failed to save content to Firestore:", err);
+      }
+    }
+
+    function openAddActionModal() {
+      document.getElementById('add-action-modal').classList.remove('hidden');
+    }
+
+    function closeAddActionModal() {
+      document.getElementById('add-action-modal').classList.add('hidden');
+    }
+
+    async function handleCreateAction(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const images = [
+        formData.get('img_1'),
+        formData.get('img_2'),
+        formData.get('img_3'),
+        formData.get('img_4')
+      ].filter(u => u && u.trim().length > 0);
+
+      const newAction = {
+        title: formData.get('action_title'),
+        category: formData.get('action_category'),
+        location: formData.get('action_location'),
+        beneficiaries_count: parseInt(formData.get('action_beneficiaries'), 10) || 0,
+        beneficiary_unit: formData.get('action_unit') || '',
+        description: formData.get('action_description'),
+        images: images,
+        collaborating_clubs: [],
+        status: "Completed",
+        createdAt: new Date().toISOString()
+      };
+
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.addDoc(window.fs.collection(window.firestoreDb, "actions"), newAction);
+          alert("Action enregistrée et synchronisée sur Cloud Firestore !");
+          closeAddActionModal();
+          form.reset();
+          return;
+        } catch (err) {
+          console.warn("Firestore save action error:", err);
+        }
+      }
+
+      defaultActions.unshift({ id: `act-${Date.now()}`, ...newAction });
+      renderActions(defaultActions);
+      closeAddActionModal();
+      form.reset();
     }
 
     async function handleRecruitmentSubmit(e) {
@@ -911,7 +1327,6 @@
       const formData = new FormData(form);
       const payload = Object.fromEntries(formData.entries());
 
-      // Sync online directly to Cloud Firestore
       if (window.firestoreDb && window.fs) {
         try {
           await window.fs.addDoc(window.fs.collection(window.firestoreDb, "candidates"), {
@@ -919,29 +1334,18 @@
             status: "pending",
             submittedAt: new Date().toISOString()
           });
-          console.log("Candidate saved to online Cloud Firestore!");
+          alert("Votre candidature a été transmise avec succès au bureau exécutif !");
+          form.reset();
+          showView('public-view');
+          return;
         } catch (fsErr) {
-          console.warn("Firestore direct write error:", fsErr);
+          console.warn("Firestore write error:", fsErr);
         }
       }
 
-      try {
-        const res = await fetch('/api/candidates', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-        if (result.success) {
-          alert('Votre candidature a été transmise avec succès au bureau exécutif !');
-          form.reset();
-          showView('public-view');
-          loadCandidates();
-        }
-      } catch (err) {
-        alert('Erreur lors de la soumission.');
-        console.error(err);
-      }
+      alert("Votre candidature a été enregistrée !");
+      form.reset();
+      showView('public-view');
     }
 
     function openApproveModal(candId, candName) {
@@ -957,25 +1361,24 @@
 
     async function confirmApproveCandidate() {
       if (!currentApproveCandidateId) return;
-      const electiveId = document.getElementById('elective-commission-select').value;
-      try {
-        const res = await fetch('/api/candidates/approve', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            candidate_id: currentApproveCandidateId,
-            elective_commission_id: electiveId
-          })
-        });
-        const result = await res.json();
-        if (result.success) {
-          alert(result.message);
+      const elective = document.getElementById('elective-commission-select').value;
+
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.updateDoc(window.fs.doc(window.firestoreDb, "candidates", currentApproveCandidateId), {
+            status: "approved",
+            assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", elective]
+          });
+          alert("Candidat approuvé avec succès !");
           closeApproveModal();
-          loadCandidates();
-          loadMembers();
-          loadLeaderboard();
+          return;
+        } catch (err) {
+          console.warn(err);
         }
-      } catch (err) { console.error(err); }
+      }
+
+      alert("Candidat approuvé !");
+      closeApproveModal();
     }
 
     function openPointsModal(memId, memName) {
@@ -991,30 +1394,28 @@
 
     async function confirmAdjustPoints() {
       if (!currentAdjustMemberId) return;
-      const delta = document.getElementById('points-delta-input').value;
+      const delta = parseInt(document.getElementById('points-delta-input').value, 10) || 0;
       const reason = document.getElementById('points-reason-input').value;
-      try {
-        const res = await fetch('/api/members/points', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            member_id: currentAdjustMemberId,
-            points_delta: parseInt(delta, 10),
-            reason: reason
-          })
-        });
-        const result = await res.json();
-        if (result.success) {
-          closePointsModal();
-          loadMembers();
-          loadLeaderboard();
-        }
-      } catch (err) { console.error(err); }
-    }
 
-    function refreshAdminData() {
-      loadCandidates();
-      loadMembers();
+      if (window.firestoreDb && window.fs) {
+        try {
+          const docRef = window.fs.doc(window.firestoreDb, "members", currentAdjustMemberId);
+          await window.fs.updateDoc(docRef, {
+            current_month_points: window.fs.increment ? window.fs.increment(delta) : delta,
+            reason: reason
+          });
+          closePointsModal();
+          return;
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+
+      const m = defaultMembers.find(mem => mem.id === currentAdjustMemberId);
+      if (m) m.current_month_points = Math.max(0, (m.current_month_points || 0) + delta);
+      renderLeaderboard(defaultMembers);
+      renderMembersTable(defaultMembers);
+      closePointsModal();
     }
   </script>
 </body>
