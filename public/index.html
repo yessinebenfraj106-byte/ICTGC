@@ -33,6 +33,9 @@
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
     h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
     .editable-focus:focus { outline: 2px dashed #005DAA; background: #EEF2FF; border-radius: 4px; padding: 2px 4px; }
+    .admin-editing [contenteditable="true"] { cursor: text; outline: 1px dashed rgba(0, 93, 170, 0.35); border-radius: 4px; transition: all 0.15s ease; }
+    .admin-editing [contenteditable="true"]:hover { outline: 2px dashed #005DAA; background: rgba(238, 242, 255, 0.6); }
+    .admin-editing [contenteditable="true"]:focus { outline: 2px solid #005DAA; background: #EEF2FF; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -53,36 +56,34 @@
         <button onclick="showView('public-view')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Accueil</button>
         <button onclick="showView('public-view', 'actions-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Actions Phares</button>
         <button onclick="showView('public-view', 'bureau-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
-        <button onclick="showView('recruitment-view')" class="px-4 py-2 rounded-lg text-emerald-700 font-semibold hover:bg-emerald-50 transition-colors">Postuler (/rejoindre)</button>
-        <button onclick="showMemberPortal()" class="px-4 py-2 rounded-lg text-blue-700 font-semibold hover:bg-blue-50 transition-colors">Espace Membre</button>
       </nav>
 
-      <div class="flex items-center gap-2">
-        <div id="auth-buttons-container" class="flex items-center gap-2">
-          <button onclick="openMemberLoginModal()" class="px-3 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
-            Connexion Membre
-          </button>
-          <button onclick="showAdminPortal()" class="px-3 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
-            Admin CRM
-          </button>
-        </div>
-        <button onclick="showView('recruitment-view')" class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all">
+      <div class="flex items-center gap-3">
+        <button onclick="showView('recruitment-view')" class="inline-flex items-center justify-center px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow">
           Nous Rejoindre
         </button>
       </div>
     </div>
   </header>
 
-  <div id="admin-banner" class="hidden bg-indigo-900 text-white px-4 py-2 text-xs font-medium flex items-center justify-between">
-    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
-      <span>Mode Administrateur Actif</span>
-      <div class="flex items-center gap-3">
-        <button onclick="toggleInlineEdit()" id="btn-toggle-edit" class="px-2.5 py-1 bg-indigo-700 hover:bg-indigo-600 rounded text-xs font-bold transition-colors">
-          Activer Édition de Texte
-        </button>
-        <button onclick="logoutAdmin()" class="underline text-indigo-200 hover:text-white">Déconnexion Admin</button>
-      </div>
+  <div id="admin-floating-bar" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex flex-wrap items-center justify-center gap-3 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-bold text-slate-100">Édition Globale Active — Cliquez sur n'importe quel texte pour modifier</span>
     </div>
+    <div class="h-4 w-px bg-slate-700 hidden sm:block"></div>
+    <button onclick="saveAllSiteContent()" id="btn-save-all-site" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
+      <span>💾</span> Sauvegarder TOUS les textes dans le Cloud
+    </button>
+    <button onclick="openAddActionModal()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
+      <span>+</span> Nouvelle Action
+    </button>
+    <button onclick="showView('admin-view')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold transition-all">
+      CRM Membres & Candidats
+    </button>
+    <button onclick="logoutAdmin()" class="px-2.5 py-1.5 text-rose-300 hover:text-white font-semibold transition-colors">
+      Quitter Admin
+    </button>
   </div>
 
   <main class="flex-grow">
@@ -99,21 +100,21 @@
             <img src="/assets/logos/create-lasting-impact.png" alt="Create Lasting Impact" class="h-10 sm:h-12 w-auto object-contain drop-shadow-sm hidden sm:block">
           </div>
 
-          <div id="edit-heroTagline" contenteditable="false" onblur="saveSiteContent('heroTagline', this.innerText)" class="editable-field inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 mb-6">
+          <div id="edit-heroTagline" data-edit-key="heroTagline" class="editable-field inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 mb-6">
             Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose
           </div>
-          <h1 id="edit-heroTitle" contenteditable="false" onblur="saveSiteContent('heroTitle', this.innerText)" class="editable-field text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight">
+          <h1 id="edit-heroTitle" data-edit-key="heroTitle" class="editable-field text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight">
             La Jeunesse au Service de la Communauté
           </h1>
-          <p id="edit-heroDescription" contenteditable="false" onblur="saveSiteContent('heroDescription', this.innerText)" class="editable-field mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p id="edit-heroDescription" data-edit-key="heroDescription" class="editable-field mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Depuis mars 2017 (charte officielle le 7 janvier 2019), l'Interact Club Tunis Golfe Carthagène rassemble des jeunes engagés de 12 à 18 ans pour transformer des vies à travers des actions solidaires durables.
           </p>
 
           <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <button onclick="showView('recruitment-view')" class="px-6 py-3.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all hover:shadow-lg">
+            <button onclick="showView('recruitment-view')" data-edit-key="heroCtaRecruit" class="editable-field px-6 py-3.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all hover:shadow-lg">
               Postuler pour le Mandat 2026-2027
             </button>
-            <button onclick="showView('public-view', 'actions-section')" class="px-6 py-3.5 text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl shadow-sm transition-all">
+            <button onclick="showView('public-view', 'actions-section')" data-edit-key="heroCtaActions" class="editable-field px-6 py-3.5 text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl shadow-sm transition-all">
               Découvrir nos Actions Réalisées
             </button>
           </div>
@@ -131,11 +132,11 @@
       <section id="actions-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-8">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Impact de Terrain</span>
-            <h2 id="edit-actionsSectionTitle" contenteditable="false" onblur="saveSiteContent('actionsSectionTitle', this.innerText)" class="editable-field text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            <span data-edit-key="actionsBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-rose-600">Impact de Terrain</span>
+            <h2 id="edit-actionsSectionTitle" data-edit-key="actionsSectionTitle" class="editable-field text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
               Nos Actions Phares
             </h2>
-            <p id="edit-actionsSectionSubtitle" contenteditable="false" onblur="saveSiteContent('actionsSectionSubtitle', this.innerText)" class="editable-field text-sm text-slate-500 mt-1">
+            <p id="edit-actionsSectionSubtitle" data-edit-key="actionsSectionSubtitle" class="editable-field text-sm text-slate-500 mt-1">
               Caravanes humanitaires, rentrées scolaires et initiatives solidaires vérifiées
             </p>
           </div>
@@ -150,24 +151,24 @@
 
       <section id="bureau-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto mb-12">
-          <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Gouvernance Officielle</span>
-          <h2 id="edit-bureauSectionTitle" contenteditable="false" onblur="saveSiteContent('bureauSectionTitle', this.innerText)" class="editable-field text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+          <span data-edit-key="bureauBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-blue-600">Gouvernance Officielle</span>
+          <h2 id="edit-bureauSectionTitle" data-edit-key="bureauSectionTitle" class="editable-field text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
             Bureau du Mandat 2026–2027
           </h2>
-          <p id="edit-bureauSectionSubtitle" contenteditable="false" onblur="saveSiteContent('bureauSectionSubtitle', this.innerText)" class="editable-field text-sm text-slate-500 mt-2">
+          <p id="edit-bureauSectionSubtitle" data-edit-key="bureauSectionSubtitle" class="editable-field text-sm text-slate-500 mt-2">
             Réunion statutaire constitutive du 1er août 2026
           </p>
         </div>
 
         <div class="mb-10">
-          <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <h3 data-edit-key="bureauExecHeading" class="editable-field text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-blue-600"></span> Bureau Exécutif
           </h3>
           <div id="bureau-executif-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
         <div>
-          <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <h3 data-edit-key="bureauElargiHeading" class="editable-field text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-amber-500"></span> Bureau Élargi & Commissions
           </h3>
           <div id="bureau-elargi-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
@@ -175,14 +176,14 @@
       </section>
 
       <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-200 text-center">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Partenaires & Médias</span>
+        <span data-edit-key="partnersBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-slate-400">Partenaires & Médias</span>
         <div class="mt-6 flex flex-wrap items-center justify-center gap-8 text-sm font-bold text-slate-500">
-          <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Tunisie Telecom</span>
-          <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Amen Bank</span>
-          <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Sotuver</span>
-          <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Sotuchoc</span>
-          <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Radio Mosaïque FM</span>
-          <span class="px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">IFM</span>
+          <span data-edit-key="partner-1" class="editable-field px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Tunisie Telecom</span>
+          <span data-edit-key="partner-2" class="editable-field px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Amen Bank</span>
+          <span data-edit-key="partner-3" class="editable-field px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Sotuver</span>
+          <span data-edit-key="partner-4" class="editable-field px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Sotuchoc</span>
+          <span data-edit-key="partner-5" class="editable-field px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">Radio Mosaïque FM</span>
+          <span data-edit-key="partner-6" class="editable-field px-4 py-2 bg-white rounded-lg border border-slate-200 shadow-sm">IFM</span>
         </div>
       </section>
 
@@ -459,45 +460,54 @@
 
   </main>
 
-  <div id="member-login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
+  <div id="internal-portal-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div>
-          <h3 class="text-base font-bold text-slate-900">Espace Membre</h3>
-          <p class="text-xs text-slate-500">Connexion via votre adresse email</p>
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm">🔒</span>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Portail Interne ICTGC</h3>
+            <p class="text-xs text-slate-500">Accès sécurisé réservé aux membres et au bureau</p>
+          </div>
         </div>
-        <button onclick="closeMemberLoginModal()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+        <button onclick="closeInternalPortal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors">✕</button>
       </div>
 
-      <form onsubmit="handleMemberLogin(event)" class="mt-4 space-y-4">
+      <div class="flex border-b border-slate-200 mt-6">
+        <button id="tab-btn-member" type="button" onclick="switchPortalTab('member')" class="flex-1 pb-3 text-xs font-bold text-blue-700 border-b-2 border-blue-600 transition-colors">
+          👤 Espace Membre
+        </button>
+        <button id="tab-btn-admin" type="button" onclick="switchPortalTab('admin')" class="flex-1 pb-3 text-xs font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors">
+          🛡️ Administration
+        </button>
+      </div>
+
+      <form id="portal-form-member" onsubmit="handleMemberLogin(event)" class="mt-6 space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Votre Adresse Email</label>
-          <input type="email" id="login-member-email" placeholder="prenom.nom@ictgc.org" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <label class="block text-xs font-bold text-slate-700 mb-1">Adresse Email du Membre</label>
+          <input type="email" id="login-member-email" placeholder="prenom.nom@ictgc.org" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         </div>
-        <button type="submit" class="w-full py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all">
-          Accéder à mon Espace
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe</label>
+          <input type="password" id="login-member-password" placeholder="Votre mot de passe..." required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <p class="text-[10px] text-slate-400 mt-1">Par défaut : <code>interact2026</code></p>
+        </div>
+        <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
+          Connexion à mon Espace Membre
         </button>
       </form>
-    </div>
-  </div>
 
-  <div id="admin-login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <form id="portal-form-admin" onsubmit="handleAdminLogin(event)" class="mt-6 space-y-4 hidden">
         <div>
-          <h3 class="text-base font-bold text-slate-900">Connexion Administrateur</h3>
-          <p class="text-xs text-slate-500">Accès CRM et gestion des membres</p>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email Administrateur / Bureau</label>
+          <input type="email" id="login-admin-email" placeholder="admin@ictgc.org" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
         </div>
-        <button onclick="closeAdminLoginModal()" class="text-slate-400 hover:text-slate-600 text-sm">✕</button>
-      </div>
-
-      <form onsubmit="handleAdminLogin(event)" class="mt-4 space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Code PIN ou Mot de Passe Admin</label>
-          <input type="password" id="admin-pass-input" placeholder="Code d'accès..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe Administrateur</label>
+          <input type="password" id="login-admin-password" placeholder="Mot de passe..." required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
         </div>
-        <button type="submit" class="w-full py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-all">
-          Déverrouiller le CRM
+        <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all">
+          Déverrouiller l'Administration
         </button>
       </form>
     </div>
@@ -631,15 +641,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
         <img src="/assets/logos/logo-blanc.png" alt="Interact Tunis Golfe Carthagène" class="h-10 w-auto object-contain opacity-95">
-        <div class="border-l border-slate-700 pl-4">
-          <p class="text-white font-bold text-sm">Interact Club Tunis Golfe Carthagène</p>
-          <p class="text-slate-400 mt-0.5">Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose</p>
+        <div class="border-l border-slate-700 pl-4" id="footer-copyright-block">
+          <p data-edit-key="footerClubTitle" class="editable-field text-white font-bold text-sm">Interact Club Tunis Golfe Carthagène</p>
+          <p data-edit-key="footerClubSubtitle" class="editable-field text-slate-400 mt-0.5">Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" class="hover:text-white transition-colors">Instagram @ic.tunisgolfecarthagene</a>
         <span>•</span>
         <a href="mailto:interact.tunisgolfecarthagene@gmail.com" class="hover:text-white transition-colors">Contact Mail</a>
+        <span>•</span>
+        <button onclick="openInternalPortal()" class="text-slate-500 hover:text-slate-300 transition-colors text-xs flex items-center gap-1 opacity-50 hover:opacity-100" title="Accès réservé membres & bureau">
+          <span>🔒</span> Accès Interne
+        </button>
       </div>
     </div>
   </footer>
@@ -800,14 +814,8 @@
 
       onSnapshot(doc(window.firestoreDb, "siteContent", "main"), (snap) => {
         if (snap.exists()) {
-          const c = snap.data();
-          if (c.heroTagline) document.getElementById('edit-heroTagline').innerText = c.heroTagline;
-          if (c.heroTitle) document.getElementById('edit-heroTitle').innerText = c.heroTitle;
-          if (c.heroDescription) document.getElementById('edit-heroDescription').innerText = c.heroDescription;
-          if (c.actionsSectionTitle) document.getElementById('edit-actionsSectionTitle').innerText = c.actionsSectionTitle;
-          if (c.actionsSectionSubtitle) document.getElementById('edit-actionsSectionSubtitle').innerText = c.actionsSectionSubtitle;
-          if (c.bureauSectionTitle) document.getElementById('edit-bureauSectionTitle').innerText = c.bureauSectionTitle;
-          if (c.bureauSectionSubtitle) document.getElementById('edit-bureauSectionSubtitle').innerText = c.bureauSectionSubtitle;
+          window.cachedSiteContent = snap.data();
+          applyCachedContent();
         }
       });
 
@@ -874,13 +882,15 @@
     function renderMetrics(data) {
       const grid = document.getElementById('metrics-grid');
       if (!grid) return;
-      grid.innerHTML = data.map(m => `
+      grid.innerHTML = data.map((m, i) => `
         <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm text-center">
-          <span class="text-xl sm:text-2xl font-black text-slate-900 block">${m.value_display || m.value || ''}</span>
-          <span class="text-xs font-bold text-blue-700 block mt-1">${m.label || ''}</span>
-          <span class="text-[10px] text-slate-400 mt-0.5 block leading-tight">${m.subtext || ''}</span>
+          <span data-edit-key="metric-val-${m.key || i}" class="editable-field text-xl sm:text-2xl font-black text-slate-900 block">${m.value_display || m.value || ''}</span>
+          <span data-edit-key="metric-lbl-${m.key || i}" class="editable-field text-xs font-bold text-blue-700 block mt-1">${m.label || ''}</span>
+          <span data-edit-key="metric-sub-${m.key || i}" class="editable-field text-[10px] text-slate-400 mt-0.5 block leading-tight">${m.subtext || ''}</span>
         </div>
       `).join('');
+      applyCachedContent();
+      if (isAdminLoggedIn) enableGlobalTextEditing();
     }
 
     function renderActions(data) {
@@ -894,13 +904,13 @@
           <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span data-edit-key="action-cat-${i}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                   ${a.category}
                 </span>
-                <span class="text-xs text-slate-400 font-medium">${a.location}</span>
+                <span data-edit-key="action-loc-${i}" class="editable-field text-xs text-slate-400 font-medium">${a.location}</span>
               </div>
-              <h3 class="text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
+              <h3 data-edit-key="action-title-${i}" class="editable-field text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
+              <p data-edit-key="action-desc-${i}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
               
               ${images.length > 0 ? `
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
@@ -927,6 +937,8 @@
           </div>
         `;
       }).join('');
+      applyCachedContent();
+      if (isAdminLoggedIn) enableGlobalTextEditing();
     }
 
     function renderBureau(data) {
@@ -937,19 +949,23 @@
       const exec = data.filter(b => b.tier === 'executif' || !b.tier);
       const elargi = data.filter(b => b.tier === 'elargi');
 
-      execGrid.innerHTML = exec.map(m => `
+      execGrid.innerHTML = exec.map((m, i) => `
         <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors">
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 block mb-1">${m.role}</span>
-          <h4 class="text-sm font-bold text-slate-900">${m.fullName || m.full_name || ''}</h4>
-          <p class="text-xs text-slate-500 mt-2 leading-relaxed line-clamp-3">${m.bio || ''}</p>
+          <span data-edit-key="bureau-role-${i}" class="editable-field text-[10px] font-extrabold uppercase tracking-wider text-blue-600 block mb-1">${m.role}</span>
+          <h4 data-edit-key="bureau-name-${i}" class="editable-field text-sm font-bold text-slate-900">${m.fullName || m.full_name || ''}</h4>
+          <p data-edit-key="bureau-bio-${i}" class="editable-field text-xs text-slate-500 mt-2 leading-relaxed line-clamp-3">${m.bio || ''}</p>
         </div>
       `).join('');
 
-      elargiGrid.innerHTML = elargi.map(m => `
+      elargiGrid.innerHTML = elargi.map((m, i) => `
         <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-          <span class="text-[10px] font-bold text-amber-700 block mb-1">${m.role}</span>
-          <h4 class="text-xs font-bold text-slate-800">${m.fullName || m.full_name || ''}</h4>
+          <span data-edit-key="elargi-role-${i}" class="editable-field text-[10px] font-bold text-amber-700 block mb-1">${m.role}</span>
+          <h4 data-edit-key="elargi-name-${i}" class="editable-field text-xs font-bold text-slate-800">${m.fullName || m.full_name || ''}</h4>
         </div>
+      `).join('');
+      applyCachedContent();
+      if (isAdminLoggedIn) enableGlobalTextEditing();
+    }
       `).join('');
     }
 
@@ -1128,18 +1144,52 @@
       `).join('');
     }
 
-    function openMemberLoginModal() {
-      document.getElementById('member-login-modal').classList.remove('hidden');
+    window.cachedSiteContent = {};
+
+    function applyCachedContent() {
+      if (!window.cachedSiteContent) return;
+      for (const [key, val] of Object.entries(window.cachedSiteContent)) {
+        if (!val) continue;
+        const el = document.querySelector(`[data-edit-key="${key}"]`) || document.getElementById(key);
+        if (el) {
+          el.innerText = val;
+        }
+      }
     }
 
-    function closeMemberLoginModal() {
-      document.getElementById('member-login-modal').classList.add('hidden');
+    function openInternalPortal(initialTab = 'member') {
+      document.getElementById('internal-portal-modal').classList.remove('hidden');
+      switchPortalTab(initialTab);
+    }
+
+    function closeInternalPortal() {
+      document.getElementById('internal-portal-modal').classList.add('hidden');
+    }
+
+    function switchPortalTab(tab) {
+      const btnMember = document.getElementById('tab-btn-member');
+      const btnAdmin = document.getElementById('tab-btn-admin');
+      const formMember = document.getElementById('portal-form-member');
+      const formAdmin = document.getElementById('portal-form-admin');
+
+      if (tab === 'member') {
+        btnMember.className = "flex-1 pb-3 text-xs font-bold text-blue-700 border-b-2 border-blue-600 transition-colors";
+        btnAdmin.className = "flex-1 pb-3 text-xs font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors";
+        formMember.classList.remove('hidden');
+        formAdmin.classList.add('hidden');
+      } else {
+        btnAdmin.className = "flex-1 pb-3 text-xs font-bold text-indigo-700 border-b-2 border-indigo-600 transition-colors";
+        btnMember.className = "flex-1 pb-3 text-xs font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent transition-colors";
+        formAdmin.classList.remove('hidden');
+        formMember.classList.add('hidden');
+      }
     }
 
     async function handleMemberLogin(e) {
       e.preventDefault();
       const email = document.getElementById('login-member-email').value.trim().toLowerCase();
-      let found = defaultMembers.find(m => m.email.toLowerCase() === email);
+      const password = document.getElementById('login-member-password').value.trim();
+      let found = defaultMembers.find(m => m.email && m.email.toLowerCase() === email);
 
       if (window.firestoreDb && window.fs) {
         try {
@@ -1151,123 +1201,130 @@
             }
           });
         } catch (err) {
-          console.warn("Firestore lookup failed:", err);
+          console.warn("Firestore member lookup failed:", err);
         }
       }
 
-      if (found) {
-        setMemberActive(found);
-        closeMemberLoginModal();
-        showView('member-view');
-      } else {
-        alert("Aucun compte actif trouvé avec cette adresse email. Veuillez vérifier votre adresse ou postuler via le formulaire de recrutement.");
+      if (!found) {
+        alert("Aucun compte membre trouvé avec cette adresse email.");
+        return;
       }
-    }
 
-    function setMemberActive(member) {
-      currentLoggedMember = member;
-      const initials = ((member.first_name || member.firstName || 'M').charAt(0) + (member.last_name || member.lastName || '').charAt(0)).toUpperCase();
-      document.getElementById('member-avatar-badge').textContent = initials;
-      document.getElementById('member-display-name').textContent = (member.first_name || member.firstName || '') + ' ' + (member.last_name || member.lastName || '');
-      document.getElementById('member-display-role').textContent = member.bureau_title || member.role || 'Membre';
-      document.getElementById('member-display-email').textContent = (member.email || '') + ' • Mandat 2026–2027';
-
-      const commsContainer = document.getElementById('member-display-commissions');
-      const comms = member.assigned_commissions || member.assignedCommissions || ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes"];
-      commsContainer.innerHTML = comms.map(c => `
-        <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium">${c}</span>
-      `).join('');
-
-      const remaining = (member.cotisation_assessed_tnd || 100) - (member.cotisation_paid_tnd || 0);
-      document.getElementById('member-dues-remaining').textContent = `${remaining} TND`;
-      document.getElementById('member-dues-status').textContent = `${member.cotisation_paid_tnd || 0} TND / ${member.cotisation_assessed_tnd || 100} TND réglé`;
-    }
-
-    function logoutMember() {
-      currentLoggedMember = null;
-      showView('public-view');
-    }
-
-    function showMemberPortal() {
-      if (currentLoggedMember) {
-        showView('member-view');
-      } else {
-        openMemberLoginModal();
+      const validPass = found.password || 'interact2026';
+      if (password !== validPass && password !== 'interact2026') {
+        alert("Mot de passe incorrect pour cet espace membre.");
+        return;
       }
-    }
 
-    function showAdminPortal() {
-      if (isAdminLoggedIn) {
-        showView('admin-view');
-      } else {
-        document.getElementById('admin-login-modal').classList.remove('hidden');
-      }
-    }
-
-    function closeAdminLoginModal() {
-      document.getElementById('admin-login-modal').classList.add('hidden');
+      setMemberActive(found);
+      closeInternalPortal();
+      showView('member-view');
     }
 
     function handleAdminLogin(e) {
       e.preventDefault();
-      const pass = document.getElementById('admin-pass-input').value.trim();
-      if (pass === 'ictgc2026' || pass === 'ictgc' || pass === 'admin') {
+      const email = document.getElementById('login-admin-email').value.trim().toLowerCase();
+      const pass = document.getElementById('login-admin-password').value.trim();
+
+      const isAllowedEmail = email === 'admin@ictgc.org' || 
+                             email === 'president@ictgc.org' || 
+                             email === 'admin' || 
+                             email.endsWith('@ictgc.org') || 
+                             email === 'yessinebenfraj09@gmail.com';
+
+      const isAllowedPass = pass === 'ictgc2026' || pass === 'ictgc' || pass === 'admin';
+
+      if (isAllowedEmail && isAllowedPass) {
         isAdminLoggedIn = true;
-        closeAdminLoginModal();
-        document.getElementById('admin-banner').classList.remove('hidden');
+        closeInternalPortal();
+        document.getElementById('admin-floating-bar').classList.remove('hidden');
         document.getElementById('admin-actions-controls').classList.remove('hidden');
-        showView('admin-view');
+        enableGlobalTextEditing();
+        alert("Bienvenue Administrateur ! L'édition globale est activée sur TOUT le site.\n\nVous pouvez cliquer sur n'importe quel texte ou titre pour le modifier en direct, puis cliquer sur 'Sauvegarder TOUS les textes dans le Cloud' en bas.");
       } else {
-        alert("Code d'accès administrateur incorrect.");
+        alert("Identifiants administrateur incorrects (Vérifiez email et mot de passe).");
       }
     }
 
-    function logoutAdmin() {
-      isAdminLoggedIn = false;
-      isInlineEditEnabled = false;
-      document.getElementById('admin-banner').classList.add('hidden');
-      document.getElementById('admin-actions-controls').classList.add('hidden');
-      disableInlineEdit();
-      showView('public-view');
-    }
-
-    function toggleInlineEdit() {
-      isInlineEditEnabled = !isInlineEditEnabled;
-      const btn = document.getElementById('btn-toggle-edit');
-      if (isInlineEditEnabled) {
-        btn.textContent = "Désactiver Édition";
-        btn.classList.replace('bg-indigo-700', 'bg-emerald-600');
-        enableInlineEdit();
-      } else {
-        btn.textContent = "Activer Édition de Texte";
-        btn.classList.replace('bg-emerald-600', 'bg-indigo-700');
-        disableInlineEdit();
-      }
-    }
-
-    function enableInlineEdit() {
-      document.querySelectorAll('.editable-field').forEach(el => {
+    function enableGlobalTextEditing() {
+      document.body.classList.add('admin-editing');
+      const elements = document.querySelectorAll('#public-view h1, #public-view h2, #public-view h3, #public-view h4, #public-view p, #public-view .editable-field, #public-view [data-edit-key], #footer-copyright-block p, #footer-copyright-block [data-edit-key]');
+      elements.forEach((el, idx) => {
+        if (!el.getAttribute('data-edit-key')) {
+          el.setAttribute('data-edit-key', `auto-text-${idx}`);
+        }
         el.setAttribute('contenteditable', 'true');
         el.classList.add('editable-focus');
       });
     }
 
-    function disableInlineEdit() {
-      document.querySelectorAll('.editable-field').forEach(el => {
+    function disableGlobalTextEditing() {
+      document.body.classList.remove('admin-editing');
+      document.querySelectorAll('[contenteditable="true"]').forEach(el => {
         el.setAttribute('contenteditable', 'false');
         el.classList.remove('editable-focus');
       });
     }
 
-    async function saveSiteContent(fieldKey, value) {
-      if (!isAdminLoggedIn || !window.firestoreDb || !window.fs) return;
-      try {
-        await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
-          [fieldKey]: value.trim()
-        }, { merge: true });
-      } catch (err) {
-        console.warn("Failed to save content to Firestore:", err);
+    async function saveAllSiteContent() {
+      if (!isAdminLoggedIn) return;
+      const btn = document.getElementById('btn-save-all-site');
+      if (btn) btn.innerText = "⏳ Sauvegarde en cours...";
+
+      const payload = {};
+      document.querySelectorAll('[data-edit-key]').forEach(el => {
+        const key = el.getAttribute('data-edit-key');
+        if (key) {
+          payload[key] = el.innerText.trim();
+        }
+      });
+
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), payload, { merge: true });
+        } catch (err) {
+          console.warn("Firestore save error:", err);
+        }
       }
+
+      window.cachedSiteContent = { ...(window.cachedSiteContent || {}), ...payload };
+      if (btn) {
+        btn.innerText = "✅ Tous les textes sont sauvegardés !";
+        setTimeout(() => {
+          btn.innerHTML = "<span>💾</span> Sauvegarder TOUS les textes dans le Cloud";
+        }, 3000);
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      disableGlobalTextEditing();
+      document.getElementById('admin-floating-bar').classList.add('hidden');
+      document.getElementById('admin-actions-controls').classList.add('hidden');
+      showView('public-view');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l' || e.key === 'A' || e.key === 'a')) || (e.altKey && (e.key === 'l' || e.key === 'L'))) {
+        e.preventDefault();
+        openInternalPortal(e.key.toLowerCase() === 'a' ? 'admin' : 'member');
+      }
+    });
+
+    let footerClickCount = 0;
+    let footerClickTimer = null;
+    const footerBlock = document.getElementById('footer-copyright-block');
+    if (footerBlock) {
+      footerBlock.addEventListener('click', () => {
+        footerClickCount++;
+        clearTimeout(footerClickTimer);
+        if (footerClickCount >= 3) {
+          footerClickCount = 0;
+          openInternalPortal('admin');
+        } else {
+          footerClickTimer = setTimeout(() => { footerClickCount = 0; }, 600);
+        }
+      });
     }
 
     function openAddActionModal() {
