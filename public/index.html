@@ -109,6 +109,9 @@
     <button onclick="exportCurrentHtml()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold transition-all flex items-center gap-1.5 shadow" title="Télécharger le fichier index.html prêt avec vos modifications">
       <span>📥</span> Exporter Fichier HTML
     </button>
+    <button onclick="openAddBureauMemberModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
+      <span>+</span> Membre Bureau
+    </button>
     <button onclick="openAddActionModal()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
       <span>+</span> Nouvelle Action
     </button>
@@ -190,6 +193,11 @@
           <p id="edit-bureauSectionSubtitle" data-edit-key="bureauSectionSubtitle" class="editable-field text-sm text-slate-500 mt-2">
             Réunion statutaire constitutive du 1er août 2026
           </p>
+          <div id="admin-bureau-controls" class="hidden mt-4 flex items-center justify-center gap-3">
+            <button onclick="openAddBureauMemberModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5">
+              <span>➕</span> Ajouter un Membre au Bureau
+            </button>
+          </div>
         </div>
 
         <!-- 1. Bureau Exécutif -->
@@ -831,11 +839,146 @@
     </div>
   </div>
 
+  
+  <!-- Modal: Ajouter un Membre au Bureau -->
+  <div id="add-bureau-member-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Ajouter un Membre au Bureau</h3>
+          <p class="text-xs text-slate-500">Affichage public & synchronisation Cloud Firestore</p>
+        </div>
+        <button onclick="closeAddBureauMemberModal()" class="text-slate-400 hover:text-slate-600 text-base font-bold">✕</button>
+      </div>
+
+      <form onsubmit="handleAddBureauMemberSubmit(event)" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nom & Prénom (*)</label>
+          <input type="text" name="full_name" placeholder="Ex: Mohamed Ben Salem" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Rôle / Titre Officiel (*)</label>
+          <input type="text" name="role" placeholder="Ex: Chef Commission Médiatisation, Vice-Président..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Section / Pôle du Bureau (*)</label>
+          <select name="tier" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+            <option value="executif">Bureau Exécutif</option>
+            <option value="commission">Chefs des Commissions</option>
+            <option value="elargi">Bureau Élargi & Adjoints</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Photo Officielle (Optionnelle)</label>
+          
+          <div id="new-bureau-dropzone" 
+               ondragover="handleNewBureauDragOver(event)" 
+               ondragleave="handleNewBureauDragLeave(event)" 
+               ondrop="handleNewBureauDrop(event)" 
+               onclick="triggerNewBureauFileInput()"
+               class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-4 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-blue-50/30 mb-2">
+            <input type="file" id="new-bureau-file-input" accept="image/*" class="hidden" onchange="handleNewBureauFileInputChange(event)" />
+            <div class="pointer-events-none flex flex-col items-center">
+              <span class="text-2xl mb-1">📷</span>
+              <p class="text-xs font-bold text-slate-700">Glissez-déposez la photo ici</p>
+              <p class="text-[10px] text-slate-400">ou cliquez pour choisir un fichier</p>
+            </div>
+          </div>
+
+          <input type="text" id="new-bureau-photo-url" name="photo_url" placeholder="Ou collez l'URL de l'image (https://...)" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" oninput="updateNewBureauPhotoPreview(this.value)" />
+
+          <div id="new-bureau-preview-box" class="mt-2 hidden">
+            <div class="w-24 h-24 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+              <img id="new-bureau-preview-img" src="" alt="Aperçu" class="w-full h-full object-cover object-top" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeAddBureauMemberModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+            Annuler
+          </button>
+          <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition-all">
+            Ajouter au Bureau
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Gestionnaire de Photos (Glisser-Déposer & Lien Direct) -->
+  <div id="photo-manager-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div>
+          <h3 id="photo-modal-title" class="text-base font-bold text-slate-900">Modifier la Photo</h3>
+          <p id="photo-modal-subtitle" class="text-xs text-slate-500">Par glisser-déposer ou lien direct</p>
+        </div>
+        <button onclick="closePhotoManagerModal()" class="text-slate-400 hover:text-slate-600 text-base font-bold">✕</button>
+      </div>
+
+      <div class="mt-4 space-y-4">
+        <!-- Drag & Drop Zone -->
+        <div id="photo-dropzone" 
+             ondragover="handlePhotoDragOver(event)" 
+             ondragleave="handlePhotoDragLeave(event)" 
+             ondrop="handlePhotoDrop(event)" 
+             onclick="triggerPhotoFileInput()"
+             class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-blue-50/30">
+          <input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="handlePhotoFileInputChange(event)" />
+          <div class="pointer-events-none flex flex-col items-center">
+            <span class="text-3xl mb-2">📸</span>
+            <p class="text-xs font-bold text-slate-800">Glissez-déposez une image ici</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">ou cliquez pour choisir depuis votre appareil</p>
+            <p class="text-[10px] text-blue-600 font-semibold mt-1">Compression Web haute qualité automatique</p>
+          </div>
+        </div>
+
+        <!-- URL Input -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Ou collez l'URL directe d'une image :</label>
+          <div class="flex gap-2">
+            <input type="url" id="photo-url-input" placeholder="https://... ou /assets/..." class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <button type="button" onclick="applyPhotoFromUrlInput()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition-colors">
+              Appliquer
+            </button>
+          </div>
+        </div>
+
+        <!-- Preview Box -->
+        <div id="photo-preview-container" class="hidden">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-700">Aperçu sélectionné :</span>
+            <button type="button" onclick="removeCurrentPhotoPreview()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold">
+              Supprimer l'image
+            </button>
+          </div>
+          <div class="w-full h-56 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 relative">
+            <img id="photo-preview-img" src="" alt="Aperçu" class="w-full h-full object-cover" />
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closePhotoManagerModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+            Annuler
+          </button>
+          <button type="button" onclick="savePhotoManagerModal()" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition-all">
+            Enregistrer la Photo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
         <img src="/assets/logos/logo-blanc.png" alt="Interact Tunis Golfe Carthagène" class="h-10 w-auto object-contain opacity-95">
-        <div class="border-l border-slate-700 pl-4" id="footer-copyright-block">
+        <div class="border-l border-slate-700 pl-4 cursor-pointer select-none transition-opacity hover:opacity-95" id="footer-copyright-block" title="Interact Club Tunis Golfe Carthagène">
           <p data-edit-key="footerClubTitle" class="editable-field text-white font-bold text-sm">Interact Club Tunis Golfe Carthagène</p>
           <p data-edit-key="footerClubSubtitle" class="editable-field text-slate-400 mt-0.5">Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose</p>
         </div>
@@ -852,10 +995,7 @@
         </a>
         <span>•</span>
         <a href="mailto:interact.tunisgolfecarthagene@gmail.com" class="hover:text-white transition-colors">Contact Mail</a>
-        <span>•</span>
-        <button onclick="openInternalPortal()" class="text-slate-500 hover:text-slate-300 transition-colors text-xs flex items-center gap-1 opacity-50 hover:opacity-100" title="Accès réservé membres & bureau">
-          <span>🔒</span> Accès Interne
-        </button>
+
       </div>
     </div>
   </footer>
@@ -1017,6 +1157,7 @@
     function initCloudSync() {
       window.initCloudSync = initCloudSync;
       renderMetrics(defaultMetrics);
+      updateLiveInstagramFollowers();
       renderActions(defaultActions);
       renderBureau(defaultBureau);
       renderLeaderboard(defaultMembers);
@@ -1049,6 +1190,7 @@
           const items = [];
           snap.forEach(d => items.push({ id: d.id, ...d.data() }));
           renderMetrics(items);
+          updateLiveInstagramFollowers();
         }
       });
 
@@ -1119,6 +1261,7 @@
     }
 
     function renderActions(data) {
+      window.cachedActionsList = data;
       const bento = document.getElementById('actions-bento');
       if (!bento) return;
       bento.innerHTML = data.map((a, i) => {
@@ -1129,23 +1272,50 @@
           <div class="${isLarge ? 'md:col-span-2' : 'md:col-span-1'} p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span data-edit-key="action-cat-${i}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span data-edit-key="action-cat-${a.id || i}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                   ${a.category}
                 </span>
-                <span data-edit-key="action-loc-${i}" class="editable-field text-xs text-slate-400 font-medium">${a.location}</span>
-              </div>
-              <h3 data-edit-key="action-title-${i}" class="editable-field text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
-              <p data-edit-key="action-desc-${i}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
-              
-              ${images.length > 0 ? `
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                  ${images.map(img => `
-                    <div class="h-24 rounded-xl overflow-hidden border border-slate-100 bg-slate-100">
-                      <img src="${img}" alt="${a.title}" class="w-full h-full object-cover hover:scale-105 transition-transform" />
-                    </div>
-                  `).join('')}
+                <div class="flex items-center gap-2">
+                  <span data-edit-key="action-loc-${a.id || i}" class="editable-field text-xs text-slate-400 font-medium">${a.location}</span>
+                  ${isAdminLoggedIn ? `
+                    <button onclick="deleteActionDoc('${a.id || i}')" class="text-slate-400 hover:text-rose-600 transition-colors p-1" title="Supprimer l'action">
+                      🗑️
+                    </button>
+                  ` : ''}
                 </div>
-              ` : ''}
+              </div>
+              <h3 data-edit-key="action-title-${a.id || i}" class="editable-field text-lg font-extrabold text-slate-900 mb-2">${a.title}</h3>
+              <p data-edit-key="action-desc-${a.id || i}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${a.description}</p>
+              
+              <div class="space-y-2 mb-4">
+                ${images.length > 0 ? `
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    ${images.map((img, imgIdx) => `
+                      <div class="h-24 rounded-xl overflow-hidden border border-slate-100 bg-slate-100 relative group">
+                        <img src="${img}" alt="${a.title}" class="w-full h-full object-cover hover:scale-105 transition-transform" />
+                        ${isAdminLoggedIn ? `
+                          <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                            <button onclick="openActionPhotoModal('${a.id || i}', '${(a.title || '').replace(/'/g, "\\'")}', ${imgIdx})" class="px-2 py-1 bg-white text-slate-900 text-[10px] font-bold rounded-lg shadow">
+                              Changer
+                            </button>
+                            <button onclick="removeActionPhoto('${a.id || i}', ${imgIdx})" class="px-1.5 py-1 bg-rose-600 text-white text-[10px] font-bold rounded-lg shadow">
+                              ✕
+                            </button>
+                          </div>
+                        ` : ''}
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+
+                ${isAdminLoggedIn ? `
+                  <div class="flex items-center justify-between pt-1">
+                    <button onclick="openActionPhotoModal('${a.id || i}', '${(a.title || '').replace(/'/g, "\\'")}', ${images.length})" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
+                      <span>📷</span> Gérer Photos (${images.length}/4) ${images.length < 4 ? '+ Ajouter' : ''}
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
 
               ${a.beneficiaries_count > 0 ? `
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">
@@ -1169,28 +1339,35 @@
     function renderBureauCard(m, i, roleColorClass = 'text-blue-600') {
       const initials = ((m.fullName || m.full_name || 'M').split(' ').map(n => n.charAt(0)).join('')).substring(0, 2).toUpperCase();
       const photo = m.photo_url || m.photo || '';
+      const mId = m.id || i;
+      const safeName = (m.fullName || m.full_name || '').replace(/'/g, "\\'");
 
       return `
         <div class="w-72 sm:w-80 flex-shrink-0 snap-start bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between gap-2 mb-1">
-              <span data-edit-key="bureau-role-${m.id || i}" class="editable-field text-[11px] font-extrabold uppercase tracking-wider ${roleColorClass} block">
+              <span data-edit-key="bureau-role-${mId}" class="editable-field text-[11px] font-extrabold uppercase tracking-wider ${roleColorClass} block">
                 ${m.role}
               </span>
               ${isAdminLoggedIn ? `
-                <button onclick="editBureauMemberPhoto('${m.id || i}', '${(m.fullName || '').replace(/'/g, "\\'")}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold transition-colors">
-                  📷 Photo
-                </button>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold transition-colors">
+                    📷 Photo
+                  </button>
+                  <button onclick="deleteBureauMember('${mId}', '${safeName}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold transition-colors" title="Retirer du bureau">
+                    🗑️
+                  </button>
+                </div>
               ` : ''}
             </div>
 
-            <h4 data-edit-key="bureau-name-${m.id || i}" class="editable-field text-base font-extrabold text-slate-900 leading-tight">
+            <h4 data-edit-key="bureau-name-${mId}" class="editable-field text-base font-extrabold text-slate-900 leading-tight">
               ${m.fullName || m.full_name || ''}
             </h4>
 
             <div class="mt-3 w-full h-52 rounded-2xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
               ${photo ? `
-                <img src="${photo}" alt="${m.fullName}" class="w-full h-full object-cover object-top hover:scale-105 transition-transform" />
+                <img src="${photo}" alt="${m.fullName || m.full_name}" class="w-full h-full object-cover object-top hover:scale-105 transition-transform" />
               ` : `
                 <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-blue-50 text-slate-400">
                   <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold text-lg mb-1 shadow-inner">
@@ -1201,7 +1378,7 @@
               `}
               ${isAdminLoggedIn ? `
                 <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <button onclick="editBureauMemberPhoto('${m.id || i}', '${(m.fullName || '').replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-white text-slate-900 font-bold text-xs rounded-xl shadow-md hover:bg-slate-50 transition-colors">
+                  <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="px-3 py-1.5 bg-white text-slate-900 font-bold text-xs rounded-xl shadow-md hover:bg-slate-50 transition-colors">
                     Changer Photo
                   </button>
                 </div>
@@ -1234,32 +1411,6 @@
 
       applyCachedContent();
       if (isAdminLoggedIn) enableGlobalTextEditing();
-    }
-
-    async function editBureauMemberPhoto(id, name) {
-      const currentList = window.cachedBureauList || defaultBureau;
-      const currentMember = currentList.find(b => b.id === id);
-      const currentUrl = currentMember ? (currentMember.photo_url || '') : '';
-      
-      const newUrl = prompt(`Modifier la photo de ${name || 'ce membre'} :\nEntrez l'URL de l'image (ex: https://... ou /assets/logos/tb-logo.jpg) :`, currentUrl);
-      if (newUrl === null) return;
-
-      const trimmed = newUrl.trim();
-      if (window.firestoreDb && window.fs) {
-        try {
-          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", id), {
-            photo_url: trimmed
-          }, { merge: true });
-          alert("Photo enregistrée dans Firestore avec succès !");
-          return;
-        } catch (err) {
-          console.warn("Save photo error:", err);
-        }
-      }
-
-      if (currentMember) currentMember.photo_url = trimmed;
-      renderBureau(currentList);
-      alert("Photo mise à jour !");
     }
 
     function renderLeaderboard(data) {
@@ -1695,6 +1846,10 @@
         closeInternalPortal();
         document.getElementById('admin-floating-bar').classList.remove('hidden');
         document.getElementById('admin-actions-controls').classList.remove('hidden');
+        const bCtrl = document.getElementById('admin-bureau-controls');
+        if (bCtrl) bCtrl.classList.remove('hidden');
+        if (window.cachedBureauList) renderBureau(window.cachedBureauList);
+        if (window.cachedActionsList) renderActions(window.cachedActionsList);
         enableGlobalTextEditing();
         alert("Bienvenue Administrateur !\nL'accès d'administration et l'édition en direct de tous les textes sont déverrouillés.");
         return;
@@ -1746,6 +1901,10 @@
         isAdminLoggedIn = true;
         document.getElementById('admin-floating-bar').classList.remove('hidden');
         document.getElementById('admin-actions-controls').classList.remove('hidden');
+        const bCtrl = document.getElementById('admin-bureau-controls');
+        if (bCtrl) bCtrl.classList.remove('hidden');
+        if (window.cachedBureauList) renderBureau(window.cachedBureauList);
+        if (window.cachedActionsList) renderActions(window.cachedActionsList);
         enableGlobalTextEditing();
       }
 
@@ -1818,6 +1977,8 @@
       if (bar) bar.classList.add('hidden');
       const act = clone.querySelector('#admin-actions-controls');
       if (act) act.classList.add('hidden');
+      const bur = clone.querySelector('#admin-bureau-controls');
+      if (bur) bur.classList.add('hidden');
       clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
       clone.querySelectorAll('.editable-focus').forEach(el => el.classList.remove('editable-focus'));
 
@@ -1839,6 +2000,10 @@
       disableGlobalTextEditing();
       document.getElementById('admin-floating-bar').classList.add('hidden');
       document.getElementById('admin-actions-controls').classList.add('hidden');
+      const bCtrl = document.getElementById('admin-bureau-controls');
+      if (bCtrl) bCtrl.classList.add('hidden');
+      if (window.cachedBureauList) renderBureau(window.cachedBureauList);
+      if (window.cachedActionsList) renderActions(window.cachedActionsList);
       showView('public-view');
     }
 
@@ -1853,14 +2018,15 @@
     let footerClickTimer = null;
     const footerBlock = document.getElementById('footer-copyright-block');
     if (footerBlock) {
-      footerBlock.addEventListener('click', () => {
+      footerBlock.addEventListener('click', (e) => {
+        if (e.target && e.target.isContentEditable) return;
         footerClickCount++;
         clearTimeout(footerClickTimer);
         if (footerClickCount >= 3) {
           footerClickCount = 0;
           openInternalPortal();
         } else {
-          footerClickTimer = setTimeout(() => { footerClickCount = 0; }, 600);
+          footerClickTimer = setTimeout(() => { footerClickCount = 0; }, 700);
         }
       });
     }
@@ -2028,6 +2194,403 @@
 
     window.initCloudSync = initCloudSync;
     initCloudSync();
+  
+    // --- Image Compression & Management ---
+    function compressImageFile(file, maxWidth = 900, maxHeight = 900, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        if (!file || !file.type.startsWith('image/')) {
+          return reject(new Error('Le fichier sélectionné n\'est pas une image valide.'));
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth || height > maxHeight) {
+              if (width / maxWidth > height / maxHeight) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              } else {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve(dataUrl);
+          };
+          img.onerror = () => reject(new Error('Erreur de décodage de l\'image.'));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // --- Photo Manager Modal Logic ---
+    window.activePhotoModalTarget = null;
+    window.currentModalPhotoValue = '';
+
+    function openBureauPhotoModal(id, name) {
+      window.activePhotoModalTarget = { type: 'bureau', id, name };
+      const currentList = window.cachedBureauList || defaultBureau;
+      const member = currentList.find(b => (b.id || '') === id);
+      const existingUrl = member ? (member.photo_url || member.photo || '') : '';
+      
+      document.getElementById('photo-modal-title').textContent = `Photo : ${name || 'Membre du Bureau'}`;
+      document.getElementById('photo-modal-subtitle').textContent = 'Glissez-déposez une photo ou collez un lien direct';
+      
+      setModalPhotoValue(existingUrl);
+      document.getElementById('photo-manager-modal').classList.remove('hidden');
+    }
+    window.openBureauPhotoModal = openBureauPhotoModal;
+
+    function openActionPhotoModal(id, title, imgIdx = 0) {
+      window.activePhotoModalTarget = { type: 'action', id, title, imgIdx };
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === id);
+      const existingUrl = (action && action.images && action.images[imgIdx]) ? action.images[imgIdx] : '';
+
+      document.getElementById('photo-modal-title').textContent = `Photo ${imgIdx + 1}/4 : ${title || 'Action Phare'}`;
+      document.getElementById('photo-modal-subtitle').textContent = 'Glissez-déposez une photo pour l\'action ou collez un lien';
+
+      setModalPhotoValue(existingUrl);
+      document.getElementById('photo-manager-modal').classList.remove('hidden');
+    }
+    window.openActionPhotoModal = openActionPhotoModal;
+
+    function closePhotoManagerModal() {
+      document.getElementById('photo-manager-modal').classList.add('hidden');
+      window.activePhotoModalTarget = null;
+      window.currentModalPhotoValue = '';
+    }
+    window.closePhotoManagerModal = closePhotoManagerModal;
+
+    function setModalPhotoValue(val) {
+      window.currentModalPhotoValue = val || '';
+      const input = document.getElementById('photo-url-input');
+      const previewCont = document.getElementById('photo-preview-container');
+      const previewImg = document.getElementById('photo-preview-img');
+      
+      if (input) input.value = (val && !val.startsWith('data:')) ? val : '';
+      if (val) {
+        if (previewImg) previewImg.src = val;
+        if (previewCont) previewCont.classList.remove('hidden');
+      } else {
+        if (previewImg) previewImg.src = '';
+        if (previewCont) previewCont.classList.add('hidden');
+      }
+    }
+
+    function triggerPhotoFileInput() {
+      const fi = document.getElementById('photo-file-input');
+      if (fi) fi.click();
+    }
+    window.triggerPhotoFileInput = triggerPhotoFileInput;
+
+    async function handlePhotoFileInputChange(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        const compressed = await compressImageFile(file);
+        setModalPhotoValue(compressed);
+      } catch (err) {
+        alert(err.message || 'Erreur lors de la compression de la photo.');
+      }
+    }
+    window.handlePhotoFileInputChange = handlePhotoFileInputChange;
+
+    function handlePhotoDragOver(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('photo-dropzone');
+      if (dropzone) dropzone.classList.add('border-blue-600', 'bg-blue-50/50');
+    }
+    window.handlePhotoDragOver = handlePhotoDragOver;
+
+    function handlePhotoDragLeave(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('photo-dropzone');
+      if (dropzone) dropzone.classList.remove('border-blue-600', 'bg-blue-50/50');
+    }
+    window.handlePhotoDragLeave = handlePhotoDragLeave;
+
+    async function handlePhotoDrop(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('photo-dropzone');
+      if (dropzone) dropzone.classList.remove('border-blue-600', 'bg-blue-50/50');
+
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        try {
+          const compressed = await compressImageFile(file);
+          setModalPhotoValue(compressed);
+        } catch (err) {
+          alert(err.message || 'Erreur lors de la compression de l\'image glissée.');
+        }
+      }
+    }
+    window.handlePhotoDrop = handlePhotoDrop;
+
+    function applyPhotoFromUrlInput() {
+      const input = document.getElementById('photo-url-input');
+      if (input && input.value.trim()) {
+        setModalPhotoValue(input.value.trim());
+      }
+    }
+    window.applyPhotoFromUrlInput = applyPhotoFromUrlInput;
+
+    function removeCurrentPhotoPreview() {
+      setModalPhotoValue('');
+    }
+    window.removeCurrentPhotoPreview = removeCurrentPhotoPreview;
+
+    async function savePhotoManagerModal() {
+      if (!window.activePhotoModalTarget) {
+        closePhotoManagerModal();
+        return;
+      }
+
+      const target = window.activePhotoModalTarget;
+      const photoVal = window.currentModalPhotoValue || '';
+
+      if (target.type === 'bureau') {
+        const currentList = window.cachedBureauList || [...defaultBureau];
+        const member = currentList.find(b => (b.id || '') === target.id);
+        if (member) member.photo_url = photoVal;
+
+        if (window.firestoreDb && window.fs && target.id) {
+          try {
+            await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", target.id), {
+              photo_url: photoVal
+            }, { merge: true });
+          } catch (err) {
+            console.warn("Firestore bureau photo update error:", err);
+          }
+        }
+        renderBureau(currentList);
+        closePhotoManagerModal();
+        alert("Photo du membre enregistrée avec succès !");
+      } else if (target.type === 'action') {
+        const currentList = window.cachedActionsList || [...defaultActions];
+        const action = currentList.find(a => (a.id || '') === target.id);
+        if (action) {
+          if (!Array.isArray(action.images)) action.images = [];
+          if (target.imgIdx < action.images.length) {
+            if (photoVal) action.images[target.imgIdx] = photoVal;
+            else action.images.splice(target.imgIdx, 1);
+          } else if (photoVal) {
+            action.images.push(photoVal);
+          }
+          action.images = action.images.filter(Boolean).slice(0, 4);
+
+          if (window.firestoreDb && window.fs && target.id) {
+            try {
+              await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", target.id), {
+                images: action.images
+              }, { merge: true });
+            } catch (err) {
+              console.warn("Firestore action photos update error:", err);
+            }
+          }
+          renderActions(currentList);
+        }
+        closePhotoManagerModal();
+        alert("Photos de l\'action enregistrées avec succès !");
+      }
+    }
+    window.savePhotoManagerModal = savePhotoManagerModal;
+
+    async function removeActionPhoto(actionId, imgIdx) {
+      if (!confirm("Voulez-vous retirer cette photo de l\'action ?")) return;
+      const currentList = window.cachedActionsList || [...defaultActions];
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (action && Array.isArray(action.images)) {
+        action.images.splice(imgIdx, 1);
+        if (window.firestoreDb && window.fs && actionId) {
+          try {
+            await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", actionId), {
+              images: action.images
+            }, { merge: true });
+          } catch (err) {
+            console.warn("Firestore remove action photo error:", err);
+          }
+        }
+        renderActions(currentList);
+      }
+    }
+    window.removeActionPhoto = removeActionPhoto;
+
+    async function deleteActionDoc(actionId) {
+      if (!confirm("Êtes-vous sûr de vouloir supprimer définitivement cette action phare ?")) return;
+      if (window.firestoreDb && window.fs && actionId && !actionId.startsWith('action-')) {
+        try {
+          await window.fs.deleteDoc(window.fs.doc(window.firestoreDb, "actions", actionId));
+        } catch (err) {
+          console.warn("Firestore delete action error:", err);
+        }
+      }
+      const currentList = window.cachedActionsList || defaultActions;
+      const filtered = currentList.filter(a => (a.id || '') !== actionId);
+      renderActions(filtered);
+    }
+    window.deleteActionDoc = deleteActionDoc;
+
+    // --- Add Bureau Member Logic ---
+    function openAddBureauMemberModal() {
+      document.getElementById('add-bureau-member-modal').classList.remove('hidden');
+    }
+    window.openAddBureauMemberModal = openAddBureauMemberModal;
+
+    function closeAddBureauMemberModal() {
+      document.getElementById('add-bureau-member-modal').classList.add('hidden');
+    }
+    window.closeAddBureauMemberModal = closeAddBureauMemberModal;
+
+    function triggerNewBureauFileInput() {
+      const fi = document.getElementById('new-bureau-file-input');
+      if (fi) fi.click();
+    }
+    window.triggerNewBureauFileInput = triggerNewBureauFileInput;
+
+    async function handleNewBureauFileInputChange(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        const compressed = await compressImageFile(file);
+        updateNewBureauPhotoPreview(compressed);
+      } catch (err) {
+        alert(err.message || "Erreur lors du traitement de l\'image.");
+      }
+    }
+    window.handleNewBureauFileInputChange = handleNewBureauFileInputChange;
+
+    function handleNewBureauDragOver(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('new-bureau-dropzone');
+      if (dropzone) dropzone.classList.add('border-blue-600', 'bg-blue-50/50');
+    }
+    window.handleNewBureauDragOver = handleNewBureauDragOver;
+
+    function handleNewBureauDragLeave(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('new-bureau-dropzone');
+      if (dropzone) dropzone.classList.remove('border-blue-600', 'bg-blue-50/50');
+    }
+    window.handleNewBureauDragLeave = handleNewBureauDragLeave;
+
+    async function handleNewBureauDrop(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('new-bureau-dropzone');
+      if (dropzone) dropzone.classList.remove('border-blue-600', 'bg-blue-50/50');
+
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        try {
+          const compressed = await compressImageFile(file);
+          updateNewBureauPhotoPreview(compressed);
+        } catch (err) {
+          alert(err.message || "Erreur lors de la compression de l\'image.");
+        }
+      }
+    }
+    window.handleNewBureauDrop = handleNewBureauDrop;
+
+    function updateNewBureauPhotoPreview(url) {
+      const urlInput = document.getElementById('new-bureau-photo-url');
+      const box = document.getElementById('new-bureau-preview-box');
+      const img = document.getElementById('new-bureau-preview-img');
+      if (urlInput && !url.startsWith('data:')) urlInput.value = url;
+      if (urlInput && url.startsWith('data:')) urlInput.value = url;
+      if (url && img && box) {
+        img.src = url;
+        box.classList.remove('hidden');
+      } else if (box) {
+        box.classList.add('hidden');
+      }
+    }
+    window.updateNewBureauPhotoPreview = updateNewBureauPhotoPreview;
+
+    async function handleAddBureauMemberSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const fullName = form.full_name.value.trim();
+      const role = form.role.value.trim();
+      const tier = form.tier.value;
+      const photo_url = form.photo_url.value.trim();
+
+      if (!fullName || !role) {
+        alert("Veuillez renseigner le nom et le rôle du membre.");
+        return;
+      }
+
+      const newMember = {
+        fullName: fullName,
+        full_name: fullName,
+        role: role,
+        tier: tier,
+        photo_url: photo_url || "",
+        created_at: new Date().toISOString()
+      };
+
+      if (window.firestoreDb && window.fs) {
+        try {
+          const docRef = await window.fs.addDoc(window.fs.collection(window.firestoreDb, "bureauMembers"), newMember);
+          newMember.id = docRef.id;
+        } catch (err) {
+          console.warn("Firestore addDoc bureau error:", err);
+        }
+      }
+
+      const current = window.cachedBureauList || [...defaultBureau];
+      if (!newMember.id) newMember.id = 'bm-' + Date.now();
+      current.push(newMember);
+      renderBureau(current);
+
+      closeAddBureauMemberModal();
+      form.reset();
+      updateNewBureauPhotoPreview('');
+      alert("Nouveau membre du bureau ajouté et publié avec succès !");
+    }
+    window.handleAddBureauMemberSubmit = handleAddBureauMemberSubmit;
+
+    async function deleteBureauMember(id, name) {
+      if (!confirm(`Êtes-vous sûr de vouloir retirer "${name}" du bureau ?`)) return;
+
+      if (window.firestoreDb && window.fs && id && !id.startsWith('bm-')) {
+        try {
+          await window.fs.deleteDoc(window.fs.doc(window.firestoreDb, "bureauMembers", id));
+        } catch (err) {
+          console.warn("Firestore delete bureau error:", err);
+        }
+      }
+
+      const current = window.cachedBureauList || defaultBureau;
+      const filtered = current.filter(b => (b.id || '') !== id);
+      renderBureau(filtered);
+    }
+    window.deleteBureauMember = deleteBureauMember;
+
+    // --- Live Instagram Follower Counter ---
+    async function updateLiveInstagramFollowers() {
+      try {
+        const resp = await fetch('/api/instagram');
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data && data.followers) {
+          const el = document.querySelector('[data-edit-key="metric-val-community_reach"]');
+          if (el) el.textContent = data.followers;
+        }
+      } catch (err) {
+        // Silently fallback to static count
+      }
+    }
+    window.updateLiveInstagramFollowers = updateLiveInstagramFollowers;
+
   </script>
 </body>
 </html>
