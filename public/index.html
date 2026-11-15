@@ -220,9 +220,12 @@
           <p id="edit-bureauSectionSubtitle" data-edit-key="bureauSectionSubtitle" class="editable-field text-sm text-slate-500 mt-2">
             Réunion statutaire constitutive du 1er août 2026
           </p>
-          <div id="admin-bureau-controls" class="hidden mt-4 flex items-center justify-center gap-3">
+          <div id="admin-bureau-controls" class="hidden mt-4 flex flex-wrap items-center justify-center gap-3">
             <button onclick="openAddBureauMemberModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5">
               <span>➕</span> Ajouter un Membre au Bureau
+            </button>
+            <button onclick="openReorderBureauModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5">
+              <span>🔄</span> Organiser l'Ordre du Bureau
             </button>
           </div>
         </div>
@@ -1001,6 +1004,30 @@
     </div>
   </div>
 
+  
+  <!-- Modal: Organiser et Réordonner le Bureau -->
+  <div id="reorder-bureau-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Organiser & Réordonner le Bureau</h3>
+          <p class="text-xs text-slate-500">Ajustez l'ordre d'affichage et les pôles en direct</p>
+        </div>
+        <button onclick="closeReorderBureauModal()" class="text-slate-400 hover:text-slate-600 text-base font-bold">✕</button>
+      </div>
+
+      <div class="mt-4 space-y-6" id="reorder-modal-content">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-end">
+        <button type="button" onclick="closeReorderBureauModal()" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition-all">
+          Enregistrer & Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
@@ -1369,11 +1396,47 @@
       if (isAdminLoggedIn) enableGlobalTextEditing();
     }
 
+    function generateNameAvatar(name, role = '') {
+      const cleanName = (name || 'Membre').trim();
+      const initials = cleanName.split(/\s+/).filter(Boolean).map(n => n.charAt(0)).slice(0, 2).join('').toUpperCase() || 'M';
+      
+      let hash = 0;
+      for (let i = 0; i < cleanName.length; i++) hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
+      const palettes = [
+        ['#1e3a8a', '#2563eb'],
+        ['#0f766e', '#0d9488'],
+        ['#4338ca', '#6366f1'],
+        ['#831843', '#db2777'],
+        ['#1e293b', '#475569'],
+        ['#0369a1', '#0284c7']
+      ];
+      const p = palettes[Math.abs(hash) % palettes.length];
+      
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+        <defs>
+          <linearGradient id="grad-${Math.abs(hash)}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${p[0]}" />
+            <stop offset="100%" stop-color="${p[1]}" />
+          </linearGradient>
+        </defs>
+        <rect width="400" height="400" fill="url(#grad-${Math.abs(hash)})" />
+        <circle cx="200" cy="155" r="82" fill="rgba(255,255,255,0.18)" />
+        <text x="200" y="185" font-family="Plus Jakarta Sans, sans-serif" font-size="76" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">${initials}</text>
+        <text x="200" y="295" font-family="Inter, sans-serif" font-size="20" font-weight="800" fill="#ffffff" text-anchor="middle">${cleanName}</text>
+        ${role ? `<text x="200" y="325" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.8)" text-anchor="middle">${role}</text>` : ''}
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    window.generateNameAvatar = generateNameAvatar;
+
     function renderBureauCard(m, i, roleColorClass = 'text-blue-600') {
-      const initials = ((m.fullName || m.full_name || 'M').split(' ').map(n => n.charAt(0)).join('')).substring(0, 2).toUpperCase();
-      const photo = m.photo_url || m.photo || '';
+      const memberName = m.fullName || m.full_name || 'Membre';
+      const defaultAvatar = generateNameAvatar(memberName, m.role || '');
+      const photo = (m.photo_url || m.photo || '').trim() || defaultAvatar;
+      const isCustomPhoto = Boolean((m.photo_url || m.photo || '').trim());
       const mId = m.id || i;
-      const safeName = (m.fullName || m.full_name || '').replace(/'/g, "\\'");
+      const safeName = memberName.replace(/'/g, "\\'");
+      const tier = getMemberTier(m);
 
       return `
         <div class="w-72 sm:w-80 flex-shrink-0 snap-start bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between">
@@ -1395,20 +1458,11 @@
             </div>
 
             <h4 data-edit-key="bureau-name-${mId}" class="editable-field text-base font-extrabold text-slate-900 leading-tight">
-              ${m.fullName || m.full_name || ''}
+              ${memberName}
             </h4>
 
             <div class="mt-3 w-full h-52 rounded-2xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
-              ${photo ? `
-                <img src="${photo}" alt="${m.fullName || m.full_name}" class="w-full h-full object-cover object-top hover:scale-105 transition-transform" />
-              ` : `
-                <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-blue-50 text-slate-400">
-                  <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold text-lg mb-1 shadow-inner">
-                    ${initials}
-                  </div>
-                  <span class="text-[10px] text-slate-400 font-medium">Photo officielle</span>
-                </div>
-              `}
+              <img id="bureau-img-${mId}" src="${photo}" alt="${memberName}" data-has-custom="${isCustomPhoto}" class="w-full h-full object-cover object-top hover:scale-105 transition-transform" />
               ${isAdminLoggedIn ? `
                 <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="px-3 py-1.5 bg-white text-slate-900 font-bold text-xs rounded-xl shadow-md hover:bg-slate-50 transition-colors">
@@ -1418,6 +1472,24 @@
               ` : ''}
             </div>
           </div>
+
+          ${isAdminLoggedIn ? `
+            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 text-[11px]">
+              <div class="flex items-center gap-1">
+                <button onclick="moveBureauMember('${mId}', -1)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-lg transition-colors" title="Déplacer vers la gauche">
+                  ◀
+                </button>
+                <button onclick="moveBureauMember('${mId}', 1)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-lg transition-colors" title="Déplacer vers la droite">
+                  ▶
+                </button>
+              </div>
+              <select onchange="changeMemberSection('${mId}', this.value)" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-bold text-slate-700 focus:outline-none">
+                <option value="executif" ${tier === 'executif' ? 'selected' : ''}>Pôle Exécutif</option>
+                <option value="commission" ${tier === 'commission' ? 'selected' : ''}>Pôle Commission</option>
+                <option value="adjoint" ${tier === 'adjoint' ? 'selected' : ''}>Pôle Adjoint</option>
+              </select>
+            </div>
+          ` : ''}
         </div>
       `;
     }
@@ -2041,7 +2113,7 @@
           console.warn("Auto-save siteContent error:", err);
         }
 
-        // 3. If element is part of a Bureau Member, also sync the bureauMembers document directly!
+        // 3. If element is part of a Bureau Member, sync document and auto-sync avatar to name!
         if (key.startsWith('bureau-name-') || key.startsWith('bureau-role-')) {
           const memberId = key.replace('bureau-name-', '').replace('bureau-role-', '');
           const isName = key.startsWith('bureau-name-');
@@ -2050,11 +2122,21 @@
           if (member) {
             if (isName) { member.fullName = text; member.full_name = text; }
             else { member.role = text; }
+
+            // If using default photo (no custom URL), regenerate avatar matching new name immediately!
+            if (!member.photo_url || !member.photo) {
+              const imgEl = document.getElementById(`bureau-img-${memberId}`);
+              if (imgEl && imgEl.getAttribute('data-has-custom') !== 'true') {
+                imgEl.src = generateNameAvatar(member.fullName || member.full_name, member.role || '');
+              }
+            }
+
             try {
               localStorage.setItem('ictgc_bureau_cache', JSON.stringify(currentBureau));
-              if (!memberId.startsWith('exec-') && !memberId.startsWith('comm-') && !memberId.startsWith('elargi-')) {
+              if (!memberId.startsWith('exec-') && !memberId.startsWith('comm-') && !memberId.startsWith('adj-')) {
                 await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", memberId), {
-                  [isName ? 'fullName' : 'role']: text
+                  [isName ? 'fullName' : 'role']: text,
+                  full_name: member.fullName || member.full_name
                 }, { merge: true });
               }
             } catch (err) {}
