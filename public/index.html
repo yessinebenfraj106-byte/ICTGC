@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interact Club Tunis Golfe Carthagène | District 9010</title>
   <link rel="icon" type="image/jpeg" href="/assets/logos/tb-logo.jpg">
+  <script>
+    const _w = console.warn;
+    console.warn = function(...args) {
+      if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) return;
+      _w.apply(console, args);
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -677,7 +684,9 @@
     window.firestoreDb = db;
     window.fs = { collection, addDoc, doc, updateDoc, onSnapshot, getDocs, setDoc };
 
-    initCloudSync();
+    if (typeof window.initCloudSync === 'function') {
+      window.initCloudSync();
+    }
   </script>
 
   <script>
@@ -801,6 +810,7 @@
     }
 
     function initCloudSync() {
+      window.initCloudSync = initCloudSync;
       renderMetrics(defaultMetrics);
       renderActions(defaultActions);
       renderBureau(defaultBureau);
@@ -965,8 +975,6 @@
       `).join('');
       applyCachedContent();
       if (isAdminLoggedIn) enableGlobalTextEditing();
-    }
-      `).join('');
     }
 
     function renderLeaderboard(data) {
@@ -1474,6 +1482,9 @@
       renderMembersTable(defaultMembers);
       closePointsModal();
     }
+
+    window.initCloudSync = initCloudSync;
+    initCloudSync();
   </script>
 </body>
 </html>
