@@ -87,6 +87,12 @@ class ClubRequestHandler(http.server.SimpleHTTPRequestHandler):
                 rows = cursor.execute("SELECT * FROM metrics ORDER BY display_order ASC").fetchall()
                 self.send_json([dict(r) for r in rows])
 
+            elif path == "/api/facebook":
+                self.send_json({"success": True, "followers": "9 414+", "raw": 9414})
+
+            elif path == "/api/instagram":
+                self.send_json({"success": True, "followers": "3 601+", "raw": 3601})
+
             elif path == "/api/leaderboard":
                 rows = cursor.execute("""
                     SELECT id, first_name || ' ' || last_name AS full_name, role, bureau_title,
