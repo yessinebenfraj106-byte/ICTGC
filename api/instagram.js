@@ -3,7 +3,7 @@ module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=300');
 
   const username = 'ic.tunisgolfecarthagene';
-  const defaultFollowers = '3 600+';
+  const defaultFollowers = '3 601+';
 
   try {
     const controller = new AbortController();

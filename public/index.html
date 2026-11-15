@@ -48,6 +48,19 @@
 
 (function() {
       try {
+        var rawBureau = localStorage.getItem('ictgc_bureau_cache');
+        if (rawBureau) {
+          try { window.cachedBureauList = JSON.parse(rawBureau); } catch(e) {}
+        }
+        var rawActions = localStorage.getItem('ictgc_actions_cache');
+        if (rawActions) {
+          try { window.cachedActionsList = JSON.parse(rawActions); } catch(e) {}
+        }
+        var rawMetrics = localStorage.getItem('ictgc_metrics_cache');
+        if (rawMetrics) {
+          try { window.cachedMetrics = JSON.parse(rawMetrics); } catch(e) {}
+        }
+
         var raw = localStorage.getItem('ictgc_site_content');
         if (raw) {
           var cached = JSON.parse(raw);
@@ -144,19 +157,19 @@
         <button onclick="showView('public-view', 'bureau-section')" class="px-4 py-2 rounded-lg hover:text-blue-700 hover:bg-slate-50 transition-colors">Mandat 2026-2027</button>
       </nav>
 
-      <div class="flex items-center gap-2 sm:gap-2.5">
+      <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
         <!-- Facebook with Followers Count -->
-        <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition-all shadow-xs border border-blue-200/80 group" title="Page Facebook officielle (@ICTGC)">
+        <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition-all shadow-xs border border-blue-200/80 group" title="Page Facebook officielle (@ICTGC)">
           <svg class="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          <span class="text-xs font-bold header-fb-count" data-edit-key="header-fb-count">9 414+</span>
+          <span class="text-[11px] sm:text-xs font-bold header-fb-count" data-edit-key="header-fb-count">9 414+</span>
         </a>
         <!-- Instagram with Followers Count -->
-        <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-50 text-pink-700 hover:bg-pink-600 hover:text-white transition-all shadow-xs border border-pink-200/80 group" title="Compte Instagram officiel (@ic.tunisgolfecarthagene)">
+        <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-pink-50 text-pink-700 hover:bg-pink-600 hover:text-white transition-all shadow-xs border border-pink-200/80 group" title="Compte Instagram officiel (@ic.tunisgolfecarthagene)">
           <svg class="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          <span class="text-xs font-bold header-insta-count" data-edit-key="header-insta-count">3 601+</span>
+          <span class="text-[11px] sm:text-xs font-bold header-insta-count" data-edit-key="header-insta-count">3 601+</span>
         </a>
         <!-- Nous Rejoindre CTA -->
-        <button onclick="showView('recruitment-view')" class="inline-flex items-center justify-center px-4 sm:px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow">
+        <button onclick="showView('recruitment-view')" class="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow whitespace-nowrap">
           Nous Rejoindre
         </button>
       </div>
@@ -248,10 +261,10 @@
           <div class="relative z-10">
             <div class="hidden md:block absolute top-1/2 left-8 right-8 h-0.5 -translate-y-12 bg-gradient-to-r from-amber-500 via-rose-500 to-sky-400 opacity-30 z-0"></div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 relative z-10 items-stretch">
               
               <!-- 1. Rotary International -->
-              <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 hover:border-amber-400/80 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-lg">
+              <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 hover:border-amber-400/80 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-lg h-full">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -274,7 +287,7 @@
               </div>
 
               <!-- 2. Rotary Club Ariana La Rose -->
-              <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 hover:border-rose-400/80 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-lg">
+              <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 hover:border-rose-400/80 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-lg h-full">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30">
@@ -297,7 +310,7 @@
               </div>
 
               <!-- 3. Le Programme Mondial Interact -->
-              <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 hover:border-sky-400/80 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-lg">
+              <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 hover:border-sky-400/80 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-lg h-full">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30">
@@ -320,7 +333,7 @@
               </div>
 
               <!-- 4. Notre Club : ICTGC -->
-              <div class="bg-gradient-to-br from-blue-950/90 to-slate-800/90 backdrop-blur-md rounded-2xl p-5 border-2 border-amber-400/80 hover:border-amber-300 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-xl relative overflow-hidden">
+              <div class="bg-gradient-to-br from-blue-950/90 to-slate-800/90 backdrop-blur-md rounded-2xl p-5 border-2 border-amber-400/80 hover:border-amber-300 transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-xl relative overflow-hidden h-full">
                 <div class="absolute top-0 right-0 w-20 h-20 bg-amber-400/10 rounded-full blur-xl pointer-events-none"></div>
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
@@ -401,7 +414,7 @@
               <span>↔</span> Défilement horizontal
             </span>
           </div>
-          <div id="bureau-executif-grid" class="flex gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
+          <div id="bureau-executif-grid" class="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
         </div>
 
         <!-- 2. Chefs des Commissions -->
@@ -414,7 +427,7 @@
               <span>↔</span> Défilement horizontal
             </span>
           </div>
-          <div id="bureau-commission-grid" class="flex gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
+          <div id="bureau-commission-grid" class="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
         </div>
 
         <!-- 3. Les Adjoints -->
@@ -427,7 +440,7 @@
               <span>↔</span> Défilement horizontal
             </span>
           </div>
-          <div id="bureau-elargi-grid" class="flex gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
+          <div id="bureau-elargi-grid" class="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
         </div>
       </section>
 
@@ -1391,13 +1404,90 @@
       }
     }
 
+    async function syncFullBureauToCloud(list) {
+      window.cachedBureauList = list;
+      try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(list)); } catch(e) {}
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
+            bureauMembersList: list,
+            bureauUpdatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch(err) {
+          console.warn("Firestore sync bureau error:", err);
+        }
+      }
+    }
+    window.syncFullBureauToCloud = syncFullBureauToCloud;
+
+    async function syncFullActionsToCloud(list) {
+      window.cachedActionsList = list;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(list)); } catch(e) {}
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
+            actionsList: list,
+            actionsUpdatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch(err) {
+          console.warn("Firestore sync actions error:", err);
+        }
+      }
+    }
+    window.syncFullActionsToCloud = syncFullActionsToCloud;
+
+    async function syncFullMetricsToCloud(list) {
+      window.cachedMetrics = list;
+      try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(list)); } catch(e) {}
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
+            metricsList: list,
+            metricsUpdatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch(err) {
+          console.warn("Firestore sync metrics error:", err);
+        }
+      }
+    }
+    window.syncFullMetricsToCloud = syncFullMetricsToCloud;
+
     function initCloudSync() {
       window.initCloudSync = initCloudSync;
-      renderMetrics(defaultMetrics);
+
+      // 1. Instant cache load from localStorage (0ms latency, eliminates old text delay)
+      let initialMetrics = defaultMetrics;
+      try {
+        const storedM = localStorage.getItem('ictgc_metrics_cache');
+        if (storedM) {
+          const parsed = JSON.parse(storedM);
+          if (Array.isArray(parsed) && parsed.length > 0) initialMetrics = parsed;
+        }
+      } catch(e) {}
+      renderMetrics(initialMetrics);
       updateLiveInstagramFollowers();
       updateLiveFacebookFollowers();
-      renderActions(defaultActions);
-      renderBureau(defaultBureau);
+
+      let initialActions = defaultActions;
+      try {
+        const storedA = localStorage.getItem('ictgc_actions_cache');
+        if (storedA) {
+          const parsed = JSON.parse(storedA);
+          if (Array.isArray(parsed) && parsed.length > 0) initialActions = parsed;
+        }
+      } catch(e) {}
+      renderActions(initialActions);
+
+      let initialBureau = defaultBureau;
+      try {
+        const storedB = localStorage.getItem('ictgc_bureau_cache');
+        if (storedB) {
+          const parsed = JSON.parse(storedB);
+          if (Array.isArray(parsed) && parsed.length > 0) initialBureau = parsed;
+        }
+      } catch(e) {}
+      renderBureau(initialBureau);
+
       renderLeaderboard(defaultMembers);
       renderResourceLibrary(defaultResources);
       renderZoneLinks(defaultZoneLinks);
@@ -1420,6 +1510,23 @@
           window.cachedSiteContent = data;
           try { localStorage.setItem('ictgc_site_content', JSON.stringify(data)); } catch(e){}
           applyCachedContent();
+
+          // Sync full bureau if updated in cloud
+          if (data.bureauMembersList && Array.isArray(data.bureauMembersList) && data.bureauMembersList.length > 0) {
+            window.cachedBureauList = data.bureauMembersList;
+            try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(data.bureauMembersList)); } catch(e){}
+            renderBureau(data.bureauMembersList);
+          }
+          if (data.actionsList && Array.isArray(data.actionsList) && data.actionsList.length > 0) {
+            window.cachedActionsList = data.actionsList;
+            try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(data.actionsList)); } catch(e){}
+            renderActions(data.actionsList);
+          }
+          if (data.metricsList && Array.isArray(data.metricsList) && data.metricsList.length > 0) {
+            window.cachedMetrics = data.metricsList;
+            try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(data.metricsList)); } catch(e){}
+            renderMetrics(data.metricsList);
+          }
         }
       });
 
@@ -1430,7 +1537,7 @@
           try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(items)); } catch(e){}
           renderMetrics(items);
           updateLiveInstagramFollowers();
-      updateLiveFacebookFollowers();
+          updateLiveFacebookFollowers();
         }
       });
 
@@ -1447,8 +1554,15 @@
         if (!snap.empty) {
           const items = [];
           snap.forEach(d => items.push({ id: d.id, ...d.data() }));
-          try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(items)); } catch(e){}
-          renderBureau(items);
+          const currentList = window.cachedBureauList || defaultBureau;
+          const map = new Map(items.map(m => [m.id, m]));
+          const merged = currentList.map(m => map.get(m.id) || m);
+          items.forEach(m => {
+            if (!currentList.some(c => c.id === m.id)) merged.push(m);
+          });
+          window.cachedBureauList = merged;
+          try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(merged)); } catch(e){}
+          renderBureau(merged);
         }
       });
 
@@ -1493,16 +1607,20 @@
       try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(data)); } catch(e){}
       const grid = document.getElementById('metrics-grid');
       if (!grid) return;
-      grid.innerHTML = data.map((m, i) => `
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-amber-300 transition-all text-center group relative overflow-hidden flex flex-col justify-between">
-          <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
-          <div>
-            <span data-edit-key="metric-val-${m.key || i}" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight">${m.value_display || m.value || ''}</span>
-            <span data-edit-key="metric-lbl-${m.key || i}" class="editable-field text-xs font-bold text-sky-700 block mt-1.5">${m.label || ''}</span>
+      grid.innerHTML = data.map((m, i) => {
+        const isLastOdd = (i === data.length - 1 && data.length % 2 !== 0);
+        const spanClass = isLastOdd ? 'col-span-2 sm:col-span-1 lg:col-span-2 xl:col-span-1' : '';
+        return `
+          <div class="${spanClass} bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
+            <div>
+              <span data-edit-key="metric-val-${m.key || i}" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight">${m.value_display || m.value || ''}</span>
+              <span data-edit-key="metric-lbl-${m.key || i}" class="editable-field text-xs font-bold text-sky-700 block mt-1.5">${m.label || ''}</span>
+            </div>
+            <span data-edit-key="metric-sub-${m.key || i}" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium">${m.subtext || ''}</span>
           </div>
-          <span data-edit-key="metric-sub-${m.key || i}" class="editable-field text-[10px] text-slate-500 mt-1.5 block leading-tight font-medium">${m.subtext || ''}</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
       applyCachedContent();
       if (isAdminLoggedIn) enableGlobalTextEditing();
       initCountUpObserver();
@@ -1639,7 +1757,7 @@
       const tier = getMemberTier(m);
 
       return `
-        <div class="w-72 sm:w-80 flex-shrink-0 snap-start bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between"
+        <div class="w-72 sm:w-80 flex-shrink-0 snap-start bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between h-full"
              data-member-id="${mId}"
              data-member-tier="${tier}"
              ${isAdminLoggedIn ? `
@@ -1777,7 +1895,7 @@
         const tier = getMemberTier(m);
 
         return `
-          <div class="bg-slate-50/80 rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 flex flex-col justify-between hover:bg-white hover:border-rose-300 transition-all">
+          <div class="bg-slate-50/80 rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 flex flex-col justify-between hover:bg-white hover:border-rose-300 transition-all h-full">
             <div>
               <div class="flex items-center justify-between gap-1 mb-1">
                 <span data-edit-key="bureau-role-${mId}" class="editable-field text-[10px] font-extrabold uppercase tracking-wide text-rose-600 block line-clamp-1">
@@ -1823,7 +1941,7 @@
       }).join('');
 
       return `
-        <div class="w-[330px] sm:w-[560px] md:w-[600px] flex-shrink-0 snap-start bg-white rounded-3xl p-4 sm:p-5 border-2 border-rose-200/90 shadow-sm hover:shadow-md hover:border-rose-400 transition-all flex flex-col justify-between relative overflow-hidden">
+        <div class="w-[330px] sm:w-[560px] md:w-[600px] flex-shrink-0 snap-start bg-white rounded-3xl p-4 sm:p-5 border-2 border-rose-200/90 shadow-sm hover:shadow-md hover:border-rose-400 transition-all flex flex-col justify-between h-full relative overflow-hidden">
           <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-amber-500 to-rose-600"></div>
           
           <div>
@@ -1977,6 +2095,7 @@
       window.cachedBureauList = list;
       try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(list)); } catch(e){}
       renderBureau(list);
+      syncFullBureauToCloud(list);
       const modal = document.getElementById('reorder-bureau-modal');
       if (modal && !modal.classList.contains('hidden')) {
         openReorderBureauModal();
@@ -2013,6 +2132,7 @@
       window.cachedBureauList = list;
       try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(list)); } catch(e){}
       renderBureau(list);
+      syncFullBureauToCloud(list);
     }
     window.moveBureauMember = moveBureauMember;
 
@@ -2034,6 +2154,7 @@
       }
       
       renderBureau(list);
+      syncFullBureauToCloud(list);
     }
     window.changeMemberSection = changeMemberSection;
 
@@ -2707,6 +2828,7 @@
 
             try {
               localStorage.setItem('ictgc_bureau_cache', JSON.stringify(currentBureau));
+              syncFullBureauToCloud(currentBureau);
               if (!memberId.startsWith('exec-') && !memberId.startsWith('comm-') && !memberId.startsWith('adj-')) {
                 await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", memberId), {
                   [isName ? 'fullName' : 'role']: text,
@@ -2731,6 +2853,7 @@
             action[field] = text;
             try {
               localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentActions));
+              syncFullActionsToCloud(currentActions);
               if (!actionId.startsWith('act-') && !/^\d+$/.test(actionId)) {
                 await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", actionId), {
                   [field]: text
@@ -3190,6 +3313,7 @@
           }
         }
         renderBureau(currentList);
+        syncFullBureauToCloud(currentList);
         closePhotoManagerModal();
         alert("Photo du membre enregistrée avec succès !");
       } else if (target.type === 'action') {
@@ -3215,6 +3339,7 @@
             }
           }
           renderActions(currentList);
+          syncFullActionsToCloud(currentList);
         }
         closePhotoManagerModal();
         alert("Photos de l\'action enregistrées avec succès !");
@@ -3238,6 +3363,7 @@
           }
         }
         renderActions(currentList);
+        syncFullActionsToCloud(currentList);
       }
     }
     window.removeActionPhoto = removeActionPhoto;
@@ -3254,6 +3380,7 @@
       const currentList = window.cachedActionsList || defaultActions;
       const filtered = currentList.filter(a => (a.id || '') !== actionId);
       renderActions(filtered);
+      syncFullActionsToCloud(filtered);
     }
     window.deleteActionDoc = deleteActionDoc;
 
@@ -3369,6 +3496,7 @@
       if (!newMember.id) newMember.id = 'bm-' + Date.now();
       current.push(newMember);
       renderBureau(current);
+      syncFullBureauToCloud(current);
 
       closeAddBureauMemberModal();
       form.reset();
@@ -3393,6 +3521,7 @@
       window.cachedBureauList = filtered;
       try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(filtered)); } catch(e){}
       renderBureau(filtered);
+      syncFullBureauToCloud(filtered);
     }
     window.deleteBureauMember = deleteBureauMember;
 
