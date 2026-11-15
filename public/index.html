@@ -135,6 +135,26 @@
     .admin-editing [contenteditable="true"] { cursor: text; outline: 1px dashed rgba(0, 93, 170, 0.35); border-radius: 4px; transition: all 0.15s ease; }
     .admin-editing [contenteditable="true"]:hover { outline: 2px dashed #005DAA; background: rgba(238, 242, 255, 0.6); }
     .admin-editing [contenteditable="true"]:focus { outline: 2px solid #005DAA; background: #EEF2FF; }
+    .checkerboard-bg {
+      background-color: #0f172a;
+      background-image: 
+        linear-gradient(45deg, #1e293b 25%, transparent 25%), 
+        linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #1e293b 75%), 
+        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+    .checkerboard-light {
+      background-color: #ffffff;
+      background-image: 
+        linear-gradient(45deg, #f1f5f9 25%, transparent 25%), 
+        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #f1f5f9 75%), 
+        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -1224,8 +1244,8 @@
               </button>
             </div>
           </div>
-          <div class="w-full h-56 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 relative">
-            <img id="photo-preview-img" src="" alt="Aperçu" class="w-full h-full object-cover" />
+          <div class="w-full h-56 rounded-2xl overflow-hidden checkerboard-light border border-slate-200 relative flex items-center justify-center p-2">
+            <img id="photo-preview-img" src="" alt="Aperçu" class="max-w-full max-h-full object-contain filter drop-shadow-xs" />
           </div>
         </div>
 
@@ -1505,8 +1525,8 @@
         <button type="button" onclick="closeImageCropper()" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">✕</button>
       </div>
 
-      <!-- Canvas Workspace -->
-      <div class="relative my-4 bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center select-none" style="min-height: 280px; max-height: 420px; height: 50vh;">
+      <!-- Canvas Workspace (with Transparency Checkerboard) -->
+      <div class="relative my-4 checkerboard-bg rounded-2xl overflow-hidden flex items-center justify-center select-none" style="min-height: 280px; max-height: 420px; height: 50vh;">
         <canvas id="cropper-canvas" class="max-w-full max-h-full cursor-grab active:cursor-grabbing"></canvas>
         <div id="cropper-loader" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center text-white text-xs font-bold">
           <span>Chargement de l'image...</span>
@@ -1542,13 +1562,24 @@
           </div>
         </div>
 
-        <!-- Zoom Slider -->
-        <div class="flex items-center gap-3 pt-1 border-t border-slate-200/60">
-          <span class="text-xs font-bold text-slate-600 flex items-center gap-1">
-            <span>🔍</span> Zoom :
-          </span>
-          <input type="range" id="cropper-zoom-slider" min="0.5" max="3" step="0.05" value="1" oninput="handleCropperZoom(parseFloat(this.value))" class="flex-1 accent-blue-600 cursor-pointer" />
-          <span id="cropper-zoom-label" class="text-xs font-mono font-bold text-slate-700 w-12 text-right">100%</span>
+        <!-- Zoom Slider & Transparency Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/60">
+          <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+            <span class="text-xs font-bold text-slate-600 flex items-center gap-1">
+              <span>🔍</span> Zoom :
+            </span>
+            <input type="range" id="cropper-zoom-slider" min="0.5" max="3" step="0.05" value="1" oninput="handleCropperZoom(parseFloat(this.value))" class="flex-1 accent-blue-600 cursor-pointer" />
+            <span id="cropper-zoom-label" class="text-xs font-mono font-bold text-slate-700 w-12 text-right">100%</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="removeSolidBackgroundFromCropper()" class="px-2.5 py-1.5 bg-white hover:bg-amber-50 text-amber-800 font-bold rounded-lg border border-amber-300 transition-all shadow-2xs flex items-center gap-1.5 text-xs" title="Convertit automatiquement le fond blanc ou uni en fond transparent (idéal pour logos)">
+              <span>🪄</span> Rendre Fond Transparent
+            </button>
+            <span id="cropper-transparency-badge" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+              <span>✨</span> Format Sans Fond Supporté
+            </span>
+          </div>
         </div>
       </div>
 
@@ -3816,12 +3847,24 @@
     window.initCloudSync = initCloudSync;
     initCloudSync();
   
-    // --- Image Compression & Management ---
-    function compressImageFile(file, maxWidth = 900, maxHeight = 900, quality = 0.82) {
+    // --- Image Compression & Management (Full Transparency & No-Background Support) ---
+    function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.85) {
       return new Promise((resolve, reject) => {
         if (!file || !file.type.startsWith('image/')) {
           return reject(new Error('Le fichier sélectionné n\'est pas une image valide.'));
         }
+
+        // SVG files are already scalable vector format with native transparency
+        if (file.type === 'image/svg+xml') {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier SVG.'));
+          reader.readAsDataURL(file);
+          return;
+        }
+
+        const isTransparentType = file.type === 'image/png' || file.type === 'image/webp' || file.type === 'image/gif';
+
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
@@ -3841,9 +3884,33 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
+
+            // Clear transparently (never black)
+            ctx.clearRect(0, 0, width, height);
             ctx.drawImage(img, 0, 0, width, height);
-            const dataUrl = canvas.toDataURL('image/jpeg', quality);
-            resolve(dataUrl);
+
+            // Detect if image actually has any transparent pixels (alpha < 250)
+            let hasAlpha = false;
+            try {
+              const imgData = ctx.getImageData(0, 0, width, height).data;
+              for (let i = 3; i < imgData.length; i += 4) {
+                if (imgData[i] < 250) {
+                  hasAlpha = true;
+                  break;
+                }
+              }
+            } catch (err) {
+              hasAlpha = isTransparentType;
+            }
+
+            // If image has transparent / no background, export as image/png so alpha channel is 100% preserved!
+            if (hasAlpha || isTransparentType) {
+              const dataUrl = canvas.toDataURL('image/png');
+              resolve(dataUrl);
+            } else {
+              const dataUrl = canvas.toDataURL('image/jpeg', quality);
+              resolve(dataUrl);
+            }
           };
           img.onerror = () => reject(new Error('Erreur de décodage de l\'image.'));
           img.src = e.target.result;
@@ -4282,6 +4349,7 @@
     // --- Interactive Canvas Cropper & Rotator Controller ---
     const cropperState = {
       img: null,
+      originalImg: null,
       rotation: 0,
       flipH: false,
       zoom: 1,
@@ -4291,7 +4359,9 @@
       callback: null,
       isDragging: false,
       startX: 0,
-      startY: 0
+      startY: 0,
+      preserveAlpha: true,
+      hasTransparentBg: false
     };
 
     function openImageCropper(imageSrc, callback, options = {}) {
@@ -4315,10 +4385,28 @@
       if (zoomSlider) zoomSlider.value = 1;
       if (zoomLabel) zoomLabel.textContent = '100%';
 
+      cropperState.preserveAlpha = imageSrc.startsWith('data:image/png') || imageSrc.startsWith('data:image/webp') || imageSrc.startsWith('data:image/svg') || imageSrc.endsWith('.png') || imageSrc.endsWith('.webp') || imageSrc.endsWith('.svg');
+
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
         cropperState.img = img;
+        cropperState.originalImg = img;
+        try {
+          const probe = document.createElement('canvas');
+          probe.width = Math.min(img.width, 100);
+          probe.height = Math.min(img.height, 100);
+          const pCtx = probe.getContext('2d');
+          pCtx.drawImage(img, 0, 0, probe.width, probe.height);
+          const pData = pCtx.getImageData(0, 0, probe.width, probe.height).data;
+          for (let i = 3; i < pData.length; i += 4) {
+            if (pData[i] < 250) {
+              cropperState.preserveAlpha = true;
+              cropperState.hasTransparentBg = true;
+              break;
+            }
+          }
+        } catch(e) {}
         if (loader) loader.classList.add('hidden');
         renderCropperCanvas();
       };
@@ -4373,6 +4461,9 @@
     window.flipCropperImage = flipCropperImage;
 
     function resetCropperTransform() {
+      if (cropperState.originalImg) {
+        cropperState.img = cropperState.originalImg;
+      }
       cropperState.rotation = 0;
       cropperState.flipH = false;
       cropperState.zoom = 1;
@@ -4383,6 +4474,7 @@
       if (slider) slider.value = 1;
       if (label) label.textContent = '100%';
       renderCropperCanvas();
+      showAppToast("Transformation et image réinitialisées.", "info");
     }
     window.resetCropperTransform = resetCropperTransform;
 
@@ -4446,7 +4538,19 @@
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, cw, ch);
 
-      // 1. Draw transformed image in background
+      // Draw subtle transparency checkerboard behind image
+      const box = getCropperBox(cw, ch);
+      const checkerSize = 14;
+      for (let x = box.x; x < box.x + box.w; x += checkerSize) {
+        for (let y = box.y; y < box.y + box.h; y += checkerSize) {
+          const w = Math.min(checkerSize, box.x + box.w - x);
+          const h = Math.min(checkerSize, box.y + box.h - y);
+          ctx.fillStyle = ((Math.floor(x / checkerSize) + Math.floor(y / checkerSize)) % 2 === 0) ? '#1e293b' : '#0f172a';
+          ctx.fillRect(x, y, w, h);
+        }
+      }
+
+      // 1. Draw transformed image
       ctx.save();
       ctx.translate(cw / 2 + cropperState.panX, ch / 2 + cropperState.panY);
       ctx.rotate((cropperState.rotation * Math.PI) / 180);
@@ -4461,8 +4565,6 @@
       ctx.restore();
 
       // 2. Crop Window Mask
-      const box = getCropperBox(cw, ch);
-
       // Dark translucent overlay outside crop box
       ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
       ctx.fillRect(0, 0, cw, box.y);
@@ -4581,13 +4683,90 @@
       eCtx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
       eCtx.restore();
 
-      const croppedDataUrl = exportCanvas.toDataURL('image/jpeg', 0.88);
+      // Detect if cropped result contains transparent / no background pixels
+      let hasAlpha = Boolean(cropperState.preserveAlpha || cropperState.hasTransparentBg);
+      try {
+        const pData = eCtx.getImageData(0, 0, exportCanvas.width, exportCanvas.height).data;
+        for (let i = 3; i < pData.length; i += 4) {
+          if (pData[i] < 250) {
+            hasAlpha = true;
+            break;
+          }
+        }
+      } catch(e) {}
+
+      // If transparent, export as image/png to preserve alpha transparency, else image/jpeg
+      const exportFormat = hasAlpha ? 'image/png' : 'image/jpeg';
+      const croppedDataUrl = exportCanvas.toDataURL(exportFormat, 0.9);
       const cb = cropperState.callback;
       closeImageCropper();
       cb(croppedDataUrl);
-      showAppToast("Image recadrée avec succès !", "success");
+      showAppToast(hasAlpha ? "Image recadrée avec fond transparent préservé !" : "Image recadrée avec succès !", "success");
     }
     window.applyImageCropperResult = applyImageCropperResult;
+
+    function removeSolidBackgroundFromCropper() {
+      if (!cropperState.img) {
+        showAppToast("Veuillez d'abord charger une image.", "info");
+        return;
+      }
+      try {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = cropperState.img.width;
+        tempCanvas.height = cropperState.img.height;
+        const tCtx = tempCanvas.getContext('2d');
+        tCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+        tCtx.drawImage(cropperState.img, 0, 0);
+
+        const imgData = tCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        const data = imgData.data;
+
+        // Sample corner pixels to determine background tone
+        const w = tempCanvas.width;
+        const h = tempCanvas.height;
+        const cornerIndices = [
+          0,
+          (w - 1) * 4,
+          (h - 1) * w * 4,
+          ((h - 1) * w + w - 1) * 4
+        ];
+
+        let bgR = 255, bgG = 255, bgB = 255;
+        if (cornerIndices.length > 0) {
+          bgR = data[cornerIndices[0]];
+          bgG = data[cornerIndices[0] + 1];
+          bgB = data[cornerIndices[0] + 2];
+        }
+
+        const threshold = 36;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
+          // If close to corner background color OR bright white/light background
+          if (dist < threshold || (r >= 238 && g >= 238 && b >= 238)) {
+            data[i + 3] = 0; // Transparent
+          }
+        }
+
+        tCtx.putImageData(imgData, 0, 0);
+        const newImg = new Image();
+        newImg.onload = () => {
+          cropperState.img = newImg;
+          cropperState.preserveAlpha = true;
+          cropperState.hasTransparentBg = true;
+          renderCropperCanvas();
+          showAppToast("Fond uni supprimé ! Le format sans fond (transparent) est actif.", "success");
+        };
+        newImg.src = tempCanvas.toDataURL('image/png');
+      } catch (err) {
+        console.warn("Background removal error:", err);
+        showAppToast("Impossible de détourer cette image.", "error");
+      }
+    }
+    window.removeSolidBackgroundFromCropper = removeSolidBackgroundFromCropper;
+
 
     function cropCurrentPhotoModal() {
       if (!window.currentModalPhotoValue) {
