@@ -16,14 +16,41 @@
       try {
         var raw = localStorage.getItem('ictgc_site_content');
         if (raw) {
-          window.cachedSiteContent = JSON.parse(raw);
+          var cached = JSON.parse(raw);
+          window.cachedSiteContent = cached;
+          
+          function applyNode(node) {
+            if (node.nodeType !== 1) return;
+            var k = node.getAttribute('data-edit-key') || node.id;
+            if (k && cached[k] !== undefined) {
+              node.innerText = cached[k];
+            }
+            if (node.querySelectorAll) {
+              var targets = node.querySelectorAll('[data-edit-key], #edit-bureauSectionTitle, #edit-bureauSectionSubtitle');
+              for (var i = 0; i < targets.length; i++) {
+                var tk = targets[i].getAttribute('data-edit-key') || targets[i].id;
+                if (tk && cached[tk] !== undefined) {
+                  targets[i].innerText = cached[tk];
+                }
+              }
+            }
+          }
+
+          var observer = new MutationObserver(function(mutations) {
+            for (var i = 0; i < mutations.length; i++) {
+              var added = mutations[i].addedNodes;
+              for (var j = 0; j < added.length; j++) {
+                applyNode(added[j]);
+              }
+            }
+          });
+          observer.observe(document.documentElement, { childList: true, subtree: true });
+
           document.addEventListener('DOMContentLoaded', function() {
-            if (!window.cachedSiteContent) return;
-            for (var key in window.cachedSiteContent) {
-              var val = window.cachedSiteContent[key];
-              if (!val) continue;
+            observer.disconnect();
+            for (var key in cached) {
               var el = document.querySelector('[data-edit-key="' + key + '"]') || document.getElementById(key);
-              if (el) el.innerText = val;
+              if (el && cached[key] !== undefined) el.innerText = cached[key];
             }
           });
         }
@@ -1036,7 +1063,7 @@
       { key: "school_kids", label: "Écoliers Dotés de Cartables", value_display: "800", subtext: "Action Rentrée Scolaire (Nabeul)" },
       { key: "food_baskets", label: "Paniers Alimentaires Distribués", value_display: "1 000", subtext: "Couffin de Ramadan (Mahdia)" },
       { key: "winter_families", label: "Foyers Réchauffés en Hiver", value_display: "120", subtext: "Hiver au Chaud (Testour)" },
-      { key: "community_reach", label: "Communauté Digitale", value_display: "3 120+", subtext: "Abonnés engagés sur Instagram (@ic.tunisgolfecarthagene)" },
+      { key: "community_reach", label: "Communauté Digitale", value_display: "3 601+", subtext: "Abonnés engagés sur Instagram (@ic.tunisgolfecarthagene)" },
       { key: "years_active", label: "Années d'Engagement", value_display: "8+", subtext: "Depuis mars 2017 (Charte officielle le 7 janvier 2019)" }
     ];
 
@@ -1189,6 +1216,7 @@
         if (!snap.empty) {
           const items = [];
           snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(items)); } catch(e){}
           renderMetrics(items);
           updateLiveInstagramFollowers();
         }
@@ -1198,6 +1226,7 @@
         if (!snap.empty) {
           const items = [];
           snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(items)); } catch(e){}
           renderActions(items);
         }
       });
@@ -1206,6 +1235,7 @@
         if (!snap.empty) {
           const items = [];
           snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(items)); } catch(e){}
           renderBureau(items);
         }
       });
@@ -1247,6 +1277,8 @@
     }
 
     function renderMetrics(data) {
+      window.cachedMetrics = data;
+      try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(data)); } catch(e){}
       const grid = document.getElementById('metrics-grid');
       if (!grid) return;
       grid.innerHTML = data.map((m, i) => `
@@ -1262,6 +1294,7 @@
 
     function renderActions(data) {
       window.cachedActionsList = data;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(data)); } catch(e){}
       const bento = document.getElementById('actions-bento');
       if (!bento) return;
       bento.innerHTML = data.map((a, i) => {
@@ -1391,6 +1424,7 @@
 
     function renderBureau(data) {
       window.cachedBureauList = data;
+      try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(data)); } catch(e){}
       const execGrid = document.getElementById('bureau-executif-grid');
       const commissionGrid = document.getElementById('bureau-commission-grid');
       const elargiGrid = document.getElementById('bureau-elargi-grid');
@@ -1925,8 +1959,107 @@
         }
         el.setAttribute('contenteditable', 'true');
         el.classList.add('editable-focus');
+
+        if (!el._autoSaveBound) {
+          el._autoSaveBound = true;
+          el.addEventListener('blur', () => autoSaveSingleElement(el));
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              el.blur();
+            }
+          });
+        }
       });
     }
+
+    let syncToastTimer = null;
+    function showSyncToast(msg = '✓ Synchronisé en direct dans le Cloud') {
+      let toast = document.getElementById('auto-sync-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'auto-sync-toast';
+        toast.className = 'fixed top-5 right-5 z-50 bg-slate-900/95 text-emerald-400 border border-slate-700 px-4 py-2 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 pointer-events-none transition-all duration-300 opacity-0 translate-y-[-10px]';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${msg}`;
+      toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+      clearTimeout(syncToastTimer);
+      syncToastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-[-10px]');
+      }, 2500);
+    }
+
+    async function autoSaveSingleElement(el) {
+      if (!isAdminLoggedIn) return;
+      const key = el.getAttribute('data-edit-key') || el.id;
+      if (!key) return;
+      const text = el.innerText.trim();
+
+      // 1. Update localStorage and memory cache immediately
+      if (!window.cachedSiteContent) window.cachedSiteContent = {};
+      window.cachedSiteContent[key] = text;
+      try {
+        localStorage.setItem('ictgc_site_content', JSON.stringify(window.cachedSiteContent));
+      } catch (e) {}
+
+      // 2. Sync to Firestore siteContent/main
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
+            [key]: text
+          }, { merge: true });
+        } catch (err) {
+          console.warn("Auto-save siteContent error:", err);
+        }
+
+        // 3. If element is part of a Bureau Member, also sync the bureauMembers document directly!
+        if (key.startsWith('bureau-name-') || key.startsWith('bureau-role-')) {
+          const memberId = key.replace('bureau-name-', '').replace('bureau-role-', '');
+          const isName = key.startsWith('bureau-name-');
+          const currentBureau = window.cachedBureauList || defaultBureau;
+          const member = currentBureau.find(b => (b.id || '') === memberId);
+          if (member) {
+            if (isName) { member.fullName = text; member.full_name = text; }
+            else { member.role = text; }
+            try {
+              localStorage.setItem('ictgc_bureau_cache', JSON.stringify(currentBureau));
+              if (!memberId.startsWith('exec-') && !memberId.startsWith('comm-') && !memberId.startsWith('elargi-')) {
+                await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", memberId), {
+                  [isName ? 'fullName' : 'role']: text
+                }, { merge: true });
+              }
+            } catch (err) {}
+          }
+        }
+
+        // 4. If element is part of an Action, also sync the actions document directly!
+        if (key.startsWith('action-title-') || key.startsWith('action-desc-') || key.startsWith('action-cat-') || key.startsWith('action-loc-')) {
+          let field = 'title';
+          if (key.startsWith('action-desc-')) field = 'description';
+          else if (key.startsWith('action-cat-')) field = 'category';
+          else if (key.startsWith('action-loc-')) field = 'location';
+          const actionId = key.replace(`action-${field.substring(0,3)}-`, '').replace(`action-${field}-`, '');
+          
+          const currentActions = window.cachedActionsList || defaultActions;
+          const action = currentActions.find(a => (a.id || '') === actionId);
+          if (action) {
+            action[field] = text;
+            try {
+              localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentActions));
+              if (!actionId.startsWith('act-') && !/^\d+$/.test(actionId)) {
+                await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", actionId), {
+                  [field]: text
+                }, { merge: true });
+              }
+            } catch (err) {}
+          }
+        }
+      }
+
+      showSyncToast();
+    }
+    window.autoSaveSingleElement = autoSaveSingleElement;
 
     function disableGlobalTextEditing() {
       document.body.classList.remove('admin-editing');
@@ -2584,6 +2717,11 @@
         if (data && data.followers) {
           const el = document.querySelector('[data-edit-key="metric-val-community_reach"]');
           if (el) el.textContent = data.followers;
+          if (!window.cachedSiteContent) window.cachedSiteContent = {};
+          window.cachedSiteContent['metric-val-community_reach'] = data.followers;
+          try {
+            localStorage.setItem('ictgc_site_content', JSON.stringify(window.cachedSiteContent));
+          } catch(e) {}
         }
       } catch (err) {
         // Silently fallback to static count
