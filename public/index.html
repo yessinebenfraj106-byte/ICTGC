@@ -273,6 +273,11 @@
           <button type="button" onclick="setAppLanguage('ar', true)" id="lang-btn-ar" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900 font-bold" title="العربية">عربي</button>
         </div>
 
+        <!-- Espace Interne Button -->
+        <button onclick="openInternalPortal()" id="btn-open-portal" class="px-3 py-2 text-xs font-bold text-slate-700 hover:text-blue-700 bg-slate-100 hover:bg-blue-50 border border-slate-200 rounded-xl transition-all flex items-center gap-1.5 shadow-2xs whitespace-nowrap" title="Espace Membres & Administration">
+          <span>🔐</span> <span>Espace Interne</span>
+        </button>
+
         <!-- Nous Rejoindre CTA -->
         <button onclick="showView('recruitment-view')" data-i18n="navJoinUs" class="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow whitespace-nowrap">
           Nous Rejoindre
@@ -2236,6 +2241,10 @@
         </a>
         <span>•</span>
         <a href="mailto:interact.tunisgolfecarthagene@gmail.com" data-i18n="footerContact" class="hover:text-white transition-colors">Contact Mail</a>
+        <span>•</span>
+        <button onclick="openInternalPortal()" class="hover:text-white transition-colors flex items-center gap-1 font-medium">
+          <span>🔐</span> Espace Interne
+        </button>
 
       </div>
     </div>
