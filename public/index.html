@@ -60,6 +60,10 @@
         if (rawMetrics) {
           try { window.cachedMetrics = JSON.parse(rawMetrics); } catch(e) {}
         }
+        var rawMembers = localStorage.getItem('ictgc_members_cache');
+        if (rawMembers) {
+          try { window.allMembersList = JSON.parse(rawMembers); } catch(e) {}
+        }
 
         var raw = localStorage.getItem('ictgc_site_content');
         if (raw) {
@@ -132,6 +136,41 @@
     }
   </script>
   <style>
+
+    /* Action Category Tabs */
+    .tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background-color: #f1f5f9;
+      padding: 0.375rem;
+      border-radius: 1rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .tab {
+      padding: 0.5rem 1.25rem;
+      border-radius: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #64748b;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tab:hover {
+      color: #0f172a;
+    }
+    .tab.is-on {
+      background-color: #ffffff;
+      color: #1d4ed8;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-color: #cbd5e1;
+    }
+
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
     h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
     .editable-focus:focus { outline: 2px dashed #005DAA; background: #EEF2FF; border-radius: 4px; padding: 2px 4px; }
@@ -423,6 +462,14 @@
             </button>
           </div>
         </div>
+        <!-- Action Category Tabs -->
+        <div class="flex items-center justify-center mb-8">
+          <div class="tabs" role="group" aria-label="Catégories d’actions">
+            <button type="button" class="tab is-on" data-cat="financiere" data-site="actionsSection.financialLabel" aria-pressed="true" onclick="filterActionsCategory('financiere')">FINANCIÈRES</button>
+            <button type="button" class="tab" data-cat="humanitaire" data-site="actionsSection.humanitarianLabel" aria-pressed="false" onclick="filterActionsCategory('humanitaire')">HUMANITAIRES</button>
+          </div>
+        </div>
+
         <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense"></div>
       </section>
 
@@ -629,51 +676,6 @@
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Ce que vous voulez apporter au club (*)</label>
                 <textarea name="desired_contribution" rows="2" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
               </div>
-            </div>
-          </div>
-
-          <div class="space-y-4 pt-6 border-t border-slate-100">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold uppercase tracking-wider text-blue-700 flex items-center gap-2" data-i18n="recruitSec5">5. Choix des Commissions</h3>
-              <span class="text-[10px] text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full font-bold">
-                3 Statutaires Obligatoires
-              </span>
-            </div>
-            
-            <p class="text-xs text-slate-500">
-              Selon les statuts du club, tout membre actif intègre obligatoirement les 3 commissions fondamentales, et peut choisir une ou plusieurs commissions électives :
-            </p>
-
-            <div class="space-y-2.5 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs">
-              <label class="flex items-center gap-2.5 text-slate-800 font-semibold cursor-not-allowed">
-                <input type="checkbox" checked disabled class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" />
-                <span>Commission d'Intérêt Public (CIP) <span class="text-blue-600 text-[10px] font-bold uppercase ml-1">• Obligatoire</span></span>
-              </label>
-              <label class="flex items-center gap-2.5 text-slate-800 font-semibold cursor-not-allowed">
-                <input type="checkbox" checked disabled class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" />
-                <span>Commission des Relations Internes & Externes (CRIE) <span class="text-blue-600 text-[10px] font-bold uppercase ml-1">• Obligatoire</span></span>
-              </label>
-              <label class="flex items-center gap-2.5 text-slate-800 font-semibold cursor-not-allowed">
-                <input type="checkbox" checked disabled class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" />
-                <span>Commission des Ressources Humaines (CRH) <span class="text-blue-600 text-[10px] font-bold uppercase ml-1">• Obligatoire</span></span>
-              </label>
-
-              <div class="border-t border-slate-200 my-2 pt-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                Commissions Électives au Choix :
-              </div>
-
-              <label class="flex items-center gap-2.5 text-slate-700 cursor-pointer hover:text-slate-900">
-                <input type="checkbox" name="elective_commissions" value="Commission des Finances" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" />
-                <span>Commission des Finances</span>
-              </label>
-              <label class="flex items-center gap-2.5 text-slate-700 cursor-pointer hover:text-slate-900">
-                <input type="checkbox" name="elective_commissions" value="Commission des Actions Internationales" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" />
-                <span>Commission des Actions Internationales</span>
-              </label>
-              <label class="flex items-center gap-2.5 text-slate-700 cursor-pointer hover:text-slate-900">
-                <input type="checkbox" name="elective_commissions" value="Commission de Médiatisation" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" />
-                <span>Commission de Médiatisation</span>
-              </label>
             </div>
           </div>
 
@@ -1353,6 +1355,43 @@
             <input type="text" name="action_collaborating" placeholder="Ex: Interact Club Carthage, Rotary..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
           </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Type d'Action (Filtre par onglet) (*)</label>
+            <select name="action_type" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="humanitaire" selected>🤝 Humanitaire (Solidarité, Caravane...)</option>
+              <option value="financiere">💰 Financière (Autofinancement, Vente...)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Couleur ou Dégradé de la Boîte</label>
+            <select name="action_custom_gradient" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="">⚪ Blanc Classique (Défaut)</option>
+              <option value="linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%)">🌊 Azur Rotary & Océan</option>
+              <option value="linear-gradient(135deg, #451a03 0%, #b45309 50%, #f59e0b 100%)">🌅 Ambre Solaire Carthage</option>
+              <option value="linear-gradient(135deg, #022c22 0%, #065f46 50%, #10b981 100%)">🌿 Émeraude Solidarité</option>
+              <option value="linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #7c3aed 100%)">💜 Nuit Royale & Indigo</option>
+              <option value="linear-gradient(135deg, #500724 0%, #9d174d 50%, #f43f5e 100%)">🌹 Rose Carthage & Rubis</option>
+              <option value="linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%)">🌑 Noir Minuit & Prestige</option>
+              <option value="linear-gradient(135deg, #451a03 0%, #78350f 50%, #d97706 100%)">✨ Or Festif Autofinancement</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-50/80 border border-amber-200 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🌟</span>
+            <div>
+              <div class="text-xs font-bold text-slate-900">Dernière Actualité / News (À la Une)</div>
+              <div class="text-[10px] text-slate-500">Mettre cette action en vedette officielle sur le site</div>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" name="action_is_news" class="sr-only peer">
+            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Description détaillée (*)</label>
           <textarea name="action_description" rows="3" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
@@ -1796,6 +1835,127 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal: Personnalisation Dégradé & News Action -->
+  <div id="action-style-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <span>🎨</span> Personnaliser la Carte d'Action
+          </h3>
+          <p id="action-style-title" class="text-xs text-slate-500 font-semibold mt-0.5"></p>
+        </div>
+        <button onclick="closeActionStyleModal()" class="text-slate-400 hover:text-slate-600 text-base font-bold">✕</button>
+      </div>
+
+      <div class="mt-4 space-y-4">
+        <input type="hidden" id="action-style-id" />
+
+        <!-- Toggle News / À la Une -->
+        <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">🌟</span>
+            <div>
+              <div class="text-xs font-bold text-slate-900">Dernière Actualité / News (À la Une)</div>
+              <div class="text-[10px] text-slate-500">Affiche un badge officiel "DERNIÈRE ACTUALITÉ" sur cette action</div>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="action-style-is-news" class="sr-only peer" onchange="updateStyleModalPreview()">
+            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+
+        <!-- Action Category Type (Financière vs Humanitaire) -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">Catégorie d'affichage (Onglets) :</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
+              <input type="radio" name="action-style-type" value="humanitaire" id="style-type-humanitaire" class="text-blue-600 focus:ring-blue-500" onchange="updateStyleModalPreview()" />
+              <span class="text-xs font-bold text-slate-800">🤝 Humanitaire</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
+              <input type="radio" name="action-style-type" value="financiere" id="style-type-financiere" class="text-blue-600 focus:ring-blue-500" onchange="updateStyleModalPreview()" />
+              <span class="text-xs font-bold text-slate-800">💰 Financière (Autofinancement)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Gradient Presets Swatches -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">Palette de Dégradés & Couleurs :</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)')" class="p-2 rounded-xl border border-slate-300 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-slate-800" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+              ⚪ Blanc Épuré
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%)')" class="p-2 rounded-xl border border-slate-400 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);">
+              🌊 Azur Océan
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #451a03 0%, #b45309 50%, #f59e0b 100%)')" class="p-2 rounded-xl border border-amber-600 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #451a03 0%, #b45309 50%, #f59e0b 100%);">
+              🌅 Ambre Solaire
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #022c22 0%, #065f46 50%, #10b981 100%)')" class="p-2 rounded-xl border border-emerald-600 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #022c22 0%, #065f46 50%, #10b981 100%);">
+              🌿 Émeraude
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #7c3aed 100%)')" class="p-2 rounded-xl border border-indigo-600 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #7c3aed 100%);">
+              💜 Nuit Royale
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #500724 0%, #9d174d 50%, #f43f5e 100%)')" class="p-2 rounded-xl border border-rose-600 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #500724 0%, #9d174d 50%, #f43f5e 100%);">
+              🌹 Rose Carthage
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%)')" class="p-2 rounded-xl border border-slate-600 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%);">
+              🌑 Noir Minuit
+            </button>
+            <button type="button" onclick="selectGradientPreset('linear-gradient(135deg, #451a03 0%, #78350f 50%, #d97706 100%)')" class="p-2 rounded-xl border border-amber-700 text-left hover:scale-[1.02] transition-transform text-[11px] font-bold text-white shadow-xs" style="background: linear-gradient(135deg, #451a03 0%, #78350f 50%, #d97706 100%);">
+              ✨ Or Festif
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Gradient CSS / Color Input -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Gradient ou Couleur Personnalisée (CSS) :</label>
+          <div class="flex items-center gap-2">
+            <input type="text" id="action-style-gradient-input" placeholder="linear-gradient(...) ou #hex" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" oninput="updateStyleModalPreview()" />
+            <input type="color" id="action-style-color-picker" class="w-10 h-9 p-0.5 border border-slate-300 rounded-xl cursor-pointer" onchange="applyColorPickerGradient(this.value)" />
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Accepte toute syntaxe CSS valide (ex: <code>linear-gradient(135deg, #1e3a8a, #0284c7)</code> ou <code>#0f172a</code>).</p>
+        </div>
+
+        <!-- Live Preview Box -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Aperçu en Direct de la Boîte :</label>
+          <div id="action-style-preview-box" class="p-4 rounded-2xl border border-slate-200 transition-all shadow-sm">
+            <div id="action-style-preview-badge" class="hidden mb-2">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-600 text-white animate-pulse">🔥 DERNIÈRE ACTUALITÉ • À LA UNE</span>
+            </div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span id="action-style-preview-cat" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">Catégorie</span>
+              <span id="action-style-preview-loc" class="text-[11px] text-slate-400">Tunisie</span>
+            </div>
+            <div id="action-style-preview-title" class="font-bold text-slate-900 text-sm">Titre de l'action</div>
+            <div id="action-style-preview-desc" class="text-xs text-slate-500 mt-1">Exemple de description avec le dégradé appliqué.</div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+          <button type="button" onclick="resetActionStyle()" class="px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors">
+            Réinitialiser au style blanc
+          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="closeActionStyleModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">
+              Annuler
+            </button>
+            <button type="button" onclick="saveActionStyle()" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-xs">
+              Enregistrer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Modal: Ajouter / Modifier un Partenaire ou Sponsor -->
   <div id="add-partner-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
@@ -3031,6 +3191,11 @@
         window.ICTGC_Analytics.logAction(desc, 'navigation');
       }
 
+      if (viewId === 'admin-view' && !isAdminLoggedIn) {
+        alert("Accès réservé exclusivement aux administrateurs autorisés.");
+        showView('public-view');
+        return;
+      }
       if (viewId === 'admin-view' && isAdminLoggedIn) {
         if (typeof switchAdminTab === 'function') switchAdminTab('analytics');
       }
@@ -3315,14 +3480,39 @@
         }
       });
 
+      // Load cached members
+      try {
+        const cachedM = localStorage.getItem('ictgc_members_cache');
+        if (cachedM) {
+          const parsed = JSON.parse(cachedM);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            window.allMembersList = parsed;
+            renderMembersTable(parsed);
+            renderLeaderboard(parsed);
+          }
+        }
+      } catch(e) {}
+
       onSnapshot(collection(window.firestoreDb, "members"), (snap) => {
         if (!snap.empty) {
-          const items = [];
-          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
-          renderLeaderboard(items);
-          renderMembersTable(items);
+          const fsItems = [];
+          snap.forEach(d => fsItems.push({ id: d.id, ...d.data() }));
+          const baseList = window.allMembersList || defaultMembers;
+          const merged = baseList.map(bm => {
+            const fsMatch = fsItems.find(f => f.id === bm.id || (f.email && bm.email && f.email.toLowerCase() === bm.email.toLowerCase()));
+            return fsMatch ? { ...bm, ...fsMatch } : bm;
+          });
+          fsItems.forEach(fi => {
+            if (!merged.some(m => m.id === fi.id || (m.email && fi.email && m.email.toLowerCase() === fi.email.toLowerCase()))) {
+              merged.push(fi);
+            }
+          });
+          window.allMembersList = merged;
+          try { localStorage.setItem('ictgc_members_cache', JSON.stringify(merged)); } catch(e){}
+          renderLeaderboard(merged);
+          renderMembersTable(merged);
           if (currentLoggedMember) {
-            const updated = items.find(m => m.id === currentLoggedMember.id || m.email === currentLoggedMember.email);
+            const updated = merged.find(m => m.id === currentLoggedMember.id || m.email === currentLoggedMember.email);
             if (updated) setMemberActive(updated);
           }
         }
@@ -3379,12 +3569,210 @@
       initCountUpObserver();
     }
 
+    window.currentActionCategoryFilter = 'financiere';
+
+    function filterActionsCategory(category) {
+      const tabs = document.querySelectorAll('.tabs .tab');
+      if (window.currentActionCategoryFilter === category) {
+        window.currentActionCategoryFilter = 'all';
+        tabs.forEach(btn => {
+          btn.classList.remove('is-on');
+          btn.setAttribute('aria-pressed', 'false');
+        });
+      } else {
+        window.currentActionCategoryFilter = category;
+        tabs.forEach(btn => {
+          const isTarget = btn.getAttribute('data-cat') === category;
+          btn.classList.toggle('is-on', isTarget);
+          btn.setAttribute('aria-pressed', isTarget ? 'true' : 'false');
+        });
+      }
+      renderActions(window.cachedActionsList || defaultActions);
+    }
+    window.filterActionsCategory = filterActionsCategory;
+
+    async function toggleActionAsNews(actionId) {
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+
+      const willBeNews = !action.is_news;
+      currentList.forEach(a => {
+        if (a.id === actionId) {
+          a.is_news = willBeNews;
+        } else if (willBeNews) {
+          a.is_news = false;
+        }
+      });
+
+      renderActions(currentList);
+      await syncFullActionsToCloud(currentList);
+      if (typeof showAppToast === 'function') {
+        showAppToast(willBeNews ? "Action définie comme Dernière Actualité / News !" : "Statut Actualité / À la Une retiré.", "success");
+      }
+    }
+    window.toggleActionAsNews = toggleActionAsNews;
+
+    let currentStyleActionId = null;
+
+    function openActionStyleModal(actionId) {
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+
+      currentStyleActionId = actionId;
+      document.getElementById('action-style-id').value = actionId;
+      document.getElementById('action-style-title').textContent = action.title || 'Action';
+      document.getElementById('action-style-is-news').checked = Boolean(action.is_news);
+
+      const actionType = action.action_type || (
+        ((action.category || '') + (action.title || '')).toLowerCase().includes('financ') || 
+        ((action.category || '') + (action.title || '')).toLowerCase().includes('autofinance') || 
+        ((action.title || '').toLowerCase().includes('midnight')) ? 'financiere' : 'humanitaire'
+      );
+      if (actionType === 'financiere') {
+        document.getElementById('style-type-financiere').checked = true;
+      } else {
+        document.getElementById('style-type-humanitaire').checked = true;
+      }
+
+      document.getElementById('action-style-gradient-input').value = action.custom_gradient || '';
+      updateStyleModalPreview();
+      document.getElementById('action-style-modal').classList.remove('hidden');
+    }
+    window.openActionStyleModal = openActionStyleModal;
+
+    function closeActionStyleModal() {
+      document.getElementById('action-style-modal').classList.add('hidden');
+      currentStyleActionId = null;
+    }
+    window.closeActionStyleModal = closeActionStyleModal;
+
+    function selectGradientPreset(preset) {
+      document.getElementById('action-style-gradient-input').value = preset;
+      updateStyleModalPreview();
+    }
+    window.selectGradientPreset = selectGradientPreset;
+
+    function applyColorPickerGradient(hex) {
+      const grad = `linear-gradient(135deg, ${hex} 0%, #0f172a 100%)`;
+      document.getElementById('action-style-gradient-input').value = grad;
+      updateStyleModalPreview();
+    }
+    window.applyColorPickerGradient = applyColorPickerGradient;
+
+    function resetActionStyle() {
+      document.getElementById('action-style-gradient-input').value = '';
+      updateStyleModalPreview();
+    }
+    window.resetActionStyle = resetActionStyle;
+
+    function updateStyleModalPreview() {
+      const grad = (document.getElementById('action-style-gradient-input').value || '').trim();
+      const isNews = document.getElementById('action-style-is-news').checked;
+      const isFinanciere = document.getElementById('style-type-financiere').checked;
+
+      const box = document.getElementById('action-style-preview-box');
+      const badge = document.getElementById('action-style-preview-badge');
+      const catEl = document.getElementById('action-style-preview-cat');
+      const titleEl = document.getElementById('action-style-preview-title');
+      const descEl = document.getElementById('action-style-preview-desc');
+      const locEl = document.getElementById('action-style-preview-loc');
+
+      badge.classList.toggle('hidden', !isNews);
+      catEl.textContent = isFinanciere ? "💰 Financière" : "🤝 Humanitaire";
+
+      if (grad) {
+        box.style.background = grad;
+        const isDark = !grad.includes('#ffffff') && !grad.includes('#f8fafc');
+        titleEl.className = isDark ? "font-bold text-white text-sm" : "font-bold text-slate-900 text-sm";
+        descEl.className = isDark ? "text-xs text-slate-200 mt-1" : "text-xs text-slate-600 mt-1";
+        locEl.className = isDark ? "text-[11px] text-slate-300" : "text-[11px] text-slate-400";
+        catEl.className = isDark ? "px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white border border-white/30" : "px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800";
+      } else {
+        box.style.background = '#ffffff';
+        titleEl.className = "font-bold text-slate-900 text-sm";
+        descEl.className = "text-xs text-slate-500 mt-1";
+        locEl.className = "text-[11px] text-slate-400";
+        catEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800";
+      }
+    }
+    window.updateStyleModalPreview = updateStyleModalPreview;
+
+    async function saveActionStyle() {
+      if (!currentStyleActionId) return;
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === currentStyleActionId);
+      if (!action) return;
+
+      const isNews = document.getElementById('action-style-is-news').checked;
+      const actionType = document.getElementById('style-type-financiere').checked ? 'financiere' : 'humanitaire';
+      const customGradient = (document.getElementById('action-style-gradient-input').value || '').trim();
+
+      if (isNews) {
+        currentList.forEach(a => {
+          if (a.id !== currentStyleActionId) a.is_news = false;
+        });
+      }
+
+      action.is_news = isNews;
+      action.action_type = actionType;
+      action.custom_gradient = customGradient;
+
+      renderActions(currentList);
+      await syncFullActionsToCloud(currentList);
+      closeActionStyleModal();
+      if (typeof showAppToast === 'function') {
+        showAppToast("Style et paramètres de l'action enregistrés avec succès !", "success");
+      }
+    }
+    window.saveActionStyle = saveActionStyle;
+
     function renderActions(data) {
       if (!Array.isArray(data)) return;
       window.cachedActionsList = data;
       try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(data)); } catch(e){}
       const bento = document.getElementById('actions-bento');
       if (!bento) return;
+
+      const catFilter = window.currentActionCategoryFilter || 'financiere';
+      let filteredData = data;
+      if (catFilter === 'financiere') {
+        filteredData = data.filter(a => {
+          const t = (a.action_type || '').toLowerCase();
+          const c = (a.category || '').toLowerCase();
+          const tit = (a.title || '').toLowerCase();
+          return t === 'financiere' || c.includes('financ') || c.includes('autofinance') || c.includes('culture') || c.includes('loisir') || tit.includes('midnight') || tit.includes('pool') || tit.includes('gala');
+        });
+      } else if (catFilter === 'humanitaire') {
+        filteredData = data.filter(a => {
+          const t = (a.action_type || '').toLowerCase();
+          const c = (a.category || '').toLowerCase();
+          const tit = (a.title || '').toLowerCase();
+          const isFin = t === 'financiere' || c.includes('financ') || c.includes('autofinance') || tit.includes('midnight');
+          return !isFin || t === 'humanitaire';
+        });
+      }
+
+      if (filteredData.length === 0) {
+        bento.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400 bg-white rounded-3xl border border-dashed border-slate-200">
+            <span class="text-3xl mb-2 block">🤝</span>
+            <p class="text-sm font-bold text-slate-700">Aucune action affichée pour cette catégorie.</p>
+            <div class="mt-3 flex items-center justify-center gap-2">
+              <button onclick="filterActionsCategory('all')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                Afficher toutes les actions
+              </button>
+              ${isAdminLoggedIn ? `
+                <button onclick="openAddActionModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs">
+                  + Ajouter une action
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        return;
+      }
 
       if (data.length === 0) {
         bento.innerHTML = `
@@ -3510,16 +3898,37 @@
         ));
         const collabText = hasCollab ? (Array.isArray(a.collaborating_clubs) ? a.collaborating_clubs.join(', ') : a.collaborating_clubs.trim()) : '';
 
+        const hasGradient = Boolean(a.custom_gradient && a.custom_gradient.trim().length > 0);
+        const cardGradient = hasGradient ? a.custom_gradient.trim() : '';
+        const isDark = hasGradient && !cardGradient.includes('#ffffff') && !cardGradient.includes('#f8fafc');
+
+        const cardBgClass = hasGradient ? '' : 'bg-white';
+        const cardStyleAttr = hasGradient ? `style="background: ${cardGradient};"` : '';
+        const titleColorClass = isDark ? 'text-white' : 'text-slate-900';
+        const descColorClass = isDark ? 'text-slate-200' : 'text-slate-600';
+        const locColorClass = isDark ? 'text-slate-300' : 'text-slate-400';
+        const borderClass = isDark ? 'border-white/20 shadow-lg' : 'border-slate-200 shadow-sm';
+        const catBadgeClass = isDark ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs' : 'bg-blue-50 text-blue-700 border border-blue-200';
+
         return `
-          <div data-action-id="${actionId}" class="${spanClass} p-5 sm:p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full">
+          <div data-action-id="${actionId}" class="${spanClass} p-5 sm:p-6 ${cardBgClass} rounded-3xl border ${borderClass} hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full" ${cardStyleAttr}>
+            <div>
+              ${a.is_news ? `
+                <div class="mb-3 flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-rose-600 text-white shadow-md animate-pulse">
+                    <span>🔥</span> <span>DERNIÈRE ACTUALITÉ • À LA UNE</span>
+                  </span>
+                  <span class="text-[10px] ${isDark ? 'text-white/80 bg-white/20' : 'text-slate-500 bg-slate-100 border border-slate-200'} font-bold px-2 py-0.5 rounded-full">News Officielle</span>
+                </div>
+              ` : ''}
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span data-edit-key="action-cat-${actionId}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
+                <span data-edit-key="action-cat-${actionId}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-extrabold ${catBadgeClass}">
                   ${displayCat}
                 </span>
                 
                 <div class="flex items-center gap-2">
-                  <span data-edit-key="action-loc-${actionId}" class="editable-field text-xs text-slate-400 font-semibold">${displayLoc}</span>
+                  <span data-edit-key="action-loc-${actionId}" class="editable-field text-xs ${locColorClass} font-semibold">${displayLoc}</span>
                   
                   ${isAdminLoggedIn ? `
                     <!-- Action Grid Size Toggle -->
@@ -3529,6 +3938,16 @@
                       <button type="button" onclick="updateActionSize('${actionId}', 3)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 3 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">Plein</button>
                     </div>
 
+                    <!-- News Toggle Button -->
+                    <button type="button" onclick="toggleActionAsNews('${actionId}')" class="px-2 py-1 rounded-lg text-[10px] font-bold ${a.is_news ? 'bg-rose-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200'}" title="Définir ou retirer cette action comme Dernière Actualité / News">
+                      ${a.is_news ? '⭐ À la Une' : '☆ À la Une'}
+                    </button>
+
+                    <!-- Gradient / Style Button -->
+                    <button type="button" onclick="openActionStyleModal('${actionId}')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-blue-900 border border-slate-200 flex items-center gap-1" title="Personnaliser les couleurs et dégradé de la boîte">
+                      <span>🎨</span> <span>Dégradé</span>
+                    </button>
+
                     <button onclick="deleteActionDoc('${actionId}')" class="text-slate-400 hover:text-rose-600 transition-colors p-1" title="Supprimer l'action">
                       🗑️
                     </button>
@@ -3536,8 +3955,8 @@
                 </div>
               </div>
 
-              <h3 data-edit-key="action-title-${actionId}" class="editable-field text-lg font-black text-slate-900 mb-2 leading-snug">${displayTitle}</h3>
-              <p data-edit-key="action-desc-${actionId}" class="editable-field text-xs text-slate-600 leading-relaxed mb-4">${displayDesc}</p>
+              <h3 data-edit-key="action-title-${actionId}" class="editable-field text-lg font-black ${titleColorClass} mb-2 leading-snug">${displayTitle}</h3>
+              <p data-edit-key="action-desc-${actionId}" class="editable-field text-xs ${descColorClass} leading-relaxed mb-4">${displayDesc}</p>
               
               <!-- Album Preview -->
               ${albumPreviewHtml}
@@ -4403,8 +4822,10 @@
       document.getElementById('crud-comm-internationales').checked = comms.includes("Commission des Actions Internationales");
       document.getElementById('crud-comm-mediatisation').checked = comms.includes("Commission de Médiatisation");
 
-      document.getElementById('crud-member-assessed').value = m.cotisation_assessed_tnd ?? 100;
-      document.getElementById('crud-member-paid').value = m.cotisation_paid_tnd ?? 100;
+      const mAssessed = m.cotisation_assessed_tnd !== undefined ? m.cotisation_assessed_tnd : (m.cotisationAssessedTnd ?? 100);
+      const mPaid = m.cotisation_paid_tnd !== undefined ? m.cotisation_paid_tnd : (m.cotisationPaidTnd ?? 0);
+      document.getElementById('crud-member-assessed').value = mAssessed;
+      document.getElementById('crud-member-paid').value = mPaid;
       document.getElementById('crud-member-points').value = m.current_month_points || m.currentMonthPoints || 0;
       document.getElementById('member-crud-modal').classList.remove('hidden');
     }
@@ -4421,6 +4842,12 @@
       if (document.getElementById('crud-comm-internationales').checked) assignedComms.push("Commission des Actions Internationales");
       if (document.getElementById('crud-comm-mediatisation').checked) assignedComms.push("Commission de Médiatisation");
 
+      const assessedRaw = document.getElementById('crud-member-assessed').value.trim();
+      const paidRaw = document.getElementById('crud-member-paid').value.trim();
+      const cotisationAssessed = assessedRaw !== '' && !isNaN(Number(assessedRaw)) ? Number(assessedRaw) : 100;
+      const cotisationPaid = paidRaw !== '' && !isNaN(Number(paidRaw)) ? Number(paidRaw) : 0;
+      const monthPoints = parseInt(document.getElementById('crud-member-points').value, 10) || 0;
+
       const memberData = {
         first_name: document.getElementById('crud-member-firstname').value.trim(),
         last_name: document.getElementById('crud-member-lastname').value.trim(),
@@ -4434,39 +4861,61 @@
           "Commission des Relations Internes & Externes",
           "Commission des Ressources Humaines"
         ],
-        cotisation_assessed_tnd: parseInt(document.getElementById('crud-member-assessed').value, 10) || 100,
-        cotisation_paid_tnd: parseInt(document.getElementById('crud-member-paid').value, 10) || 0,
-        current_month_points: parseInt(document.getElementById('crud-member-points').value, 10) || 0,
-        lifetime_points: parseInt(document.getElementById('crud-member-points').value, 10) || 0,
+        cotisation_assessed_tnd: cotisationAssessed,
+        cotisation_paid_tnd: cotisationPaid,
+        current_month_points: monthPoints,
+        lifetime_points: monthPoints,
         updatedAt: new Date().toISOString()
       };
 
+      // 1. Immediately update in-memory lists
+      const activeList = window.allMembersList || defaultMembers;
+      const targetId = memberId || `mem-${Date.now()}`;
+      const memIdx = activeList.findIndex(m => m.id === targetId || (memberId && m.id === memberId));
+      if (memIdx !== -1) {
+        activeList[memIdx] = { ...activeList[memIdx], ...memberData, id: targetId };
+      } else {
+        activeList.push({ id: targetId, ...memberData });
+      }
+
+      const defIdx = defaultMembers.findIndex(m => m.id === targetId || (memberId && m.id === memberId));
+      if (defIdx !== -1) {
+        defaultMembers[defIdx] = { ...defaultMembers[defIdx], ...memberData, id: targetId };
+      } else {
+        defaultMembers.push({ id: targetId, ...memberData });
+      }
+
+      window.allMembersList = activeList;
+
+      // 2. Persist to localStorage immediately
+      try {
+        localStorage.setItem('ictgc_members_cache', JSON.stringify(activeList));
+      } catch (err) {}
+
+      // 3. Render immediately in CRM table and leaderboard
+      renderMembersTable(activeList);
+      renderLeaderboard(activeList);
+
+      // 4. Update member view if current logged-in user
+      if (currentLoggedMember && (currentLoggedMember.id === targetId || (currentLoggedMember.email && currentLoggedMember.email.toLowerCase() === memberData.email))) {
+        setMemberActive({ ...currentLoggedMember, ...memberData });
+      }
+
+      // 5. Persist to Firestore with setDoc merge: true (never fails even if doc did not exist!)
       if (window.firestoreDb && window.fs) {
         try {
-          if (memberId) {
-            await window.fs.updateDoc(window.fs.doc(window.firestoreDb, "members", memberId), memberData);
-          } else {
-            memberData.createdAt = new Date().toISOString();
-            await window.fs.addDoc(window.fs.collection(window.firestoreDb, "members"), memberData);
-          }
-          alert("Membre enregistré et synchronisé avec succès sur Firestore !");
-          closeMemberCrudModal();
-          return;
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "members", targetId), memberData, { merge: true });
         } catch (err) {
           console.warn("Firestore save member error:", err);
         }
       }
 
-      if (memberId) {
-        const idx = defaultMembers.findIndex(m => m.id === memberId);
-        if (idx !== -1) defaultMembers[idx] = { id: memberId, ...memberData };
-      } else {
-        defaultMembers.push({ id: `mem-${Date.now()}`, ...memberData });
-      }
-      renderMembersTable(defaultMembers);
-      renderLeaderboard(defaultMembers);
       closeMemberCrudModal();
-      alert("Membre enregistré avec succès !");
+      if (typeof showAppToast === 'function') {
+        showAppToast("Membre et cotisations enregistrés avec succès !", "success");
+      } else {
+        alert("Membre et cotisations enregistrés avec succès !");
+      }
     }
 
     async function deleteMember(memberId, memberName) {
@@ -5168,8 +5617,8 @@ const CATEGORY_I18N = {
 
       // 3. Translate all elements with data-i18n
       const dict = I18N_DICT[lang] || I18N_DICT.fr;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
+      document.querySelectorAll('[data-i18n], [data-site]').forEach(el => {
+        const key = el.getAttribute('data-i18n') || el.getAttribute('data-site');
         if (key && dict[key]) {
           el.textContent = dict[key];
         }
@@ -5365,32 +5814,22 @@ const CATEGORY_I18N = {
         return;
       }
 
-      // 3. Sorted by account access: Bureau / Admin roles also unlock editing
-      const isBureauOrAdmin = found.role === 'bureau' || 
-                             found.role === 'admin' || 
-                             (found.bureau_title && (
-                               found.bureau_title.toLowerCase().includes('président') || 
-                               found.bureau_title.toLowerCase().includes('secrétaire') ||
-                               found.bureau_title.toLowerCase().includes('chef')
-                             ));
-
-      if (isBureauOrAdmin || isAdminPass) {
-        isAdminLoggedIn = true;
-        document.getElementById('admin-floating-bar').classList.remove('hidden');
-        document.getElementById('admin-actions-controls').classList.remove('hidden');
-        const bCtrl = document.getElementById('admin-bureau-controls');
-        if (bCtrl) bCtrl.classList.remove('hidden');
-        const pCtrl = document.getElementById('admin-partners-controls');
-        if (pCtrl) pCtrl.classList.remove('hidden');
-        if (window.cachedBureauList) renderBureau(window.cachedBureauList);
-        if (window.cachedActionsList) renderActions(window.cachedActionsList);
-        if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
-        enableGlobalTextEditing();
-      }
+      // 3. Ordinary Member Login ONLY - Strictly NO admin privileges granted
+      isAdminLoggedIn = false;
+      document.getElementById('admin-floating-bar').classList.add('hidden');
+      document.getElementById('admin-actions-controls').classList.add('hidden');
+      const bCtrl = document.getElementById('admin-bureau-controls');
+      if (bCtrl) bCtrl.classList.add('hidden');
+      const pCtrl = document.getElementById('admin-partners-controls');
+      if (pCtrl) pCtrl.classList.add('hidden');
+      if (typeof disableGlobalTextEditing === 'function') disableGlobalTextEditing();
 
       setMemberActive(found);
       closeInternalPortal();
       showView('member-view');
+      if (typeof showAppToast === 'function') {
+        showAppToast(`Bienvenue dans votre espace membre, ${found.first_name || found.fullName || ''} !`, "info");
+      }
     }
     window.handleUnifiedLogin = handleUnifiedLogin;
     window.handleMemberLogin = handleUnifiedLogin;
@@ -5684,6 +6123,9 @@ const CATEGORY_I18N = {
       const collabRaw = formData.get('action_collaborating') || '';
       const collabList = collabRaw.split(/[,]+/).map(s => s.trim()).filter(Boolean);
       const gridCols = parseInt(formData.get('action_grid_cols') || '2', 10) || 2;
+      const actionType = formData.get('action_type') || 'humanitaire';
+      const customGradient = (formData.get('action_custom_gradient') || '').trim();
+      const isNews = formData.get('action_is_news') === 'on' || formData.get('action_is_news') === 'true';
 
       const newAction = {
         id: `act-${Date.now()}`,
@@ -5696,6 +6138,9 @@ const CATEGORY_I18N = {
         images: images,
         grid_cols: gridCols,
         collaborating_clubs: collabList,
+        action_type: actionType,
+        custom_gradient: customGradient,
+        is_news: isNews,
         status: "Completed",
         createdAt: new Date().toISOString()
       };
