@@ -659,12 +659,12 @@
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitSchool">Votre lycée (*)</label>
-                <input type="text" name="high_school" placeholder="Ex: Lycée Pilote Hammam Lif" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                <input type="text" name="high_school" data-i18n-placeholder="recruitSchoolPh" placeholder="Ex: Lycée Pilote Hammam Lif" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitAddress">Votre adresse (*)</label>
-              <input type="text" name="address" placeholder="Ex: Hammam Lif, Ben Arous (ou Tunis, Carthage...)" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <input type="text" name="address" data-i18n-placeholder="recruitAddressPh" placeholder="Ex: Hammam Lif, Ben Arous (ou Tunis, Carthage...)" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -689,20 +689,20 @@
           <div class="space-y-4 pt-6 border-t border-slate-100">
             <h3 class="text-sm font-bold uppercase tracking-wider text-rose-600 flex items-center gap-2" data-i18n="recruitSec2">2. Centre d'intérêt et loisirs</h3>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Quels sont vos loisirs (*)</label>
-              <input type="text" name="hobbies" placeholder="Ex: Débat, lecture, photographie, basketball, piano..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitHobbies">Quels sont vos loisirs (*)</label>
+              <input type="text" name="hobbies" data-i18n-placeholder="recruitHobbiesPh" placeholder="Ex: Débat, lecture, photographie, basketball, piano..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Participez-vous à des activités extrascolaires ? Si oui, lesquelles ? (*)</label>
-              <input type="text" name="extracurricular_activities" placeholder="Ex: Club de débat, scoutisme, club robotique, MUN..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitExtraCurr">Participez-vous à des activités extrascolaires ? Si oui, lesquelles ? (*)</label>
+              <input type="text" name="extracurricular_activities" data-i18n-placeholder="recruitExtraCurrPh" placeholder="Ex: Club de débat, scoutisme, club robotique, MUN..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Décrivez votre personnalité en 3 mots (*)</label>
-                <input type="text" name="personality_three_words" placeholder="Ex: Dynamique, empathique, organisée" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitPersonality">Décrivez votre personnalité en 3 mots (*)</label>
+                <input type="text" name="personality_three_words" data-i18n-placeholder="recruitPersonalityPh" placeholder="Ex: Dynamique, empathique, organisée" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Introverti / Extraverti (*)</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitIntroExtro">Introverti / Extraverti (*)</label>
                 <select name="personality_scale" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
                   <option value="Très extravertie">Très extravertie</option>
                   <option value="Extravertie" selected>Extravertie</option>
@@ -713,12 +713,12 @@
               </div>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Avez-vous de l'expérience dans d'autres clubs ? (*)</label>
-              <input type="text" name="other_clubs_experience" placeholder="Ex: Membre actif au club Interact / Interacteur novice / Club Unesco..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitOtherClubs">Avez-vous de l'expérience dans d'autres clubs ? (*)</label>
+              <input type="text" name="other_clubs_experience" data-i18n-placeholder="recruitOtherClubsPh" placeholder="Ex: Membre actif au club Interact / Interacteur novice / Club Unesco..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Talents utiles au club (design, montage, etc.) (*)</label>
-              <input type="text" name="useful_talents" placeholder="Ex: Montage vidéo, design Canva/Photoshop, prise de parole..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitTalents">Talents utiles au club (design, montage, etc.) (*)</label>
+              <input type="text" name="useful_talents" data-i18n-placeholder="recruitTalentsPh" placeholder="Ex: Montage vidéo, design Canva/Photoshop, prise de parole..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
           </div>
 
@@ -726,38 +726,38 @@
             <h3 class="text-sm font-bold uppercase tracking-wider text-amber-600 flex items-center gap-2" data-i18n="recruitSec3">3. Disponibilité & Engagement</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Disponibilité sur le terrain (1 à 5) (*)</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitFieldAvail">Disponibilité sur le terrain (1 à 5) (*)</label>
                 <input type="number" min="1" max="5" name="field_availability" value="5" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Disponibilité en ligne (1 à 5) (*)</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitOnlineAvail">Disponibilité en ligne (1 à 5) (*)</label>
                 <input type="number" min="1" max="5" name="online_availability" value="5" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Contraintes influençant la disponibilité (*)</label>
-              <input type="text" name="availability_constraints" placeholder="Ex: Examens trimestriels, cours de soutien le samedi matin..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitConstraints">Contraintes influençant la disponibilité (*)</label>
+              <input type="text" name="availability_constraints" data-i18n-placeholder="recruitConstraintsPh" placeholder="Ex: Examens trimestriels, cours de soutien le samedi matin..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
             </div>
           </div>
 
           <div class="space-y-4 pt-6 border-t border-slate-100">
             <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-2" data-i18n="recruitSec4">4. Lettre de motivation</h3>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Que représente Interact pour vous ? (*)</label>
-              <textarea name="what_interact_means" rows="2" placeholder="Ex: Une opportunité unique de servir la communauté et développer mon leadership..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitInteractMeans">Que représente Interact pour vous ? (*)</label>
+              <textarea name="what_interact_means" rows="2" data-i18n-placeholder="recruitInteractMeansPh" placeholder="Ex: Une opportunité unique de servir la communauté et développer mon leadership..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Pourquoi souhaitez-vous nous rejoindre ? (*)</label>
-              <textarea name="why_join" rows="2" placeholder="Ex: Pour participer activement aux caravanes humanitaires et faire rayonner le club..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+              <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitWhyJoin">Pourquoi souhaitez-vous nous rejoindre ? (*)</label>
+              <textarea name="why_join" rows="2" data-i18n-placeholder="recruitWhyJoinPh" placeholder="Ex: Pour participer activement aux caravanes humanitaires et faire rayonner le club..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Compétences à offrir (*)</label>
-                <textarea name="skills_offered" rows="2" placeholder="Ex: Organisation d'événements, communication digitale, gestion d'équipe..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitSkillsOffered">Compétences à offrir (*)</label>
+                <textarea name="skills_offered" rows="2" data-i18n-placeholder="recruitSkillsOfferedPh" placeholder="Ex: Organisation d'événements, communication digitale, gestion d'équipe..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Ce que vous voulez apporter au club (*)</label>
-                <textarea name="desired_contribution" rows="2" placeholder="Ex: Aider à la réussite des actions caritatives et apporter de la créativité..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="recruitDesiredContrib">Ce que vous voulez apporter au club (*)</label>
+                <textarea name="desired_contribution" rows="2" data-i18n-placeholder="recruitDesiredContribPh" placeholder="Ex: Aider à la réussite des actions caritatives et apporter de la créativité..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
               </div>
             </div>
           </div>
@@ -790,14 +790,12 @@
         <div class="flex items-center gap-4">
           <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-6">
             <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Cotisation restante</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block" data-i18n="memberDuesRemainingLabel">Cotisation restante</span>
               <span id="member-dues-remaining" class="text-2xl font-black text-emerald-600 block">0 TND</span>
               <span id="member-dues-status" class="text-[10px] text-slate-500">100 TND / 100 TND réglé</span>
             </div>
           </div>
-          <button onclick="logoutMember()" class="p-3 text-xs font-semibold text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
-            Déconnexion
-          </button>
+          <button onclick="logoutMember()" data-i18n="logoutLabel" class="p-3 text-xs font-semibold text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Déconnexion</button>
         </div>
       </div>
 
@@ -1252,8 +1250,8 @@
         <div class="flex items-center gap-2.5">
           <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm">🔒</span>
           <div>
-            <h3 class="text-base font-extrabold text-slate-900">Portail Interne ICTGC</h3>
-            <p class="text-xs text-slate-500">Accès sécurisé réservé aux membres et au bureau</p>
+            <h3 class="text-base font-extrabold text-slate-900" data-i18n="portalLoginTitle">Portail Interne ICTGC</h3>
+            <p class="text-xs text-slate-500" data-i18n="portalLoginSub">Accès sécurisé réservé aux membres et au bureau</p>
           </div>
         </div>
         <button onclick="closeInternalPortal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors">✕</button>
@@ -2350,6 +2348,28 @@
   </script>
 
   <script>
+    // --- Enterprise Security: Universal XSS & Injection Sanitizers ---
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    window.escapeHtml = escapeHtml;
+
+    function sanitizeUrl(url) {
+      if (!url || typeof url !== 'string') return '#';
+      const trimmed = url.trim();
+      if (/^(?:https?:|\/|assets\/|data:image\/)/i.test(trimmed)) {
+        return trimmed.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+      return '#';
+    }
+    window.sanitizeUrl = sanitizeUrl;
+
     let currentApproveCandidateId = null;
     let currentAdjustMemberId = null;
     let isInlineEditEnabled = false;
@@ -2870,17 +2890,17 @@
               <div class="flex items-center gap-2">
                 <span class="text-base">${flag}</span>
                 <div>
-                  <span class="font-bold text-slate-900 block">${country}</span>
+                  <span class="font-bold text-slate-900 block">${escapeHtml(country)}</span>
                   <span class="text-[10px] text-slate-400 block">${dateStr}</span>
                 </div>
               </div>
             </td>
             <td class="p-3 font-medium text-slate-700">
               <span class="inline-block px-2 py-0.5 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-800">
-                ${s.device || 'Mobile'} • ${s.os || 'OS'}
+                ${escapeHtml(s.device || 'Mobile')} • ${escapeHtml(s.os || 'OS')}
               </span>
             </td>
-            <td class="p-3 font-medium text-slate-700">${s.browser || 'Navigateur'}</td>
+            <td class="p-3 font-medium text-slate-700">${escapeHtml(s.browser || 'Navigateur')}</td>
             <td class="p-3 font-bold text-slate-900">${durationStr}</td>
             <td class="p-3">
               <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-50 text-blue-700">
@@ -4777,8 +4797,8 @@
       const container = document.getElementById('zone-links-list');
       if (!container) return;
       container.innerHTML = links.map(l => `
-        <a href="${l.messenger_url}" target="_blank" class="block p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all">
-          <span class="text-xs font-bold text-slate-900 block">${l.zone_name}</span>
+        <a href="${sanitizeUrl(l.messenger_url)}" target="_blank" class="block p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all">
+          <span class="text-xs font-bold text-slate-900 block">${escapeHtml(l.zone_name)}</span>
           <span class="text-[10px] text-slate-500 block">${l.action_title} • Ouvrir ↗</span>
         </a>
       `).join('');
@@ -4793,8 +4813,8 @@
       }
       tbody.innerHTML = data.map(c => `
         <tr class="hover:bg-slate-50">
-          <td class="p-3 font-bold text-slate-900">${c.first_name} ${c.last_name}</td>
-          <td class="p-3">${c.high_school} (${c.address})</td>
+          <td class="p-3 font-bold text-slate-900">${escapeHtml(c.first_name)} ${escapeHtml(c.last_name)}</td>
+          <td class="p-3">${escapeHtml(c.high_school)} (${escapeHtml(c.address)})</td>
           <td class="p-3">Terrain: ${c.field_availability}/5 | Web: ${c.online_availability}/5</td>
           <td class="p-3">${c.personality_scale}</td>
           <td class="p-3">
@@ -4804,7 +4824,7 @@
           </td>
           <td class="p-3 text-right">
             ${c.status === 'pending' ? `
-              <button onclick="openApproveModal('${c.id}', '${c.first_name} ${c.last_name}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm">
+              <button onclick="openApproveModal('${c.id}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm">
                 Approuver
               </button>
             ` : '<span class="text-slate-400 text-xs">Traité</span>'}
@@ -4840,13 +4860,13 @@
             <span class="font-semibold text-slate-800">${m.cotisation_paid_tnd || 0} / ${m.cotisation_assessed_tnd || 100} TND</span>
           </td>
           <td class="p-3 text-right whitespace-nowrap space-x-1">
-            <button onclick="openPointsModal('${m.id}', '${(m.first_name || m.firstName || '') + ' ' + (m.last_name || m.lastName || '')}')" title="Ajuster les points" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-bold transition-colors">
+            <button onclick="openPointsModal('${m.id}')" title="Ajuster les points" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-bold transition-colors">
               🏆 +/- Pts
             </button>
             <button onclick="openEditMemberModal('${m.id}')" title="Modifier ce membre" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition-colors">
               ✏️ Modifier
             </button>
-            <button onclick="deleteMember('${m.id}', '${(m.first_name || m.firstName || '') + ' ' + (m.last_name || m.lastName || '')}')" title="Supprimer ce membre" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-bold transition-colors">
+            <button onclick="deleteMember('${m.id}')" title="Supprimer ce membre" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-bold transition-colors">
               🗑️ Supprimer
             </button>
           </td>
@@ -5003,6 +5023,11 @@
     }
 
     async function deleteMember(memberId, memberName) {
+      if (!memberName) {
+        const list = window.allMembersList || defaultMembers;
+        const found = list.find(m => m.id === memberId);
+        memberName = found ? ((found.first_name || found.firstName || '') + ' ' + (found.last_name || found.lastName || '')).trim() : 'ce membre';
+      }
       if (!confirm(`Confirmez-vous la suppression définitive du membre "${memberName}" ?\nCette opération retirera le compte de la base de données.`)) {
         return;
       }
@@ -5041,6 +5066,38 @@
         navJoinUs: "Nous Rejoindre",
         'actionsSection.financialLabel': "FINANCIÈRES",
         'actionsSection.humanitarianLabel': "HUMANITAIRES",
+        recruitHobbies: "Quels sont vos loisirs (*)",
+        recruitHobbiesPh: "Ex: Débat, lecture, photographie, basketball, piano...",
+        recruitExtraCurr: "Participez-vous à des activités extrascolaires ? Si oui, lesquelles ? (*)",
+        recruitExtraCurrPh: "Ex: Club de débat, scoutisme, club robotique, MUN...",
+        recruitPersonality: "Décrivez votre personnalité en 3 mots (*)",
+        recruitPersonalityPh: "Ex: Dynamique, empathique, organisée",
+        recruitIntroExtro: "Introverti / Extraverti (*)",
+        recruitOtherClubs: "Avez-vous de l'expérience dans d'autres clubs ? (*)",
+        recruitOtherClubsPh: "Ex: Membre actif au club Interact / Interacteur novice / Club Unesco...",
+        recruitTalents: "Talents utiles au club (design, montage, etc.) (*)",
+        recruitTalentsPh: "Ex: Montage vidéo, design Canva/Photoshop, prise de parole...",
+        recruitFieldAvail: "Disponibilité sur le terrain (1 à 5) (*)",
+        recruitOnlineAvail: "Disponibilité en ligne (1 à 5) (*)",
+        recruitConstraints: "Contraintes influençant la disponibilité (*)",
+        recruitConstraintsPh: "Ex: Examens trimestriels, cours de soutien le samedi matin...",
+        recruitInteractMeans: "Que représente Interact pour vous ? (*)",
+        recruitInteractMeansPh: "Ex: Une opportunité unique de servir la communauté et développer mon leadership...",
+        recruitWhyJoin: "Pourquoi souhaitez-vous nous rejoindre ? (*)",
+        recruitWhyJoinPh: "Ex: Pour participer activement aux caravanes humanitaires et faire rayonner le club...",
+        recruitSkillsOffered: "Compétences à offrir (*)",
+        recruitSkillsOfferedPh: "Ex: Organisation d'événements, communication digitale, gestion d'équipe...",
+        recruitDesiredContrib: "Ce que vous voulez apporter au club (*)",
+        recruitDesiredContribPh: "Ex: Aider à la réussite des actions caritatives et apporter de la créativité...",
+        recruitSchoolPh: "Ex: Lycée Pilote Hammam Lif",
+        recruitAddressPh: "Ex: Hammam Lif, Ben Arous (ou Tunis, Carthage...)",
+        portalLoginTitle: "Portail Interne ICTGC",
+        portalLoginSub: "Accès sécurisé réservé aux membres et au bureau",
+        portalEmailLabel: "Identifiant (Email / Pseudonyme)",
+        portalPassLabel: "Mot de passe",
+        portalSubmitBtn: "Se connecter",
+        memberDuesRemainingLabel: "Cotisation restante",
+        logoutLabel: "Déconnexion",
         headerClubSub: "Tunis Golfe Carthagène",
         headerClubMeta: "Club #219646 • District 9010",
 
@@ -5142,6 +5199,38 @@
         navJoinUs: "Join Us",
         'actionsSection.financialLabel': "FINANCIAL",
         'actionsSection.humanitarianLabel': "HUMANITARIAN",
+        recruitHobbies: "What are your hobbies (*)",
+        recruitHobbiesPh: "Ex: Debate, reading, photography, basketball, music...",
+        recruitExtraCurr: "Do you take part in extracurricular activities? If yes, which ones? (*)",
+        recruitExtraCurrPh: "Ex: Debate club, scouting, robotics club, MUN...",
+        recruitPersonality: "Describe your personality in 3 words (*)",
+        recruitPersonalityPh: "Ex: Dynamic, empathetic, organized",
+        recruitIntroExtro: "Introvert / Extravert (*)",
+        recruitOtherClubs: "Do you have experience in other clubs? (*)",
+        recruitOtherClubsPh: "Ex: Active Interact member / Novice / Unesco club...",
+        recruitTalents: "Useful talents for the club (design, video editing, etc.) (*)",
+        recruitTalentsPh: "Ex: Video editing, Canva/Photoshop design, public speaking...",
+        recruitFieldAvail: "Field availability (1 to 5) (*)",
+        recruitOnlineAvail: "Online availability (1 to 5) (*)",
+        recruitConstraints: "Constraints affecting availability (*)",
+        recruitConstraintsPh: "Ex: Quarterly exams, Saturday morning tutoring...",
+        recruitInteractMeans: "What does Interact mean to you? (*)",
+        recruitInteractMeansPh: "Ex: A unique opportunity to serve the community and develop leadership...",
+        recruitWhyJoin: "Why do you want to join us? (*)",
+        recruitWhyJoinPh: "Ex: To actively take part in humanitarian relief caravans and club outreach...",
+        recruitSkillsOffered: "Skills you can offer (*)",
+        recruitSkillsOfferedPh: "Ex: Event management, digital communication, logistics...",
+        recruitDesiredContrib: "What do you want to bring to the club? (*)",
+        recruitDesiredContribPh: "Ex: Help ensure the success of charitable actions and bring creativity...",
+        recruitSchoolPh: "Ex: Pilot High School Hammam Lif",
+        recruitAddressPh: "Ex: Hammam Lif, Ben Arous (or Tunis, Carthage...)",
+        portalLoginTitle: "ICTGC Internal Portal",
+        portalLoginSub: "Secure access reserved for members and board",
+        portalEmailLabel: "Identifier (Email / Username)",
+        portalPassLabel: "Password",
+        portalSubmitBtn: "Sign In",
+        memberDuesRemainingLabel: "Remaining dues",
+        logoutLabel: "Log Out",
         headerClubSub: "Tunis Carthage Gulf",
         headerClubMeta: "Club #219646 • District 9010",
 
@@ -5243,6 +5332,38 @@
         navJoinUs: "انضم إلينا",
         'actionsSection.financialLabel': "مالية",
         'actionsSection.humanitarianLabel': "إنسانية",
+        recruitHobbies: "ما هي هواياتك (*)",
+        recruitHobbiesPh: "مثال: المناظرة، القراءة، التصوير، كرة السلة، الموسيقى...",
+        recruitExtraCurr: "هل تشارك في أنشطة لاصفية؟ إذا نعم، ما هي؟ (*)",
+        recruitExtraCurrPh: "مثال: نادي المناظرات، الكشافة، الروبوتات، نموذج الأمم المتحدة...",
+        recruitPersonality: "صف شخصيتك في 3 كلمات (*)",
+        recruitPersonalityPh: "مثال: ديناميكي، متعاطف، منظم",
+        recruitIntroExtro: "انطوائي / اجتماعي (*)",
+        recruitOtherClubs: "هل لديك خبرة في نوادٍ أخرى؟ (*)",
+        recruitOtherClubsPh: "مثال: عضو ناشط في نادي إنتركت / مبتدئ / نادي يونسكو...",
+        recruitTalents: "مواهب مفيدة للنادي (تصميم، مونتاج، إلخ) (*)",
+        recruitTalentsPh: "مثال: مونتاج الفيديو، التصميم عبر Canva/Photoshop، الخطابة...",
+        recruitFieldAvail: "التواجد الميداني (1 إلى 5) (*)",
+        recruitOnlineAvail: "التواجد عبر الإنترنت (1 إلى 5) (*)",
+        recruitConstraints: "معوقات قد تؤثر على التفرغ (*)",
+        recruitConstraintsPh: "مثال: الامتحانات الثلاثية، دروس الدعم صباح السبت...",
+        recruitInteractMeans: "ماذا يعني لك الإنتركت؟ (*)",
+        recruitInteractMeansPh: "مثال: فرصة فريدة لخدمة المجتمع وتطوير مهاراتي القيادية...",
+        recruitWhyJoin: "لماذا ترغب في الانضمام إلينا؟ (*)",
+        recruitWhyJoinPh: "مثال: للمشاركة الفعالة في القوافل الإنسانية وإشعاع النادي...",
+        recruitSkillsOffered: "المهارات التي يمكنك تقديمها (*)",
+        recruitSkillsOfferedPh: "مثال: تنظيم الفعاليات، التواصل الرقمي، الإدارة اللوجستية...",
+        recruitDesiredContrib: "ما الذي تريد تقديمه للنادي؟ (*)",
+        recruitDesiredContribPh: "مثال: المساهمة في إنجاح المبادرات الخيرية وتقديم أفكار إبداعية...",
+        recruitSchoolPh: "مثال: المعهد النموذجي بحمام الأنف",
+        recruitAddressPh: "مثال: حمام الأنف، بن عروس (أو تونس، قرطاج...)",
+        portalLoginTitle: "بوابة نادي ICTGC الداخلية",
+        portalLoginSub: "دخول آمن مخصص للأعضاء وأعضاء الهيئة الإدارية",
+        portalEmailLabel: "المعرف (البريد الإلكتروني)",
+        portalPassLabel: "كلمة المرور",
+        portalSubmitBtn: "تسجيل الدخول",
+        memberDuesRemainingLabel: "المبلغ المتبقي للاشتراك",
+        logoutLabel: "تسجيل الخروج",
         headerClubSub: "تونس خليج قرطاجنة",
         headerClubMeta: "نادي رقم 219646 • المنطقة 9010",
 
@@ -5925,6 +6046,25 @@ const CATEGORY_I18N = {
     window.handleMemberLogin = handleUnifiedLogin;
     window.handleAdminLogin = handleUnifiedLogin;
 
+    
+    function toggleInlineEdit() {
+      if (!isAdminLoggedIn) {
+        openInternalPortal();
+        return;
+      }
+      const isEditing = document.body.classList.contains('admin-editing');
+      if (isEditing) {
+        document.body.classList.remove('admin-editing');
+        document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
+        if (typeof showAppToast === 'function') showAppToast('Mode édition de texte désactivé.', 'info');
+      } else {
+        enableGlobalTextEditing();
+        showView('public-view');
+        if (typeof showAppToast === 'function') showAppToast('Mode édition de texte activé ! Cliquez sur n\'importe quel texte pour le modifier.', 'success');
+      }
+    }
+    window.toggleInlineEdit = toggleInlineEdit;
+
     function enableGlobalTextEditing() {
       document.body.classList.add('admin-editing');
       const elements = document.querySelectorAll('#public-view h1, #public-view h2, #public-view h3, #public-view h4, #public-view p, #public-view .editable-field, #public-view [data-edit-key], #footer-copyright-block p, #footer-copyright-block [data-edit-key]');
@@ -6306,6 +6446,11 @@ const CATEGORY_I18N = {
     }
 
     function openApproveModal(candId, candName) {
+      if (!candName) {
+        const list = window.allCandidatesList || [];
+        const found = list.find(c => c.id === candId);
+        candName = found ? ((found.first_name || '') + ' ' + (found.last_name || '')).trim() : 'Candidat';
+      }
       currentApproveCandidateId = candId;
       document.getElementById('approve-candidate-name').textContent = candName;
       document.getElementById('approve-modal').classList.remove('hidden');
@@ -6345,6 +6490,11 @@ const CATEGORY_I18N = {
     }
 
     function openPointsModal(memId, memName) {
+      if (!memName) {
+        const list = window.allMembersList || defaultMembers;
+        const found = list.find(m => m.id === memId);
+        memName = found ? ((found.first_name || found.firstName || '') + ' ' + (found.last_name || found.lastName || '')).trim() : 'Membre';
+      }
       currentAdjustMemberId = memId;
       document.getElementById('points-member-name').textContent = memName;
       document.getElementById('points-modal').classList.remove('hidden');
