@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preload" as="image" href="/assets/logos/tb-logo.jpg" fetchpriority="high" type="image/jpeg">
+  <link rel="preload" as="image" href="/assets/logos/logo-bleu-clair.png" fetchpriority="high" type="image/png">
   <title>Interact Club Tunis Golfe Carthagène | District 9010</title>
   <link rel="icon" type="image/jpeg" href="/assets/logos/tb-logo.jpg">
   <script>
@@ -137,38 +139,98 @@
   </script>
   <style>
 
-    /* Action Category Tabs */
+    :root {
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Content Visibility for Off-screen Performance */
+    #bureau-section, #partners-section {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 650px;
+    }
+
+    /* Action Category Tabs - Segmented Pill Control */
     .tabs {
       display: inline-flex;
       align-items: center;
-      gap: 0.375rem;
-      background-color: #f1f5f9;
-      padding: 0.375rem;
-      border-radius: 1rem;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      gap: 0.25rem;
+      background: rgba(241, 245, 249, 0.95);
+      padding: 0.3125rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(8px);
     }
     .tab {
-      padding: 0.5rem 1.25rem;
-      border-radius: 0.75rem;
+      padding: 0.5rem 1.35rem;
+      border-radius: 9999px;
       font-size: 0.75rem;
       font-weight: 800;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: #64748b;
       background: transparent;
       border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.22s var(--ease-smooth);
+      user-select: none;
     }
     .tab:hover {
       color: #0f172a;
+      background: rgba(255, 255, 255, 0.4);
     }
     .tab.is-on {
-      background-color: #ffffff;
+      background: #ffffff;
       color: #1d4ed8;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border-color: #cbd5e1;
+      box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+      border-color: rgba(203, 213, 225, 0.85);
+    }
+
+    /* Sophisticated News Badge Glow Animation */
+    @keyframes news-glow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.35);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(225, 29, 72, 0);
+      }
+    }
+    .news-badge-glow {
+      animation: news-glow 2.2s infinite var(--ease-smooth);
+    }
+
+    /* Smooth Modal Scaling Entry */
+    @keyframes modal-scale-in {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    .modal-animate-in {
+      animation: modal-scale-in 0.24s var(--ease-spring) forwards;
+    }
+
+    /* Subtle Card Hover & Interaction Smoothness */
+    .action-card-hover {
+      transition: transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease-spring), border-color 0.2s ease;
+    }
+    .action-card-hover:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Respect Reduced Motion Preferences (Accessibility) */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
@@ -239,7 +301,7 @@
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 h-20 flex items-center justify-between">
       <a href="#" onclick="showView('public-view'); return false;" class="flex items-center gap-2 sm:gap-2.5 group flex-shrink-0 -ml-1 sm:ml-0">
-        <img src="/assets/logos/tb-logo.jpg" alt="ICTGC" class="h-10 w-10 sm:h-11 sm:w-11 lg:h-12 lg:w-12 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform flex-shrink-0" />
+        <img src="/assets/logos/tb-logo.jpg" alt="ICTGC" class="h-10 w-10 sm:h-11 sm:w-11 lg:h-12 lg:w-12 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform flex-shrink-0" width="48" height="48" fetchpriority="high" decoding="async" />
         <div class="flex-shrink-0 text-left">
           <span class="block text-xs sm:text-sm font-bold tracking-tight text-slate-900 leading-tight whitespace-nowrap">Interact Club</span>
           <span class="block text-[11px] sm:text-xs font-semibold text-blue-700 whitespace-nowrap" data-i18n="headerClubSub">Tunis Golfe Carthagène</span>
@@ -272,11 +334,6 @@
           <button type="button" onclick="setAppLanguage('en', true)" id="lang-btn-en" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900" title="English">EN</button>
           <button type="button" onclick="setAppLanguage('ar', true)" id="lang-btn-ar" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900 font-bold" title="العربية">عربي</button>
         </div>
-
-        <!-- Espace Interne Button -->
-        <button onclick="openInternalPortal()" id="btn-open-portal" class="px-3 py-2 text-xs font-bold text-slate-700 hover:text-blue-700 bg-slate-100 hover:bg-blue-50 border border-slate-200 rounded-xl transition-all flex items-center gap-1.5 shadow-2xs whitespace-nowrap" title="Espace Membres & Administration">
-          <span>🔐</span> <span>Espace Interne</span>
-        </button>
 
         <!-- Nous Rejoindre CTA -->
         <button onclick="showView('recruitment-view')" data-i18n="navJoinUs" class="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow whitespace-nowrap">
@@ -1311,7 +1368,7 @@
   </div>
 
   <div id="add-action-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-slate-900">Ajouter une Action Phare</h3>
@@ -1486,7 +1543,7 @@
   
   <!-- Modal: Ajouter un Membre au Bureau -->
   <div id="add-bureau-member-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-slate-900">Ajouter un Membre au Bureau</h3>
@@ -1591,7 +1648,7 @@
 
   <!-- Modal: Gestionnaire de Photos (Glisser-Déposer & Lien Direct) -->
   <div id="photo-manager-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <div>
           <h3 id="photo-modal-title" class="text-base font-bold text-slate-900">Modifier la Photo</h3>
@@ -1787,7 +1844,7 @@
   
   <!-- Modal: Organiser et Réordonner le Bureau -->
   <div id="reorder-bureau-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-slate-900">Organiser & Réordonner le Bureau</h3>
@@ -1810,7 +1867,7 @@
 
   <!-- Modal: Modification Collaboration Clubs -->
   <div id="action-collab-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 modal-animate-in shadow-2xl border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-slate-900">Clubs en Collaboration</h3>
@@ -1843,7 +1900,7 @@
 
   <!-- Modal: Personnalisation Dégradé & News Action -->
   <div id="action-style-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -1964,7 +2021,7 @@
 
   <!-- Modal: Ajouter / Modifier un Partenaire ou Sponsor -->
   <div id="add-partner-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
         <div>
           <h3 id="add-partner-title" class="text-base font-bold text-slate-900">Ajouter / Modifier un Sponsor</h3>
@@ -2124,7 +2181,7 @@
 
   <!-- Modal: Ajouter / Modifier les Réseaux Sociaux d'un Membre du Bureau -->
   <div id="bureau-socials-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 modal-animate-in shadow-2xl border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-slate-900">Réseaux Sociaux du Membre</h3>
@@ -2223,7 +2280,7 @@
   <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
-        <img src="/assets/logos/logo-blanc.png" alt="Interact Tunis Golfe Carthagène" class="h-16 sm:h-20 w-auto object-contain opacity-100 hover:scale-105 transition-transform drop-shadow-md">
+        <img src="/assets/logos/logo-blanc.png" alt="Interact Tunis Golfe Carthagène" class="h-16 sm:h-20 w-auto object-contain opacity-100 hover:scale-105 transition-transform drop-shadow-md" width="80" height="80" loading="lazy" decoding="async">
         <div class="border-l border-slate-700 pl-4 cursor-pointer select-none transition-opacity hover:opacity-95" id="footer-copyright-block" title="Interact Club Tunis Golfe Carthagène">
           <p data-edit-key="footerClubTitle" data-i18n="footerClubTitle" class="editable-field text-white font-bold text-sm">Interact Club Tunis Golfe Carthagène</p>
           <p data-edit-key="footerClubSubtitle" data-i18n="footerClubSubtitle" class="editable-field text-slate-400 mt-0.5">Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose</p>
@@ -2242,9 +2299,7 @@
         <span>•</span>
         <a href="mailto:interact.tunisgolfecarthagene@gmail.com" data-i18n="footerContact" class="hover:text-white transition-colors">Contact Mail</a>
         <span>•</span>
-        <button onclick="openInternalPortal()" class="hover:text-white transition-colors flex items-center gap-1 font-medium">
-          <span>🔐</span> Espace Interne
-        </button>
+        <button onclick="openInternalPortal()" class="hover:text-white transition-colors font-medium text-slate-400">Espace Interne</button>
 
       </div>
     </div>
@@ -3920,11 +3975,11 @@
         const catBadgeClass = isDark ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs' : 'bg-blue-50 text-blue-700 border border-blue-200';
 
         return `
-          <div data-action-id="${actionId}" class="${spanClass} p-5 sm:p-6 ${cardBgClass} rounded-3xl border ${borderClass} hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full" ${cardStyleAttr}>
+          <div data-action-id="${actionId}" class="${spanClass} p-5 sm:p-6 ${cardBgClass} rounded-3xl border ${borderClass} action-card-hover hover:shadow-xl flex flex-col justify-between h-full ${a.is_news ? 'ring-2 ring-rose-500/25 border-rose-300' : ''}" ${cardStyleAttr}>
             <div>
               ${a.is_news ? `
                 <div class="mb-3 flex items-center justify-between">
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-rose-600 text-white shadow-md animate-pulse">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-sm news-badge-glow">
                     <span>🔥</span> <span>DERNIÈRE ACTUALITÉ • À LA UNE</span>
                   </span>
                   <span class="text-[10px] ${isDark ? 'text-white/80 bg-white/20' : 'text-slate-500 bg-slate-100 border border-slate-200'} font-bold px-2 py-0.5 rounded-full">News Officielle</span>
