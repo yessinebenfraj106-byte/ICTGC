@@ -548,8 +548,8 @@
         <!-- Action Category Tabs -->
         <div class="flex items-center justify-center mb-8">
           <div class="tabs" role="group" aria-label="Catégories d’actions">
-            <button type="button" class="tab is-on" data-cat="financiere" data-site="actionsSection.financialLabel" aria-pressed="true" onclick="filterActionsCategory('financiere')">FINANCIÈRES</button>
-            <button type="button" class="tab" data-cat="humanitaire" data-site="actionsSection.humanitarianLabel" aria-pressed="false" onclick="filterActionsCategory('humanitaire')">HUMANITAIRES</button>
+            <button type="button" class="tab is-on" data-cat="humanitaire" data-site="actionsSection.humanitarianLabel" aria-pressed="true" onclick="filterActionsCategory('humanitaire')">HUMANITAIRES</button>
+            <button type="button" class="tab" data-cat="financiere" data-site="actionsSection.financialLabel" aria-pressed="false" onclick="filterActionsCategory('financiere')">FINANCIÈRES</button>
           </div>
         </div>
 
@@ -3673,7 +3673,7 @@
       initCountUpObserver();
     }
 
-    window.currentActionCategoryFilter = 'financiere';
+    window.currentActionCategoryFilter = 'humanitaire';
 
     function filterActionsCategory(category) {
       const tabs = document.querySelectorAll('.tabs .tab');
@@ -3839,7 +3839,7 @@
       const bento = document.getElementById('actions-bento');
       if (!bento) return;
 
-      const catFilter = window.currentActionCategoryFilter || 'financiere';
+      const catFilter = window.currentActionCategoryFilter || 'humanitaire';
       let filteredData = data;
       if (catFilter === 'financiere') {
         filteredData = data.filter(a => {
@@ -3855,6 +3855,17 @@
           const tit = (a.title || '').toLowerCase();
           const isFin = t === 'financiere' || c.includes('financ') || c.includes('autofinance') || tit.includes('midnight');
           return !isFin || t === 'humanitaire';
+        });
+      } else {
+        // 'all': Humanitarian actions are placed before financial actions by default
+        filteredData = [...data].sort((a, b) => {
+          if (a.is_news && !b.is_news) return -1;
+          if (!a.is_news && b.is_news) return 1;
+          const aIsFin = (a.action_type === 'financiere' || (a.category || '').toLowerCase().includes('financ') || (a.category || '').toLowerCase().includes('autofinanc'));
+          const bIsFin = (b.action_type === 'financiere' || (b.category || '').toLowerCase().includes('financ') || (b.category || '').toLowerCase().includes('autofinanc'));
+          if (!aIsFin && bIsFin) return -1;
+          if (aIsFin && !bIsFin) return 1;
+          return 0;
         });
       }
 
@@ -6309,15 +6320,22 @@ const CATEGORY_I18N = {
       }
     });
 
-        const footerBlock = document.getElementById('footer-copyright-block');
+        let footerClickCount = 0;
+    let footerClickTimer = null;
+    const footerBlock = document.getElementById('footer-copyright-block');
     if (footerBlock) {
       footerBlock.addEventListener('click', (e) => {
         if (e.target && e.target.isContentEditable) return;
-        openInternalPortal();
-      });
-      footerBlock.addEventListener('dblclick', (e) => {
-        if (e.target && e.target.isContentEditable) return;
-        openInternalPortal();
+        footerClickCount++;
+        clearTimeout(footerClickTimer);
+        if (footerClickCount >= 3) {
+          footerClickCount = 0;
+          openInternalPortal();
+        } else {
+          footerClickTimer = setTimeout(() => {
+            footerClickCount = 0;
+          }, 1200);
+        }
       });
     }
 
