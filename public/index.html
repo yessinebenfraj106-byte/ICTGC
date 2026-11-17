@@ -553,7 +553,7 @@
           </div>
         </div>
 
-        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense"></div>
+        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </section>
 
       <section id="bureau-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -3905,7 +3905,7 @@
       }
 
       bento.innerHTML = filteredData.map((a, i) => {
-        const span = parseInt(a.grid_cols, 10) || (i === 0 ? 2 : 1);
+        const span = parseInt(a.grid_cols, 10) || 1;
         const spanClass = span === 3 ? 'md:col-span-2 lg:col-span-3' : (span === 2 ? 'md:col-span-2' : 'md:col-span-1');
         let rawImages = a.images;
         if (typeof rawImages === 'string') rawImages = [rawImages];
@@ -4036,7 +4036,6 @@
                   <span class="text-[10px] ${isDark ? 'text-white/80 bg-white/20' : 'text-slate-500 bg-slate-100 border border-slate-200'} font-bold px-2 py-0.5 rounded-full">News Officielle</span>
                 </div>
               ` : ''}
-            <div>
               <div class="flex items-center justify-between gap-2 mb-3">
                 <span data-edit-key="action-cat-${actionId}" class="editable-field px-2.5 py-1 rounded-full text-[10px] font-extrabold ${catBadgeClass}">
                   ${displayCat}
@@ -4144,10 +4143,9 @@
           </linearGradient>
         </defs>
         <rect width="400" height="400" fill="url(#grad-${Math.abs(hash)})" />
-        <circle cx="200" cy="155" r="82" fill="rgba(255,255,255,0.18)" />
-        <text x="200" y="185" font-family="Plus Jakarta Sans, sans-serif" font-size="76" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">${initials}</text>
-        <text x="200" y="295" font-family="Inter, sans-serif" font-size="20" font-weight="800" fill="#ffffff" text-anchor="middle">${cleanName}</text>
-        ${role ? `<text x="200" y="325" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.8)" text-anchor="middle">${role}</text>` : ''}
+        <circle cx="200" cy="200" r="95" fill="rgba(255,255,255,0.18)" />
+        <circle cx="200" cy="200" r="85" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+        <text x="200" y="230" font-family="Plus Jakarta Sans, sans-serif" font-size="84" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="3">${initials}</text>
       </svg>`;
       return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
     }
@@ -4196,7 +4194,7 @@
                 ${isAdminLoggedIn ? `
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 ` : ''}
-                <span data-edit-key="bureau-role-${mId}" class="editable-field text-[11px] font-extrabold uppercase tracking-wider ${roleColorClass} block truncate">
+                <span data-edit-key="bureau-role-${mId}" class="editable-field text-[11px] font-extrabold uppercase tracking-wider ${roleColorClass} block leading-tight text-balance break-words">
                   ${displayRole}
                 </span>
               </div>
@@ -4228,8 +4226,9 @@
             </div>
 
             <!-- Social Links (Instagram & Facebook) -->
-            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5 flex-wrap">
+            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5 flex-wrap min-h-[34px]">
               <div class="flex items-center gap-1.5 flex-wrap">
+                ${(!m.instagram && !m.facebook && !isAdminLoggedIn) ? `<span class="text-[10px] text-slate-400 font-medium italic">Interact Club Tunis Golfe Carthagène</span>` : ''}
                 ${m.instagram ? `
                   <a href="${m.instagram.startsWith('http') ? m.instagram : `https://instagram.com/${m.instagram.replace(/^@/, '')}`}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 text-[10px] font-bold border border-pink-200/80 transition-all hover:scale-105 shadow-2xs" title="Profil Instagram de ${memberName}">
                     <svg class="w-3 h-3 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -4463,28 +4462,7 @@
       }
 
       if (commissionGrid) {
-        // Group commission members by their commission name to identify pairs/binômes
-        const commissionGroups = [];
-        const groupMap = new Map();
-
-        commission.forEach(m => {
-          const key = normalizeCommissionKey(m);
-          if (!groupMap.has(key)) {
-            const grp = { commissionName: key, members: [] };
-            groupMap.set(key, grp);
-            commissionGroups.push(grp);
-          }
-          groupMap.get(key).members.push(m);
-        });
-
-        commissionGrid.innerHTML = commissionGroups.map((group, grpIdx) => {
-          if (group.members.length === 1) {
-            const m = group.members[0];
-            return renderBureauCard(m, m.id || `comm-${grpIdx}`, 'text-rose-600');
-          } else {
-            return renderCommissionDuoCard(group, grpIdx);
-          }
-        }).join('');
+        commissionGrid.innerHTML = commission.map((m, i) => renderBureauCard(m, m.id || `comm-${i}`, 'text-rose-600')).join('');
       }
 
       if (elargiGrid) {
