@@ -144,13 +144,11 @@
       --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Content Visibility for Off-screen Performance */
     #bureau-section, #partners-section {
       content-visibility: auto;
       contain-intrinsic-size: auto 650px;
     }
 
-    /* Action Category Tabs - Segmented Pill Control */
     .tabs {
       display: inline-flex;
       align-items: center;
@@ -193,7 +191,6 @@
       transform: scale(0.97);
     }
 
-    /* Staggered Action Cards Fade-in */
     @keyframes action-card-enter {
       from {
         opacity: 0;
@@ -208,7 +205,6 @@
       animation: action-card-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     }
 
-    /* Sophisticated News Badge Glow Animation */
     @keyframes news-glow {
       0%, 100% {
         box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.35);
@@ -221,7 +217,6 @@
       animation: news-glow 2.2s infinite var(--ease-smooth);
     }
 
-    /* Smooth Modal Scaling Entry */
     @keyframes modal-scale-in {
       from {
         opacity: 0;
@@ -236,7 +231,6 @@
       animation: modal-scale-in 0.24s var(--ease-spring) forwards;
     }
 
-    /* Subtle Card Hover & Interaction Smoothness */
     .action-card-hover {
       transition: transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease-spring), border-color 0.2s ease;
     }
@@ -244,7 +238,6 @@
       transform: translateY(-4px);
     }
 
-    /* Respect Reduced Motion Preferences (Accessibility) */
     @media (prefers-reduced-motion: reduce) {
       *, ::before, ::after {
         animation-duration: 0.01ms !important;
@@ -280,8 +273,7 @@
       background-size: 16px 16px;
       background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
     }
-  
-    /* RTL & Arabic Typography & Flow */
+
     html[dir="rtl"] {
       font-family: 'Tajawal', system-ui, -apple-system, sans-serif !important;
     }
@@ -315,6 +307,41 @@
       margin-right: -0.25rem !important;
     }
 
+    .action-card {
+      break-inside: avoid;
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      vertical-align: top;
+      position: relative;
+    }
+    .action-card.col-span-full,
+    .action-card.col-span-3 {
+      column-span: all;
+    }
+    .action-card-resizer {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      cursor: nwse-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.6;
+      transition: opacity 0.2s, transform 0.2s;
+      user-select: none;
+      z-index: 25;
+      background: rgba(0,0,0,0.06);
+      border-radius: 6px;
+    }
+    .action-card-resizer:hover {
+      opacity: 1;
+      transform: scale(1.15);
+      background: rgba(37,99,235,0.15);
+    }
+
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -340,24 +367,23 @@
       </nav>
 
       <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
-        <!-- Facebook with Followers Count -->
+        
         <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition-all shadow-xs border border-blue-200/80 group flex-shrink-0" title="Page Facebook officielle (@ICTGC)">
           <svg class="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           <span class="text-[11px] sm:text-xs font-bold header-fb-count" data-edit-key="header-fb-count">9 414+</span>
         </a>
-        <!-- Instagram with Followers Count -->
+        
         <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-pink-50 text-pink-700 hover:bg-pink-600 hover:text-white transition-all shadow-xs border border-pink-200/80 group flex-shrink-0" title="Compte Instagram officiel (@ic.tunisgolfecarthagene)">
           <svg class="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           <span class="text-[11px] sm:text-xs font-bold header-insta-count" data-edit-key="header-insta-count">3 601+</span>
         </a>
-        <!-- Language Switcher: FR / EN / AR -->
+        
         <div class="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-[10px] sm:text-xs font-bold shadow-2xs">
           <button type="button" onclick="setAppLanguage('fr', true)" id="lang-btn-fr" class="px-2 py-1 rounded-lg transition-all bg-white text-blue-700 shadow-2xs" title="Français">FR</button>
           <button type="button" onclick="setAppLanguage('en', true)" id="lang-btn-en" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900" title="English">EN</button>
           <button type="button" onclick="setAppLanguage('ar', true)" id="lang-btn-ar" class="px-2 py-1 rounded-lg transition-all text-slate-600 hover:text-slate-900 font-bold" title="العربية">عربي</button>
         </div>
 
-        <!-- Nous Rejoindre CTA -->
         <button onclick="showView('recruitment-view')" data-i18n="navJoinUs" class="inline-flex items-center justify-center px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all hover:shadow whitespace-nowrap">
           Nous Rejoindre
         </button>
@@ -432,7 +458,6 @@
         </div>
       </section>
 
-      <!-- Frise de Filiation Officielle (Parrainage Rotary) -->
       <section id="filiation-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-gradient-to-br from-white via-slate-50 to-blue-50/40 rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm text-slate-900 relative overflow-hidden">
           <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -444,13 +469,11 @@
             <p class="text-xs sm:text-sm text-slate-600 mt-2" data-i18n="filiationSubtitle">Comprendre les origines statutaires et le parrainage historique d'ICTGC : du réseau mondial de Rotary International jusqu'à notre action locale sur le Golfe de Carthage.</p>
           </div>
 
-          <!-- Step Progress Track -->
           <div class="relative z-10">
             <div class="hidden md:block absolute top-1/2 left-8 right-8 h-0.5 -translate-y-12 bg-gradient-to-r from-amber-400 via-rose-400 to-sky-400 opacity-25 z-0"></div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 relative z-10 items-stretch">
-              
-              <!-- 1. Rotary International -->
+
               <div class="bg-white rounded-2xl p-5 border border-slate-200/90 hover:border-amber-400 hover:shadow-md transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-2xs h-full">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
@@ -467,7 +490,6 @@
                 </div>
               </div>
 
-              <!-- 2. Rotary Club Ariana La Rose -->
               <div class="bg-white rounded-2xl p-5 border border-slate-200/90 hover:border-rose-400 hover:shadow-md transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-2xs h-full">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
@@ -484,7 +506,6 @@
                 </div>
               </div>
 
-              <!-- 3. Le Programme Mondial & Interact en Tunisie -->
               <div class="bg-white rounded-2xl p-5 border border-slate-200/90 hover:border-sky-400 hover:shadow-md transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-2xs h-full">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
@@ -506,7 +527,6 @@
                 </div>
               </div>
 
-              <!-- 4. Notre Club : ICTGC -->
               <div class="bg-white rounded-2xl p-5 border-2 border-amber-400 hover:border-amber-500 hover:shadow-md transition-all hover:scale-[1.02] flex flex-col justify-between group shadow-2xs relative overflow-hidden h-full text-slate-900">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-amber-400/10 rounded-full blur-xl pointer-events-none"></div>
                 <div>
@@ -550,7 +570,7 @@
             </button>
           </div>
         </div>
-        <!-- Action Category Tabs -->
+        
         <div class="flex items-center justify-center mb-8">
           <div class="tabs" role="group" aria-label="Catégories d’actions">
             <button type="button" class="tab is-on" data-cat="humanitaire" data-site="actionsSection.humanitarianLabel" aria-pressed="true" onclick="filterActionsCategory('humanitaire')">HUMANITAIRES</button>
@@ -558,7 +578,7 @@
           </div>
         </div>
 
-        <div id="actions-bento" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="actions-bento" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 [column-fill:_balance]"></div>
       </section>
 
       <section id="bureau-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -580,7 +600,6 @@
           </div>
         </div>
 
-        <!-- 1. Bureau Exécutif -->
         <div class="mb-12">
           <div class="flex items-center justify-between mb-4">
             <h3 data-edit-key="bureauExecHeading" data-i18n="bureauExecHeading" class="editable-field text-lg font-bold text-slate-800 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> <span>Bureau Exécutif</span></h3>
@@ -591,7 +610,6 @@
           <div id="bureau-executif-grid" class="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
         </div>
 
-        <!-- 2. Chefs des Commissions -->
         <div class="mb-12">
           <div class="flex items-center justify-between mb-4">
             <h3 data-edit-key="bureauChefsHeading" data-i18n="bureauChefsHeading" class="editable-field text-lg font-bold text-slate-800 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span> <span>Chefs des Commissions</span></h3>
@@ -602,7 +620,6 @@
           <div id="bureau-commission-grid" class="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x"></div>
         </div>
 
-        <!-- 3. Les Adjoints -->
         <div>
           <div class="flex items-center justify-between mb-4">
             <h3 data-edit-key="bureauAdjointsHeading" data-i18n="bureauAdjointsHeading" class="editable-field text-lg font-bold text-slate-800 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> <span>Les Adjoints</span></h3>
@@ -614,7 +631,6 @@
         </div>
       </section>
 
-      <!-- Section Sponsors & Partenaires Officiels -->
       <section id="partners-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto mb-10">
           <span data-edit-key="partnersBadge" data-i18n="partnersBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-amber-600">Soutiens & Mécénat</span>
@@ -632,7 +648,7 @@
         </div>
 
         <div id="partners-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 items-stretch">
-          <!-- Populated by renderPartners -->
+          
         </div>
       </section>
 
@@ -646,7 +662,6 @@
           <p class="text-xs text-slate-500 mt-1" data-i18n="recruitSubtitle">Formulaire de candidature officiel pour le Mandat 2026–2027</p>
         </div>
 
-        
         <div id="recruitment-closed-banner" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold flex items-center justify-between gap-3 shadow-xs">
           <div class="flex items-center gap-2.5">
             <span class="text-2xl">🔒</span>
@@ -840,8 +855,7 @@
     </div>
 
     <div id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      
-      <!-- Admin Top Header -->
+
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
         <div>
           <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Plateforme de Gestion Globale</span>
@@ -858,7 +872,6 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs: CRM vs Analytics vs Performance Diagnostics -->
       <div class="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-2xs">
           <button id="admin-tab-btn-crm" onclick="switchAdminTab('crm')" class="px-3.5 sm:px-4 py-2 text-xs font-bold rounded-xl transition-all bg-white text-indigo-700 shadow-xs flex items-center gap-2">
@@ -883,7 +896,6 @@
         </div>
       </div>
 
-      <!-- Tab 1: CRM (Candidatures + Membres) -->
       <div id="admin-tab-crm" class="space-y-8">
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
           <h3 class="text-base font-bold text-slate-900 mb-1">Candidatures en Attente (Tunnel /rejoindre-ictgc)</h3>
@@ -947,12 +959,10 @@
         </div>
       </div>
 
-      <!-- Tab 2: Visiteurs & Activités en Direct -->
       <div id="admin-tab-analytics" class="hidden space-y-8">
-        
-        <!-- Analytics Top KPI Cards -->
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- Total Sessions & Visitors -->
+          
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Visiteurs & Sessions</span>
@@ -965,7 +975,6 @@
             <p id="kpi-sessions-sub" class="mt-1 text-[11px] text-slate-400">Sessions enregistrées depuis le cloud</p>
           </div>
 
-          <!-- Average Duration -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Temps Moyen Passé</span>
@@ -977,7 +986,6 @@
             <p class="mt-1 text-[11px] text-slate-400">Durée moyenne de navigation par session</p>
           </div>
 
-          <!-- Performance Web Vitals Score -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Vitesse & LCP Moyen</span>
@@ -990,7 +998,6 @@
             <p id="kpi-load-sub" class="mt-1 text-[11px] text-slate-400">Temps de chargement DOM ~200ms</p>
           </div>
 
-          <!-- Engagement & Actions Rate -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Taux d'Engagement</span>
@@ -1003,9 +1010,8 @@
           </div>
         </div>
 
-        <!-- Audience & Environment Breakdown -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Devices -->
+          
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-2">
               <span>📱</span> <span>Appareils Utilisés</span>
@@ -1041,7 +1047,6 @@
             </div>
           </div>
 
-          <!-- Referrers / Sources -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-2">
               <span>🌐</span> <span>Origines & Réseaux</span>
@@ -1062,7 +1067,6 @@
             </div>
           </div>
 
-          <!-- Languages Chosen -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-2">
               <span>🗣️</span> <span>Langues Choisies</span>
@@ -1099,7 +1103,6 @@
           </div>
         </div>
 
-        <!-- Live Activity Feed: What They Did -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
             <div>
@@ -1119,13 +1122,11 @@
             </div>
           </div>
 
-          <!-- Activity Cards Stream -->
           <div id="analytics-live-feed" class="space-y-4">
             <div class="p-8 text-center text-slate-400 text-xs">Chargement des parcours visiteurs en direct...</div>
           </div>
         </div>
 
-        <!-- All Sessions Table -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
             <div>
@@ -1159,7 +1160,6 @@
         </div>
       </div>
 
-      <!-- Tab 3: Testeur de Performance & Diagnostic en Direct -->
       <div id="admin-tab-perf" class="hidden space-y-8">
         
         <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
@@ -1182,9 +1182,8 @@
           </div>
         </div>
 
-        <!-- Live Audit Results Cards -->
         <div id="perf-audit-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- TTFB -->
+          
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Temps Réponse (TTFB)</span>
             <div class="mt-2 flex items-baseline gap-2">
@@ -1194,7 +1193,6 @@
             <p class="mt-1 text-[11px] text-slate-400">Objectif Google : &lt; 200 ms</p>
           </div>
 
-          <!-- LCP -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Premier Rendu Majeur (LCP)</span>
             <div class="mt-2 flex items-baseline gap-2">
@@ -1204,7 +1202,6 @@
             <p class="mt-1 text-[11px] text-slate-400">Objectif Google : &lt; 2.5 s</p>
           </div>
 
-          <!-- CLS -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Stabilité Visuelle (CLS)</span>
             <div class="mt-2 flex items-baseline gap-2">
@@ -1214,7 +1211,6 @@
             <p class="mt-1 text-[11px] text-slate-400">Objectif Google : &lt; 0.1</p>
           </div>
 
-          <!-- DOM Ready -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Prêt pour l'Utilisateur</span>
             <div class="mt-2 flex items-baseline gap-2">
@@ -1225,7 +1221,6 @@
           </div>
         </div>
 
-        <!-- Technical Optimization Checklist -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
           <h4 class="text-base font-extrabold text-slate-900 mb-4">Rapport des Optimisations Actives</h4>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -1575,8 +1570,6 @@
     </div>
   </div>
 
-  
-  <!-- Modal: Ajouter un Membre au Bureau -->
   <div id="add-bureau-member-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -1681,7 +1674,6 @@
     </div>
   </div>
 
-  <!-- Modal: Gestionnaire de Photos (Glisser-Déposer & Lien Direct) -->
   <div id="photo-manager-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -1693,7 +1685,7 @@
       </div>
 
       <div class="mt-4 space-y-4">
-        <!-- Drag & Drop Zone -->
+        
         <div id="photo-dropzone" 
              ondragover="handlePhotoDragOver(event)" 
              ondragleave="handlePhotoDragLeave(event)" 
@@ -1709,7 +1701,6 @@
           </div>
         </div>
 
-        <!-- URL Input -->
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Ou collez l'URL directe d'une image :</label>
           <div class="flex gap-2">
@@ -1720,7 +1711,6 @@
           </div>
         </div>
 
-        <!-- Preview Box -->
         <div id="photo-preview-container" class="hidden">
           <div class="flex items-center justify-between mb-1">
             <span class="text-xs font-bold text-slate-700">Aperçu sélectionné :</span>
@@ -1741,7 +1731,6 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
           <button type="button" onclick="closePhotoManagerModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
             Annuler
@@ -1754,11 +1743,9 @@
     </div>
   </div>
 
-  <!-- Modal: Visionneuse d'Album / Lightbox Interactif -->
   <div id="action-album-lightbox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/95 backdrop-blur-md select-none">
     <div class="relative w-full max-w-5xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
-      
-      <!-- Top Bar -->
+
       <div class="px-4 sm:px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between gap-3 text-white">
         <div class="min-w-0">
           <div class="flex items-center gap-2 mb-0.5">
@@ -1776,7 +1763,6 @@
         </div>
       </div>
 
-      <!-- Main Photo Stage -->
       <div class="relative flex-1 flex items-center justify-center p-2 sm:p-6 min-h-[300px] sm:min-h-[460px] max-h-[66vh] bg-slate-950/70 overflow-hidden">
         <button onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo précédente (←)">
           ◀
@@ -1789,17 +1775,14 @@
         </button>
       </div>
 
-      <!-- Filmstrip Thumbnails -->
       <div id="lightbox-filmstrip-container" class="px-4 py-3 bg-slate-900 border-t border-slate-800/80 overflow-x-auto flex gap-2 items-center justify-center">
       </div>
     </div>
   </div>
 
-  <!-- Modal: Gestionnaire d'Album & Import en Masse -->
   <div id="action-album-manager-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-sm select-none">
     <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col overflow-hidden">
-      
-      <!-- Header -->
+
       <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-shrink-0">
         <div>
           <h3 id="album-manager-title" class="text-base sm:text-lg font-black text-slate-900">Gérer l'Album Photos</h3>
@@ -1808,10 +1791,8 @@
         <button onclick="closeActionAlbumManager()" class="text-slate-400 hover:text-slate-600 text-base font-bold p-1">✕</button>
       </div>
 
-      <!-- Scrollable Body -->
       <div class="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
-        
-        <!-- Bulk Dropzone -->
+
         <div id="bulk-album-dropzone"
              ondragover="handleBulkDropOver(event)"
              ondragleave="handleBulkDropLeave(event)"
@@ -1829,7 +1810,6 @@
           </div>
         </div>
 
-        <!-- Progress Indicator -->
         <div id="bulk-upload-progress" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 font-bold flex items-center justify-between">
           <span id="bulk-progress-text">Traitement des photos...</span>
           <div class="w-32 h-2.5 bg-blue-200 rounded-full overflow-hidden">
@@ -1837,7 +1817,6 @@
           </div>
         </div>
 
-        <!-- Bulk URL Importer -->
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
           <label class="block text-xs font-bold text-slate-700 mb-1">Ou collez des URLs d'images (liens multiples) :</label>
           <textarea id="bulk-urls-input" rows="2" placeholder="Collez plusieurs URLs séparées par une nouvelle ligne ou virgule..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"></textarea>
@@ -1848,7 +1827,6 @@
           </div>
         </div>
 
-        <!-- Live Photo Grid in Album -->
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-black text-slate-800 flex items-center gap-1.5">
@@ -1863,7 +1841,6 @@
 
       </div>
 
-      <!-- Footer -->
       <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2 flex-shrink-0">
         <button type="button" onclick="closeActionAlbumManager()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
           Annuler
@@ -1876,8 +1853,6 @@
     </div>
   </div>
 
-  
-  <!-- Modal: Organiser et Réordonner le Bureau -->
   <div id="reorder-bureau-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-2xl w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -1889,7 +1864,7 @@
       </div>
 
       <div class="mt-4 space-y-6" id="reorder-modal-content">
-        <!-- Injected via JavaScript -->
+        
       </div>
 
       <div class="pt-4 border-t border-slate-100 flex items-center justify-end">
@@ -1900,7 +1875,6 @@
     </div>
   </div>
 
-  <!-- Modal: Modification Collaboration Clubs -->
   <div id="action-collab-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 modal-animate-in shadow-2xl border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -1933,7 +1907,6 @@
     </div>
   </div>
 
-  <!-- Modal: Personnalisation Dégradé & News Action -->
   <div id="action-style-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -1949,7 +1922,6 @@
       <div class="mt-4 space-y-4">
         <input type="hidden" id="action-style-id" />
 
-        <!-- Toggle News / À la Une -->
         <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-2xl flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <span class="text-xl">🌟</span>
@@ -1964,7 +1936,6 @@
           </label>
         </div>
 
-        <!-- Action Category Type (Financière vs Humanitaire) -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5">Catégorie d'affichage (Onglets) :</label>
           <div class="grid grid-cols-2 gap-2">
@@ -1979,7 +1950,6 @@
           </div>
         </div>
 
-        <!-- Gradient Presets Swatches -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5">Palette de Dégradés & Couleurs :</label>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -2010,7 +1980,6 @@
           </div>
         </div>
 
-        <!-- Custom Gradient CSS / Color Input -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Gradient ou Couleur Personnalisée (CSS) :</label>
           <div class="flex items-center gap-2">
@@ -2020,7 +1989,6 @@
           <p class="text-[10px] text-slate-400 mt-1">Accepte toute syntaxe CSS valide (ex: <code>linear-gradient(135deg, #1e3a8a, #0284c7)</code> ou <code>#0f172a</code>).</p>
         </div>
 
-        <!-- Live Preview Box -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Aperçu en Direct de la Boîte :</label>
           <div id="action-style-preview-box" class="p-4 rounded-2xl border border-slate-200 transition-all shadow-sm">
@@ -2053,8 +2021,6 @@
     </div>
   </div>
 
-
-  <!-- Modal: Ajouter / Modifier un Partenaire ou Sponsor -->
   <div id="add-partner-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 modal-animate-in shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -2127,7 +2093,6 @@
     </div>
   </div>
 
-  <!-- Modal: Recadrage & Rotation Interactive d'Image (Pure Canvas) -->
   <div id="image-cropper-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md">
     <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl border border-slate-200 max-h-[95vh] flex flex-col justify-between overflow-hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -2141,7 +2106,6 @@
         <button type="button" onclick="closeImageCropper()" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">✕</button>
       </div>
 
-      <!-- Canvas Workspace (with Transparency Checkerboard) -->
       <div class="relative my-4 checkerboard-bg rounded-2xl overflow-hidden flex items-center justify-center select-none" style="min-height: 280px; max-height: 420px; height: 50vh;">
         <canvas id="cropper-canvas" class="max-w-full max-h-full cursor-grab active:cursor-grabbing"></canvas>
         <div id="cropper-loader" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center text-white text-xs font-bold">
@@ -2149,10 +2113,9 @@
         </div>
       </div>
 
-      <!-- Controls Toolbar -->
       <div class="space-y-3 bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200/80">
         <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
-          <!-- Aspect Ratio Presets -->
+          
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="text-[11px] font-bold text-slate-500 mr-1">Format :</span>
             <button type="button" onclick="setCropperRatio('free')" id="ratio-btn-free" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-600 text-white transition-all shadow-xs">Libre</button>
@@ -2161,7 +2124,6 @@
             <button type="button" onclick="setCropperRatio('16:9')" id="ratio-btn-16-9" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 border border-slate-200 transition-all shadow-2xs">16:9 (Bannière)</button>
           </div>
 
-          <!-- Rotate & Flip Controls -->
           <div class="flex items-center gap-1.5">
             <button type="button" onclick="rotateCropperImage(-90)" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-800 font-bold rounded-lg border border-slate-200 transition-all shadow-2xs flex items-center gap-1" title="Pivoter 90° anti-horaire">
               <span>↺</span> -90°
@@ -2178,7 +2140,6 @@
           </div>
         </div>
 
-        <!-- Zoom Slider & Transparency Controls -->
         <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/60">
           <div class="flex items-center gap-3 flex-1 min-w-[200px]">
             <span class="text-xs font-bold text-slate-600 flex items-center gap-1">
@@ -2199,7 +2160,6 @@
         </div>
       </div>
 
-      <!-- Modal Footer -->
       <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3 mt-3">
         <p class="text-[11px] text-slate-400 hidden sm:block">💡 Glissez pour déplacer l'image dans le cadre</p>
         <div class="flex items-center gap-2 ml-auto">
@@ -2214,7 +2174,6 @@
     </div>
   </div>
 
-  <!-- Modal: Ajouter / Modifier les Réseaux Sociaux d'un Membre du Bureau -->
   <div id="bureau-socials-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 modal-animate-in shadow-2xl border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -2259,7 +2218,6 @@
     </div>
   </div>
 
-  <!-- Visitor Session Details Modal -->
   <div id="visitor-session-details-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
     <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-shrink-0">
@@ -2276,7 +2234,6 @@
         <button onclick="closeSessionDetailsModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors">✕</button>
       </div>
 
-      <!-- Visitor Metadata Header -->
       <div id="modal-session-meta" class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-4 border-b border-slate-100 text-xs flex-shrink-0">
         <div class="bg-slate-50 p-2.5 rounded-xl">
           <span class="text-[10px] text-slate-400 font-bold uppercase block">Appareil & OS</span>
@@ -2296,11 +2253,10 @@
         </div>
       </div>
 
-      <!-- Action Clickstream Feed -->
       <div class="mt-4 flex-grow overflow-y-auto pr-1">
         <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-3">Historique des Actions Effectuées ("Ce qu'il a fait")</span>
         <div id="modal-session-actions-timeline" class="space-y-2 text-xs">
-          <!-- Populated dynamically -->
+          
         </div>
       </div>
 
@@ -2334,7 +2290,6 @@
         <span>•</span>
         <a href="mailto:interact.tunisgolfecarthagene@gmail.com" data-i18n="footerContact" class="hover:text-white transition-colors">Contact Mail</a>
 
-
       </div>
     </div>
   </footer>
@@ -2364,7 +2319,7 @@
   </script>
 
   <script>
-    // --- Enterprise Security: Universal XSS & Injection Sanitizers ---
+    
     function escapeHtml(str) {
       if (str === null || str === undefined) return '';
       return String(str)
@@ -2394,15 +2349,11 @@
     window.allVisitorSessions = [];
     let analyticsSnapshotUnsub = null;
 
-    // =========================================================================
-    // --- ICTGC Performance & Visitor Analytics Engine (Real-Time Tracker) ---
-    // =========================================================================
     (function initAnalyticsTracker() {
       const SESSION_KEY = 'ictgc_session_id';
       const VISITOR_KEY = 'ictgc_visitor_id';
       const ACTIONS_KEY = 'ictgc_session_actions';
 
-      // 1. Session & Visitor Identity
       let sessionId = sessionStorage.getItem(SESSION_KEY);
       if (!sessionId) {
         sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
@@ -2417,7 +2368,6 @@
         isReturning = false;
       }
 
-      // 2. Hardware, OS & Browser Fingerprinting
       function getDeviceFingerprint() {
         const ua = navigator.userAgent || '';
         let type = 'Desktop';
@@ -2454,7 +2404,6 @@
         if (storedActions) actionsLog = JSON.parse(storedActions);
       } catch (e) {}
 
-      // 3. Performance & Web Vitals Measurements
       const perfVitals = {
         ttfb: 0,
         domReady: 0,
@@ -2464,7 +2413,6 @@
         inp: 0
       };
 
-      // Measure navigation timing once page loads
       window.addEventListener('load', () => {
         setTimeout(() => {
           try {
@@ -2485,7 +2433,6 @@
         }, 1200);
       });
 
-      // Largest Contentful Paint (LCP) Observer
       try {
         const lcpObs = new PerformanceObserver((entryList) => {
           const entries = entryList.getEntries();
@@ -2496,7 +2443,6 @@
         lcpObs.observe({ type: 'largest-contentful-paint', buffered: true });
       } catch (e) {}
 
-      // Cumulative Layout Shift (CLS) Observer
       try {
         let clsVal = 0;
         const clsObs = new PerformanceObserver((entryList) => {
@@ -2510,7 +2456,6 @@
         clsObs.observe({ type: 'layout-shift', buffered: true });
       } catch (e) {}
 
-      // 4. Log User Action ("What they did")
       function logAction(name, category = 'interaction', details = '') {
         const item = {
           time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
@@ -2521,7 +2466,7 @@
         };
 
         actionsLog.push(item);
-        if (actionsLog.length > 60) actionsLog.shift(); // keep document compact
+        if (actionsLog.length > 60) actionsLog.shift(); 
 
         try {
           sessionStorage.setItem(ACTIONS_KEY, JSON.stringify(actionsLog));
@@ -2589,11 +2534,10 @@
             { merge: true }
           );
         } catch (err) {
-          // Fail gracefully without console noise
+          
         }
       }
 
-      // Heartbeat every 25 seconds
       setInterval(() => syncSessionToCloud(false), 25000);
 
       document.addEventListener('visibilitychange', () => {
@@ -2615,9 +2559,6 @@
       }
     })();
 
-    // =========================================================================
-    // --- Admin Analytics & Performance Dashboard Controller ---
-    // =========================================================================
     function switchAdminTab(tabName) {
       const tabs = ['crm', 'analytics', 'perf'];
       tabs.forEach(t => {
@@ -2643,7 +2584,7 @@
 
     function initAnalyticsDashboard() {
       if (!window.firestoreDb || !window.fs) return;
-      if (analyticsSnapshotUnsub) return; // already listening
+      if (analyticsSnapshotUnsub) return; 
 
       analyticsSnapshotUnsub = window.fs.onSnapshot(
         window.fs.collection(window.firestoreDb, "visitor_sessions"),
@@ -2651,7 +2592,6 @@
           const sessions = [];
           snapshot.forEach(docSnap => sessions.push({ id: docSnap.id, ...docSnap.data() }));
 
-          // Sort latest active first
           sessions.sort((a, b) => (b.lastActive || b.startTime || 0) - (a.lastActive || a.startTime || 0));
           window.allVisitorSessions = sessions;
 
@@ -2688,7 +2628,6 @@
       const distinctVisitors = new Set(sessions.map(s => s.visitorId || s.sessionId)).size;
       const returningVisitors = sessions.filter(s => s.isReturning).length;
 
-      // 1. Update KPI: Total Sessions & Visitors
       const kpiTotal = document.getElementById('kpi-total-sessions');
       if (kpiTotal) kpiTotal.innerText = totalSessions;
 
@@ -2701,13 +2640,11 @@
         returningBadge.innerText = distinctVisitors + ' Uniques • ' + retPct + '% Fidèles';
       }
 
-      // 2. Update KPI: Average Duration
       const totalSeconds = sessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0);
       const avgSec = totalSessions > 0 ? Math.round(totalSeconds / totalSessions) : 0;
       const kpiDuration = document.getElementById('kpi-avg-duration');
       if (kpiDuration) kpiDuration.innerText = formatDuration(avgSec);
 
-      // 3. Update KPI: Performance (LCP)
       const validLcpSessions = sessions.filter(s => s.performance && s.performance.lcp > 0);
       const avgLcpMs = validLcpSessions.length > 0 
         ? Math.round(validLcpSessions.reduce((acc, s) => acc + s.performance.lcp, 0) / validLcpSessions.length)
@@ -2729,13 +2666,11 @@
         }
       }
 
-      // 4. Update KPI: Engagement Rate
       const engagedSessions = sessions.filter(s => (s.actionsCount || (s.actions && s.actions.length) || 0) >= 2);
       const engRate = totalSessions > 0 ? Math.round((engagedSessions.length / totalSessions) * 100) : 0;
       const kpiEng = document.getElementById('kpi-engagement-rate');
       if (kpiEng) kpiEng.innerText = engRate + '%';
 
-      // 5. Device Breakdown
       const mobileCount = sessions.filter(s => s.device === 'Mobile').length;
       const tabletCount = sessions.filter(s => s.device === 'Tablette').length;
       const desktopCount = sessions.filter(s => s.device === 'Desktop' || (!s.device && window.innerWidth >= 1024)).length;
@@ -2758,7 +2693,6 @@
       if (dskBar) dskBar.style.width = dskPct + '%';
       if (tabBar) tabBar.style.width = tabPct + '%';
 
-      // 6. Language Breakdown
       const frCount = sessions.filter(s => (s.language || 'fr') === 'fr').length;
       const arCount = sessions.filter(s => s.language === 'ar').length;
       const enCount = sessions.filter(s => s.language === 'en').length;
@@ -2781,7 +2715,6 @@
       if (arBar) arBar.style.width = arPct + '%';
       if (enBar) enBar.style.width = enPct + '%';
 
-      // 7. Referrer breakdown
       const directCount = sessions.filter(s => !s.referrer || s.referrer.includes('Direct') || s.referrer === '').length;
       const instaCount = sessions.filter(s => s.referrer && (s.referrer.includes('instagram') || s.referrer.includes('ig'))).length;
       const fbCount = sessions.filter(s => s.referrer && (s.referrer.includes('facebook') || s.referrer.includes('fb'))).length;
@@ -2793,10 +2726,8 @@
       if (refInsta) refInsta.innerText = instaCount;
       if (refFb) refFb.innerText = fbCount;
 
-      // 8. Render Live Activity Feed ("What they did")
       renderLiveFeed(sessions.slice(0, 15));
 
-      // 9. Render All Sessions Table
       renderSessionsTable(sessions);
     }
 
@@ -2821,7 +2752,6 @@
         const timeStr = session.startTime ? new Date(session.startTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
         const dateStr = session.dateString || new Date().toISOString().split('T')[0];
 
-        // Format recent actions pills
         const recentActionPills = actions.slice(-5).reverse().map(act => {
           let icon = '🔹';
           let badgeClass = 'bg-blue-50 text-blue-700 border-blue-200';
@@ -2867,7 +2797,6 @@
                 ` : ''}
               </div>
 
-              <!-- Steps trail -->
               <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
                 ${actionsCount > 0 ? recentActionPills : `<span class="text-xs text-slate-400 italic">Arrivé sur la page d'accueil</span>`}
               </div>
@@ -3650,6 +3579,33 @@
       }
     }
     window.handleAppRouting = handleAppRouting;
+
+    document.addEventListener('paste', function(e) {
+      const target = e.target;
+      const editable = (target && target.closest) ? target.closest('[contenteditable="true"]') : null;
+      if (editable) {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
+        if (!text) return;
+
+        if (document.queryCommandSupported && document.queryCommandSupported('insertText')) {
+          document.execCommand('insertText', false, text);
+        } else {
+          const selection = window.getSelection();
+          if (!selection.rangeCount) return;
+          selection.deleteFromDocument();
+          const textNode = document.createTextNode(text);
+          const range = selection.getRangeAt(0);
+          range.insertNode(textNode);
+          range.setStartAfter(textNode);
+          range.setEndAfter(textNode);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        editable.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+
     window.addEventListener('popstate', handleAppRouting);
 
     async function syncFullBureauToCloud(list) {
@@ -3676,60 +3632,61 @@
         window.cachedSiteContent.deletedActionsList.forEach(id => deletedIds.add(id));
       }
 
-      const currentList = window.cachedActionsList && window.cachedActionsList.length > 0
+      const currentList = (window.cachedActionsList && window.cachedActionsList.length > 0)
         ? window.cachedActionsList
         : [...defaultActions];
 
       const actionMap = new Map();
 
-      // 1. Seed base default actions
+      function getNormalizedKey(a) {
+        if (!a) return '';
+        if (a.id) return String(a.id).trim();
+        return (a.title || '').trim().toLowerCase();
+      }
+
       defaultActions.forEach((act, idx) => {
-        const id = act.id || `action-default-${idx}`;
+        const id = act.id || `action-${idx}`;
         if (!deletedIds.has(id)) {
-          let imgs = act.images || [];
-          if (typeof imgs === 'string') imgs = [imgs];
-          else if (!Array.isArray(imgs)) imgs = [];
-          actionMap.set(id, { ...act, id, images: imgs.filter(Boolean) });
+          const k = getNormalizedKey(act);
+          actionMap.set(k, { ...act, id, images: (act.images || []).filter(Boolean) });
         }
       });
 
-      // 2. Overlay existing list (carries edits, albums, newly added items)
       currentList.forEach((act, idx) => {
         const id = act.id || act._id || `act-${idx}`;
         if (!deletedIds.has(id)) {
-          const prev = actionMap.get(id) || {};
-          let imgs = act.images || prev.images || [];
-          if (typeof imgs === 'string') imgs = [imgs];
-          else if (!Array.isArray(imgs)) imgs = [];
-          actionMap.set(id, {
+          const k = getNormalizedKey(act);
+          const prev = actionMap.get(k) || {};
+          const imgs = (Array.isArray(act.images) && act.images.length > 0) ? act.images : (prev.images || []);
+          actionMap.set(k, {
             ...prev,
             ...act,
-            id,
-            images: imgs.filter(Boolean)
+            id: act.id || prev.id || id,
+            images: imgs.filter(Boolean),
+            custom_height: act.custom_height || prev.custom_height || '',
+            grid_cols: act.grid_cols || prev.grid_cols || 1
           });
         }
       });
 
-      // 3. Overlay incomingList (from cloud Firestore or form submission)
       incomingList.forEach((act, idx) => {
-        const id = act.id || act._id || `act-incoming-${Date.now()}-${idx}`;
+        const id = act.id || act._id || `act-in-${idx}`;
         if (!deletedIds.has(id)) {
-          const prev = actionMap.get(id) || {};
-          let imgs = act.images || prev.images || [];
-          if (typeof imgs === 'string') imgs = [imgs];
-          else if (!Array.isArray(imgs)) imgs = [];
-          actionMap.set(id, {
+          const k = getNormalizedKey(act);
+          const prev = actionMap.get(k) || {};
+          const imgs = (Array.isArray(act.images) && act.images.length > 0) ? act.images : (prev.images || []);
+          actionMap.set(k, {
             ...prev,
             ...act,
-            id,
-            images: imgs.filter(Boolean)
+            id: act.id || prev.id || id,
+            images: imgs.filter(Boolean),
+            custom_height: act.custom_height || prev.custom_height || '',
+            grid_cols: act.grid_cols || prev.grid_cols || 1
           });
         }
       });
 
       const merged = Array.from(actionMap.values());
-
-      // Deduplicate actions that might share the same normalized title under different IDs
       const seenTitles = new Set();
       const deduplicated = [];
       for (const act of merged) {
@@ -3753,13 +3710,13 @@
       try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(list)); } catch(e) {}
       if (window.firestoreDb && window.fs) {
         try {
-          // Save each action to its own document in collection "actions" (1MB quota per doc)
+          
           for (const a of list) {
             if (a.id) {
               await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", a.id), a, { merge: true });
             }
           }
-          // Save only metadata to siteContent/main without giant base64 image strings
+          
           const deletedActions = JSON.parse(localStorage.getItem('ictgc_deleted_actions') || '[]');
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
             deletedActionsList: deletedActions,
@@ -3793,14 +3750,13 @@
       const savedLang = localStorage.getItem('ictgc_lang') || 'fr';
       window.currentAppLanguage = savedLang;
 
-      // 1. Instant cache load from localStorage (0ms latency, eliminates old text delay)
       let initialMetrics = defaultMetrics;
       try {
         const storedM = localStorage.getItem('ictgc_metrics_cache');
         if (storedM) {
           const parsed = JSON.parse(storedM);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            // Merge defaults to apply updated labels and subtexts immediately
+            
             initialMetrics = defaultMetrics.map(def => {
               const found = parsed.find(p => p.key === def.key);
               return found ? { ...def, value_display: found.value_display || def.value_display, value: found.value || def.value } : def;
@@ -3868,7 +3824,6 @@
           try { localStorage.setItem('ictgc_site_content', JSON.stringify(data)); } catch(e){}
           applyCachedContent();
 
-          // Sync full bureau if updated in cloud
           if (data.bureauMembersList && Array.isArray(data.bureauMembersList) && data.bureauMembersList.length > 0) {
             window.cachedBureauList = data.bureauMembersList;
             try { localStorage.setItem('ictgc_bureau_cache', JSON.stringify(data.bureauMembersList)); } catch(e){}
@@ -3888,7 +3843,7 @@
             try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(merged)); } catch(e){}
             renderMetrics(merged);
           }
-          // collection("partners") is the authoritative single source of truth for sponsors
+          
         }
       });
 
@@ -3943,7 +3898,6 @@
         }
       });
 
-      // Load cached members
       try {
         const cachedM = localStorage.getItem('ictgc_members_cache');
         if (cachedM) {
@@ -4121,7 +4075,6 @@
     }
     window.toggleRecruitmentStatus = toggleRecruitmentStatus;
 
-
     async function toggleActionAsNews(actionId) {
       const currentList = [...(window.cachedActionsList || defaultActions)];
       const actionIndex = currentList.findIndex(a => (a.id || '') === actionId);
@@ -4136,13 +4089,13 @@
         if (a.id === actionId) {
           a.is_news = willBeNews;
         } else if (willBeNews && aFin === isFin) {
-          // Both financial and humanitarian can each have their own latest action!
+          
           a.is_news = false;
         }
       });
 
       if (willBeNews) {
-        // Move the recent action to the first place in the list!
+        
         const [moved] = currentList.splice(actionIndex, 1);
         currentList.unshift(moved);
       }
@@ -4157,7 +4110,6 @@
     }
     window.toggleActionAsNews = toggleActionAsNews;
 
-    // Actions Drag-and-Drop and Reordering
     let draggedActionId = null;
 
     function handleActionDragStart(e, id) {
@@ -4267,6 +4219,124 @@
     }
     window.openActionStyleModal = openActionStyleModal;
 
+    function setActionCardSpan(actionId, span) {
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+      action.grid_cols = parseInt(span, 10) || 1;
+      window.cachedActionsList = currentList;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentList)); } catch(e){}
+      renderActions(currentList);
+      syncFullActionsToCloud(currentList);
+      showAppToast(`Largeur réglée sur ${span} colonne${span > 1 ? 's' : ''}.`, 'info', 1500);
+    }
+    window.setActionCardSpan = setActionCardSpan;
+
+    function setActionCardHeight(actionId, heightVal) {
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+      const h = parseInt(heightVal, 10);
+      action.custom_height = (h && h >= 140) ? h : '';
+      window.cachedActionsList = currentList;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentList)); } catch(e){}
+      renderActions(currentList);
+      syncFullActionsToCloud(currentList);
+      showAppToast(action.custom_height ? `Hauteur réglée sur ${action.custom_height}px.` : 'Hauteur automatique rétablie.', 'info', 1500);
+    }
+    window.setActionCardHeight = setActionCardHeight;
+
+    function adjustActionCardHeight(actionId, delta) {
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+      let currentH = parseInt(action.custom_height, 10);
+      if (!currentH) {
+        const cardEl = document.querySelector(`[data-action-id="${actionId}"]`);
+        currentH = cardEl ? cardEl.offsetHeight : 400;
+      }
+      const newH = Math.max(160, Math.min(1400, currentH + delta));
+      action.custom_height = newH;
+      window.cachedActionsList = currentList;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentList)); } catch(e){}
+      renderActions(currentList);
+      syncFullActionsToCloud(currentList);
+    }
+    window.adjustActionCardHeight = adjustActionCardHeight;
+
+    function resetActionCardHeight(actionId) {
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+      action.custom_height = '';
+      window.cachedActionsList = currentList;
+      try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentList)); } catch(e){}
+      renderActions(currentList);
+      syncFullActionsToCloud(currentList);
+      showAppToast('Hauteur automatique rétablie.', 'info', 1500);
+    }
+    window.resetActionCardHeight = resetActionCardHeight;
+
+    let activeResizeCard = null;
+    function startCardMouseResize(e, actionId) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const card = document.querySelector(`[data-action-id="${actionId}"]`);
+      if (!card) return;
+
+      const currentList = window.cachedActionsList || defaultActions;
+      const action = currentList.find(a => (a.id || '') === actionId);
+      if (!action) return;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startHeight = card.offsetHeight;
+      const startWidth = card.offsetWidth;
+      let currentSpan = parseInt(action.grid_cols, 10) || 1;
+      let newHeight = startHeight;
+      let newSpan = currentSpan;
+
+      card.style.transition = 'none';
+
+      function onMouseMove(ev) {
+        const deltaY = ev.clientY - startY;
+        const deltaX = ev.clientX - startX;
+
+        newHeight = Math.max(160, Math.min(1400, startHeight + deltaY));
+        card.style.minHeight = newHeight + 'px';
+        card.style.height = newHeight + 'px';
+
+        if (deltaX > 220 && currentSpan === 1) {
+          newSpan = 2;
+        } else if (deltaX > 480) {
+          newSpan = 3;
+        } else if (deltaX < -150 && currentSpan > 1) {
+          newSpan = 1;
+        }
+      }
+
+      function onMouseUp() {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        card.style.transition = '';
+
+        action.custom_height = Math.round(newHeight);
+        if (newSpan !== currentSpan) {
+          action.grid_cols = newSpan;
+        }
+        window.cachedActionsList = currentList;
+        try { localStorage.setItem('ictgc_actions_cache', JSON.stringify(currentList)); } catch(err){}
+        renderActions(currentList);
+        syncFullActionsToCloud(currentList);
+        showAppToast(`Dimensions carte sauvegardées (${Math.round(newHeight)}px)`, 'info', 1500);
+      }
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+    window.startCardMouseResize = startCardMouseResize;
+
     function closeActionStyleModal() {
       document.getElementById('action-style-modal').classList.add('hidden');
       currentStyleActionId = null;
@@ -4369,7 +4439,7 @@
           const tit = (a.title || '').toLowerCase();
           return t === 'financiere' || c.includes('financ') || c.includes('autofinance') || c.includes('culture') || c.includes('loisir') || tit.includes('midnight') || tit.includes('pool') || tit.includes('gala');
         });
-        // Recent action first in financial feed
+        
         filteredData.sort((a, b) => {
           if (a.is_news && !b.is_news) return -1;
           if (!a.is_news && b.is_news) return 1;
@@ -4383,14 +4453,14 @@
           const isFin = t === 'financiere' || c.includes('financ') || c.includes('autofinance') || tit.includes('midnight');
           return !isFin || t === 'humanitaire';
         });
-        // Recent action first in humanitarian feed
+        
         filteredData.sort((a, b) => {
           if (a.is_news && !b.is_news) return -1;
           if (!a.is_news && b.is_news) return 1;
           return 0;
         });
       } else {
-        // 'all': Humanitarian actions are placed before financial actions by default
+        
         filteredData = [...data].sort((a, b) => {
           if (a.is_news && !b.is_news) return -1;
           if (!a.is_news && b.is_news) return 1;
@@ -4451,15 +4521,13 @@
         const description = (a.description || 'Action menée par l\'Interact Club Tunis Golfe Carthagène.').trim();
         const lang = window.currentAppLanguage || 'fr';
         const dict = (typeof I18N_DICT !== 'undefined' && I18N_DICT[lang]) ? I18N_DICT[lang] : I18N_DICT.fr;
-        const dyn = (typeof aiTranslateDynamicAction === 'function') ? aiTranslateDynamicAction({ ...a, id: actionId, title, category, location, beneficiary_unit: a.beneficiary_unit, description }, lang) : {};
+        const dyn = (typeof translateDynamicAction === 'function') ? translateDynamicAction({ ...a, id: actionId, title, category, location, beneficiary_unit: a.beneficiary_unit, description }, lang) : {};
         let displayTitle = dyn.title || title;
         let displayDesc = dyn.description || description;
         let displayCat = dyn.category || category;
         let displayLoc = dyn.location || location;
         let displayUnit = dyn.unit || a.beneficiary_unit || (lang === 'ar' ? 'مستفيد' : (lang === 'en' ? 'beneficiaries' : 'bénéficiaires'));
 
-
-        // Render Album Preview depending on photo count (Completely removed 'Action Solidaire ICTGC' tag)
         let albumPreviewHtml = '';
         if (images.length === 0) {
           albumPreviewHtml = isAdminLoggedIn ? `
@@ -4551,15 +4619,18 @@
         const isDark = hasGradient && !cardGradient.includes('#ffffff') && !cardGradient.includes('#f8fafc');
 
         const cardBgClass = hasGradient ? '' : 'bg-white';
-        const cardStyleAttr = hasGradient ? `style="background: ${cardGradient};"` : '';
         const titleColorClass = isDark ? 'text-white' : 'text-slate-900';
         const descColorClass = isDark ? 'text-slate-200' : 'text-slate-600';
         const locColorClass = isDark ? 'text-slate-300' : 'text-slate-400';
         const borderClass = isDark ? 'border-white/20 shadow-lg' : 'border-slate-200 shadow-sm';
         const catBadgeClass = isDark ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs' : 'bg-blue-50 text-blue-700 border border-blue-200';
 
+        const spanCols = span === 3 ? 'action-card col-span-3 col-span-full' : (span === 2 ? 'action-card col-span-2' : 'action-card');
+        const cardHeight = parseInt(a.custom_height, 10);
+        const cardHeightStyle = (cardHeight && cardHeight >= 140) ? ` min-height: ${cardHeight}px;` : '';
+
         return `
-          <div data-action-id="${actionId}" class="${spanClass} p-5 sm:p-6 ${cardBgClass} rounded-3xl border ${borderClass} action-card-hover hover:shadow-xl flex flex-col justify-between h-full action-card-animated ${a.is_news ? 'ring-2 ring-rose-500/35 border-rose-400/80 shadow-lg shadow-rose-950/10' : ''}" style="animation-delay: ${i * 45}ms;${hasGradient ? ` background: ${cardGradient};` : ''}" ${isAdminLoggedIn ? `draggable="true" ondragstart="handleActionDragStart(event, '${actionId}')" ondragover="handleActionDragOver(event)" ondragenter="handleActionDragEnter(event)" ondragleave="handleActionDragLeave(event)" ondrop="handleActionDrop(event, '${actionId}')" ondragend="handleActionDragEnd(event)" style="cursor: grab;" title="Glissez-déposez pour déplacer l'action"` : ''}>
+          <div data-action-id="${actionId}" class="${spanCols} p-5 sm:p-6 ${cardBgClass} rounded-3xl border ${borderClass} action-card-hover hover:shadow-xl flex flex-col justify-between action-card-animated relative ${a.is_news ? 'ring-2 ring-rose-500/35 border-rose-400/80 shadow-lg shadow-rose-950/10' : ''}" style="animation-delay: ${i * 45}ms;${hasGradient ? ` background: ${cardGradient};` : ''}${cardHeightStyle}" ${isAdminLoggedIn ? `draggable="true" ondragstart="handleActionDragStart(event, '${actionId}')" ondragover="handleActionDragOver(event)" ondragenter="handleActionDragEnter(event)" ondragleave="handleActionDragLeave(event)" ondrop="handleActionDrop(event, '${actionId}')" ondragend="handleActionDragEnd(event)" style="cursor: grab;" title="Glissez-déposez pour déplacer l'action"` : ''}>
             <div>
               ${a.is_news ? `
                 <div class="mb-3 flex items-center justify-between">
@@ -4575,25 +4646,29 @@
                 
                 <div class="flex items-center gap-1.5 flex-wrap">
                   ${isAdminLoggedIn ? `
-                    <!-- Move Action ◀ / ▶ -->
+                    
                     <div class="inline-flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200" title="Déplacer l'action dans la liste">
                       <button type="button" onclick="moveAction('${actionId}', -1)" class="px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-700 hover:bg-slate-200" title="Déplacer vers la gauche / avant">◀</button>
                       <button type="button" onclick="moveAction('${actionId}', 1)" class="px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-700 hover:bg-slate-200" title="Déplacer vers la droite / après">▶</button>
                     </div>
 
-                    <!-- Action Grid Size Toggle -->
                     <div class="inline-flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200" title="Modifier la largeur de la carte dans la grille">
-                      <button type="button" onclick="updateActionSize('${actionId}', 1)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 1 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">1 col</button>
-                      <button type="button" onclick="updateActionSize('${actionId}', 2)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 2 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">2 cols</button>
-                      <button type="button" onclick="updateActionSize('${actionId}', 3)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 3 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">Plein</button>
+                      <button type="button" onclick="setActionCardSpan('${actionId}', 1)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 1 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">1 col</button>
+                      <button type="button" onclick="setActionCardSpan('${actionId}', 2)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 2 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">2 cols</button>
+                      <button type="button" onclick="setActionCardSpan('${actionId}', 3)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${span === 3 ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">Plein</button>
                     </div>
 
-                    <!-- News Toggle Button -->
+                    <div class="inline-flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 gap-0.5" title="Ajuster la hauteur de la carte">
+                      <button type="button" onclick="adjustActionCardHeight('${actionId}', -40)" class="px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-700 hover:bg-slate-200" title="Diminuer hauteur (-40px)">-</button>
+                      <button type="button" onclick="const h = prompt('Entrez la hauteur en pixels (ex: 350) ou laissez vide pour automatique :', '${cardHeight || ''}'); if(h !== null) setActionCardHeight('${actionId}', h);" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${cardHeight ? 'bg-blue-600 text-white' : 'text-slate-700 hover:bg-slate-200'}" title="Cliquer pour entrer un nombre exact en pixels">${cardHeight ? cardHeight + 'px' : 'H: Auto'}</button>
+                      <button type="button" onclick="adjustActionCardHeight('${actionId}', 40)" class="px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-700 hover:bg-slate-200" title="Augmenter hauteur (+40px)">+</button>
+                      ${cardHeight ? `<button type="button" onclick="resetActionCardHeight('${actionId}')" class="px-1 text-[9px] font-bold text-slate-400 hover:text-rose-600" title="Rétablir hauteur automatique">✕</button>` : ''}
+                    </div>
+
                     <button type="button" onclick="toggleActionAsNews('${actionId}')" class="px-2 py-1 rounded-lg text-[10px] font-bold ${a.is_news ? 'bg-rose-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200'}" title="Définir comme Dernière Action (mise en 1ère place)">
                       ${a.is_news ? '🔥 Dernière action' : '☆ Marquer récente'}
                     </button>
 
-                    <!-- Gradient / Style Button -->
                     <button type="button" onclick="openActionStyleModal('${actionId}')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-blue-900 border border-slate-200 flex items-center gap-1" title="Personnaliser les couleurs et dégradé de la boîte">
                       <span>🎨</span> <span>Dégradé</span>
                     </button>
@@ -4607,11 +4682,9 @@
 
               <h3 data-edit-key="action-title-${actionId}" class="editable-field text-lg font-black ${titleColorClass} mb-2 leading-snug">${displayTitle}</h3>
               <p data-edit-key="action-desc-${actionId}" class="editable-field text-xs ${descColorClass} leading-relaxed mb-4">${displayDesc}</p>
-              
-              <!-- Album Preview -->
+
               ${albumPreviewHtml}
 
-              <!-- Album Controls Bar -->
               ${images.length > 0 ? `
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pt-1">
                   <button onclick="openActionAlbumLightbox('${actionId}', 0)" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition-all border border-blue-200/70 shadow-2xs">
@@ -4632,7 +4705,6 @@
               ` : ''}
             </div>
 
-            <!-- Collaboration Mention & Admin Controls -->
             ${(hasCollab || isAdminLoggedIn) ? `
               <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] gap-2">
                 <div class="flex items-center gap-1.5 flex-wrap">
@@ -4642,9 +4714,14 @@
                   ` : `<span class="text-slate-400 italic">${dict.noCollab || "Aucune collaboration renseignée"}</span>`}
                 </div>
                 ${isAdminLoggedIn ? `
-                  <button type="button" onclick="openActionCollabModal('${actionId}')" class="text-xs text-blue-600 hover:text-blue-800 font-bold hover:underline flex items-center gap-1 flex-shrink-0" title="Modifier, ajouter ou retirer la collaboration">
-                    <span>✏️</span> ${hasCollab ? 'Modifier' : '+ Collaborer'}
-                  </button>
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="openActionCollabModal('${actionId}')" class="text-xs text-blue-600 hover:text-blue-800 font-bold hover:underline flex items-center gap-1 flex-shrink-0" title="Modifier, ajouter ou retirer la collaboration">
+                      <span>✏️</span> ${hasCollab ? 'Modifier' : '+ Collaborer'}
+                    </button>
+                    <div class="action-card-resizer" onmousedown="startCardMouseResize(event, '${actionId}')" title="Glissez avec la souris pour redimensionner (Hauteur & Largeur)">
+                      <svg class="w-3.5 h-3.5 ${isDark ? 'text-white/60' : 'text-slate-400'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15l-6 6M21 9l-12 12M21 3l-18 18"/></svg>
+                    </div>
+                  </div>
                 ` : ''}
               </div>
             ` : ''}
@@ -4761,7 +4838,6 @@
               ` : ''}
             </div>
 
-            <!-- Social Links (Instagram & Facebook) -->
             <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5 flex-wrap min-h-[34px]">
               <div class="flex items-center gap-1.5 flex-wrap">
                 ${(!m.instagram && !m.facebook && !isAdminLoggedIn) ? `<span class="text-[10px] text-slate-400 font-medium italic">Interact Club Tunis Golfe Carthagène</span>` : ''}
@@ -4901,7 +4977,6 @@
                 ` : ''}
               </div>
 
-              <!-- Social Links in Duo -->
               <div class="mt-2 flex items-center justify-between gap-1 flex-wrap">
                 <div class="flex items-center gap-1 flex-wrap">
                   ${m.instagram ? `
@@ -5405,7 +5480,6 @@
       `).join('');
     }
 
-    
     async function toggleMemberAdminAccess(memberId) {
       const list = [...(window.allMembersList || defaultMembers)];
       const member = list.find(m => m.id === memberId);
@@ -5556,7 +5630,6 @@
         updatedAt: new Date().toISOString()
       };
 
-      // 1. Immediately update in-memory lists
       const activeList = window.allMembersList || defaultMembers;
       const targetId = memberId || `mem-${Date.now()}`;
       const memIdx = activeList.findIndex(m => m.id === targetId || (memberId && m.id === memberId));
@@ -5575,21 +5648,17 @@
 
       window.allMembersList = activeList;
 
-      // 2. Persist to localStorage immediately
       try {
         localStorage.setItem('ictgc_members_cache', JSON.stringify(activeList));
       } catch (err) {}
 
-      // 3. Render immediately in CRM table and leaderboard
       renderMembersTable(activeList);
       renderLeaderboard(activeList);
 
-      // 4. Update member view if current logged-in user
       if (currentLoggedMember && (currentLoggedMember.id === targetId || (currentLoggedMember.email && currentLoggedMember.email.toLowerCase() === memberData.email))) {
         setMemberActive({ ...currentLoggedMember, ...memberData });
       }
 
-      // 5. Persist to Firestore with setDoc merge: true (never fails even if doc did not exist!)
       if (window.firestoreDb && window.fs) {
         try {
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "members", targetId), memberData, { merge: true });
@@ -5633,10 +5702,6 @@
       });
     }
 
-    
-    // ==========================================
-    // TRILINGUAL SYSTEM (FR / EN / AR) + AI TRANSLATION
-    // ==========================================
     window.currentAppLanguage = localStorage.getItem('ictgc_lang') || 'fr';
 
     const I18N_DICT = {
@@ -6125,7 +6190,6 @@
         .normalize("NFD").replace(/[̀-ͯ]/g, "")
         .replace(/\s+/g, ' ');
 
-      // Check deputies first (before general titles)
       if (lower.includes("adjoint") || lower.includes("adjointe")) {
         if (lower.includes("secretaire")) {
           return targetLang === 'ar' ? "مساعد الكاتب العام" : "Deputy Secretary General";
@@ -6138,75 +6202,65 @@
         }
       }
 
-      // Past President
       if (lower.includes("past president") || lower.includes("past presidente")) {
         return targetLang === 'ar' ? "الرئيس السابق" : "Immediate Past President";
       }
 
-      // Vice-President
       if (lower.includes("vice-presidente") || lower.includes("vice presidente") || lower.includes("vice-president") || lower.includes("vice president")) {
         return targetLang === 'ar' ? "نائبة الرئيسة" : "Vice-President";
       }
 
-      // President
       if (lower === "presidente" || lower === "president") {
         return targetLang === 'ar' ? "الرئيسة" : "President";
       }
 
-      // Secretary General
       if (lower.includes("secretaire general")) {
         return targetLang === 'ar' ? "الكاتب العام" : "Secretary General";
       }
 
-      // Treasurer General
       if (lower.includes("tresoriere generale") || lower.includes("tresorier general")) {
         return targetLang === 'ar' ? "أمينة المال" : "Treasurer General";
       }
 
-      // Head of Protocol
       if (lower.includes("chef du protocole") || lower.includes("cheffe du protocole") || lower.includes("chef du protocol")) {
         return targetLang === 'ar' ? "رئيس التشريفات والمراسم" : "Head of Protocol";
       }
 
-      // CNIT
       if (lower.includes("cnit")) {
         return targetLang === 'ar' ? "ممثل النادي لدى التنسيقية الوطنية" : "CNIT Representative";
       }
 
-      // Advisor
       if (lower.includes("conseillere generale") || lower.includes("conseiller general")) {
         return targetLang === 'ar' ? "المستشارة العامة" : "General Advisor";
       }
-      
-      // Commissions:
-      // CIP
+
       if (lower.includes("interet public") || lower.includes("cip")) {
         if (lower.includes("co-chef") || lower.includes("co chef") || lower.includes("co-cheffe") || lower.includes("co cheffe")) {
           return targetLang === 'ar' ? "رئيس مساعد للجنة المصلحة العامة (CIP)" : "Co-Head of Public Interest Commission (CIP)";
         }
         return targetLang === 'ar' ? "رئيس لجنة المصلحة العامة (CIP)" : "Head of Public Interest Commission (CIP)";
       }
-      // CRIE
+      
       if (lower.includes("relations internes") || lower.includes("crie")) {
         return targetLang === 'ar' ? "رئيسة لجنة العلاقات العامة والاتصال (CRIE)" : "Head of Relations Commission (CRIE)";
       }
-      // CRH
+      
       if (lower.includes("ressources humaines") || lower.includes("crh")) {
         return targetLang === 'ar' ? "رئيسة لجنة الموارد البشرية (CRH)" : "Head of Human Resources Commission (CRH)";
       }
-      // Finances
+      
       if (lower.includes("finance")) {
         return targetLang === 'ar' ? "رئيسة لجنة المالية والتمويل" : "Head of Finance Commission";
       }
-      // International
+      
       if (lower.includes("international")) {
         return targetLang === 'ar' ? "رئيس لجنة الأنشطة الدولية" : "Head of International Actions Commission";
       }
-      // Media
+      
       if (lower.includes("media") || lower.includes("mediatisation")) {
         return targetLang === 'ar' ? "رئيسة لجنة الإعلام والتوثيق" : "Head of Media Commission";
       }
-      // Camaraderie
+      
       if (lower.includes("camaraderie")) {
         return targetLang === 'ar' ? "رئيس لجنة الزمالة والأنشطة" : "Head of Fellowship Commission";
       }
@@ -6318,7 +6372,7 @@ const ACTIONS_I18N = {
     };
     window.ACTIONS_I18N = ACTIONS_I18N;
 
-    function aiTranslateDynamicAction(action, lang) {
+    function translateDynamicAction(action, lang) {
       if (!action) return {};
       const id = action.id || '';
       const meta = ACTIONS_I18N[id];
@@ -6332,7 +6386,6 @@ const ACTIONS_I18N = {
         };
       }
 
-      // Keyword-based fallback for custom actions
       let title = action.title || '';
       let category = action.category || '';
       let location = action.location || '';
@@ -6341,7 +6394,6 @@ const ACTIONS_I18N = {
 
       if (lang === 'fr') return { title, category, location, unit, description: desc };
 
-      // Category translation
       if (typeof CATEGORY_I18N !== 'undefined' && CATEGORY_I18N[category] && CATEGORY_I18N[category][lang]) {
         category = CATEGORY_I18N[category][lang];
       } else if (category.toLowerCase().includes('humanitaire')) {
@@ -6350,12 +6402,10 @@ const ACTIONS_I18N = {
         category = lang === 'ar' ? 'المصلحة العامة والتضامن' : 'Public Interest & Solidarity';
       }
 
-      // Location translation
       if (location.includes('Tunisie')) {
         location = lang === 'ar' ? location.replace('Tunisie', 'تونس') : location.replace('Tunisie', 'Tunisia');
       }
 
-      // Unit translation
       const uLower = unit.toLowerCase();
       if (uLower.includes('eleve') || uLower.includes('élève')) {
         unit = lang === 'ar' ? 'تلميذ' : 'students';
@@ -6367,7 +6417,6 @@ const ACTIONS_I18N = {
         unit = lang === 'ar' ? 'عائلة' : 'families';
       }
 
-      // Title translation
       const tLower = title.toLowerCase();
       if (tLower.includes('mouled 2')) {
         title = lang === 'ar' ? 'مبادرة المولد النبوي 2.0' : 'Mawlid Joy Campaign 2.0';
@@ -6381,7 +6430,7 @@ const ACTIONS_I18N = {
 
       return { title, category, location, unit, description: desc };
     }
-    window.aiTranslateDynamicAction = aiTranslateDynamicAction;
+    window.translateDynamicAction = translateDynamicAction;
 
 const CATEGORY_I18N = {
       "Intérêt Public & Solidarité": { en: "Public Interest & Solidarity", ar: "المصلحة العامة والتضامن" },
@@ -6403,11 +6452,9 @@ const CATEGORY_I18N = {
         window.ICTGC_Analytics.logAction('Changement de langue : ' + (lang === 'ar' ? 'العربية' : lang.toUpperCase()), 'interaction');
       }
 
-      // 1. Update HTML dir and lang attributes
       document.documentElement.lang = lang;
       document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
 
-      // 2. Update language switcher pill buttons
       ['fr', 'en', 'ar'].forEach(l => {
         const btn = document.getElementById(`lang-btn-${l}`);
         if (!btn) return;
@@ -6418,7 +6465,6 @@ const CATEGORY_I18N = {
         }
       });
 
-      // 3. Translate all elements with data-i18n
       const dict = I18N_DICT[lang] || I18N_DICT.fr;
       document.querySelectorAll('[data-i18n], [data-site]').forEach(el => {
         const key = el.getAttribute('data-i18n') || el.getAttribute('data-site');
@@ -6427,13 +6473,11 @@ const CATEGORY_I18N = {
         }
       });
 
-      // 4. Translate editable fields with fallback
       for (const [key, val] of Object.entries(dict)) {
         const el = document.querySelector(`[data-edit-key="${key}"]`);
         if (el) el.textContent = val;
       }
 
-      // 5. Rerender dynamic lists with language adaptation
       if (window.cachedMetrics) renderMetrics(window.cachedMetrics);
       else if (typeof defaultMetrics !== 'undefined') renderMetrics(defaultMetrics);
 
@@ -6462,7 +6506,7 @@ const CATEGORY_I18N = {
         if (!val) continue;
         const el = document.querySelector(`[data-edit-key="${key}"]`) || document.getElementById(key);
         if (el) {
-          // Numbers, counters, and follower counts apply across ALL languages
+          
           if (key.startsWith('metric-val-') || key.startsWith('header-')) {
             el.innerText = val;
             continue;
@@ -6566,7 +6610,6 @@ const CATEGORY_I18N = {
                            email === 'yessine.benfraj@ictgc.org';
       const isAdminPass = password === 'ictgc2026' || password === 'ictgc' || password === 'admin';
 
-      // 1. Direct super-admin credentials check
       if (isAdminEmail && isAdminPass) {
         isAdminLoggedIn = true;
         closeInternalPortal();
@@ -6584,7 +6627,6 @@ const CATEGORY_I18N = {
         return;
       }
 
-      // 2. Lookup in Firestore and default members
       let found = null;
       if (window.firestoreDb && window.fs) {
         try {
@@ -6617,7 +6659,6 @@ const CATEGORY_I18N = {
         return;
       }
 
-      // 3. Check if user has been granted admin privileges
       let adminEmails = [];
       try { adminEmails = JSON.parse(localStorage.getItem('ictgc_admin_emails')) || []; } catch(e){}
       const isGrantedAdmin = Boolean(found.is_admin || found.role === 'admin' || adminEmails.includes(email));
@@ -6640,7 +6681,6 @@ const CATEGORY_I18N = {
         return;
       }
 
-      // 4. Ordinary Member Login ONLY (No admin privileges)
       isAdminLoggedIn = false;
       document.getElementById('admin-floating-bar').classList.add('hidden');
       document.getElementById('admin-actions-controls').classList.add('hidden');
@@ -6661,7 +6701,6 @@ const CATEGORY_I18N = {
     window.handleMemberLogin = handleUnifiedLogin;
     window.handleAdminLogin = handleUnifiedLogin;
 
-    
     function toggleInlineEdit() {
       if (!isAdminLoggedIn) {
         openInternalPortal();
@@ -6749,7 +6788,6 @@ const CATEGORY_I18N = {
     }
     window.showAppToast = showAppToast;
 
-    // In-Web Alert & Confirmation Engine (Zero native browser dialog popups)
     window.alert = function(msg) {
       if (typeof showAppToast === 'function') {
         showAppToast(String(msg), 'info', 4000);
@@ -6812,14 +6850,12 @@ const CATEGORY_I18N = {
       if (!key) return;
       const text = el.innerText.trim();
 
-      // 1. Update localStorage and memory cache immediately
       if (!window.cachedSiteContent) window.cachedSiteContent = {};
       window.cachedSiteContent[key] = text;
       try {
         localStorage.setItem('ictgc_site_content', JSON.stringify(window.cachedSiteContent));
       } catch (e) {}
 
-      // 2. Sync to Firestore siteContent/main
       if (window.firestoreDb && window.fs) {
         try {
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
@@ -6829,7 +6865,6 @@ const CATEGORY_I18N = {
           console.warn("Auto-save siteContent error:", err);
         }
 
-        // 3. If element is part of a Bureau Member, sync document and auto-sync avatar to name!
         if (key.startsWith('bureau-name-') || key.startsWith('bureau-role-')) {
           const memberId = key.replace('bureau-name-', '').replace('bureau-role-', '');
           const isName = key.startsWith('bureau-name-');
@@ -6839,7 +6874,6 @@ const CATEGORY_I18N = {
             if (isName) { member.fullName = text; member.full_name = text; }
             else { member.role = text; }
 
-            // If using default photo (no custom URL), regenerate avatar matching new name immediately!
             if (!member.photo_url || !member.photo) {
               const imgEl = document.getElementById(`bureau-img-${memberId}`);
               if (imgEl && imgEl.getAttribute('data-has-custom') !== 'true') {
@@ -6860,7 +6894,6 @@ const CATEGORY_I18N = {
           }
         }
 
-        // 4. If element is part of an Action, also sync the actions document directly!
         if (key.startsWith('action-title-') || key.startsWith('action-desc-') || key.startsWith('action-cat-') || key.startsWith('action-loc-')) {
           let field = 'title';
           if (key.startsWith('action-desc-')) field = 'description';
@@ -7062,7 +7095,6 @@ const CATEGORY_I18N = {
         }
       }
 
-      // Prepend to current list and merge safely
       const currentList = window.cachedActionsList || [...defaultActions];
       currentList.unshift(newAction);
       const updated = mergeAndSyncActions(currentList, 'user-create');
@@ -7072,7 +7104,6 @@ const CATEGORY_I18N = {
       form.reset();
       showAppToast("Action publiée et synchronisée avec succès !", "success");
 
-      // Switch to public view and scroll directly to the newly added action so it is never missed
       showView('public-view', 'actions-section');
       setTimeout(() => {
         const newCard = document.querySelector(`[data-action-id="${newAction.id}"]`);
@@ -7211,10 +7242,7 @@ const CATEGORY_I18N = {
 
     window.initCloudSync = initCloudSync;
     initCloudSync();
-  
-    // --- Image Compression & Management (Full Transparency & No-Background Support) ---
-    
-    // --- Universal Edge-Connected Flood-Fill Background Removal ---
+
     function removeBackgroundFromCanvas(canvas) {
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
@@ -7245,7 +7273,6 @@ const CATEGORY_I18N = {
       const visited = new Uint8Array(w * h);
       const queue = [];
 
-      // Seed all 4 borders
       for (let x = 0; x < w; x++) {
         queue.push(x, 0);
         queue.push(x, h - 1);
@@ -7278,7 +7305,7 @@ const CATEGORY_I18N = {
                            (isCornerLight && r >= 220 && g >= 220 && b >= 220);
 
         if (isMatching) {
-          data[dIdx + 3] = 0; // Pure Transparent
+          data[dIdx + 3] = 0; 
           if (x > 0 && !visited[pIdx - 1]) queue.push(x - 1, y);
           if (x < w - 1 && !visited[pIdx + 1]) queue.push(x + 1, y);
           if (y > 0 && !visited[pIdx - w]) queue.push(x, y - 1);
@@ -7291,17 +7318,16 @@ const CATEGORY_I18N = {
     }
     window.removeBackgroundFromCanvas = removeBackgroundFromCanvas;
 
-    function compressImageFile(file, maxWidth = 600, maxHeight = 600, quality = 0.85) {
+    function compressImageFile(file, maxWidth = 800, maxHeight = 800, quality = 0.82) {
       return new Promise((resolve, reject) => {
         if (!file || !file.type.startsWith('image/')) {
-          return reject(new Error('Le fichier sélectionné n\'est pas une image valide.'));
+          return reject(new Error('Fichier image invalide.'));
         }
 
-        // SVG files are already scalable vector format with native transparency
         if (file.type === 'image/svg+xml') {
           const reader = new FileReader();
           reader.onload = (e) => resolve(e.target.result);
-          reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier SVG.'));
+          reader.onerror = () => reject(new Error('Erreur lecture SVG.'));
           reader.readAsDataURL(file);
           return;
         }
@@ -7328,11 +7354,9 @@ const CATEGORY_I18N = {
             canvas.height = height;
             const ctx = canvas.getContext('2d');
 
-            // Clear transparently (never black)
             ctx.clearRect(0, 0, width, height);
             ctx.drawImage(img, 0, 0, width, height);
 
-            // Detect if image actually has any transparent pixels (alpha < 250)
             let hasAlpha = false;
             try {
               const imgData = ctx.getImageData(0, 0, width, height).data;
@@ -7346,19 +7370,20 @@ const CATEGORY_I18N = {
               hasAlpha = isTransparentType;
             }
 
-            // Export as pure PNG to preserve 100% alpha transparency
-            const dataUrl = canvas.toDataURL('image/png');
-            resolve(dataUrl);
+            if (hasAlpha) {
+              resolve(canvas.toDataURL('image/png'));
+            } else {
+              resolve(canvas.toDataURL('image/jpeg', quality));
+            }
           };
-          img.onerror = () => reject(new Error('Erreur de décodage de l\'image.'));
+          img.onerror = () => reject(new Error('Erreur de décodage image.'));
           img.src = e.target.result;
         };
-        reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier.'));
+        reader.onerror = () => reject(new Error('Erreur lecture fichier.'));
         reader.readAsDataURL(file);
       });
     }
 
-    // --- Photo Manager Modal Logic ---
     window.activePhotoModalTarget = null;
     window.currentModalPhotoValue = '';
 
@@ -7584,7 +7609,6 @@ const CATEGORY_I18N = {
     }
     window.deleteActionDoc = deleteActionDoc;
 
-    // --- Action Album Lightbox Controller ---
     let currentLightboxAction = null;
     let currentLightboxIndex = 0;
 
@@ -7712,7 +7736,6 @@ const CATEGORY_I18N = {
       else if (e.key === 'ArrowRight') nextLightboxPhoto();
     });
 
-    // --- Action Grid Sizing & Collaboration Controllers ---
     function updateActionSize(actionId, cols) {
       const list = window.cachedActionsList || defaultActions;
       const action = list.find(a => (a.id || '') === actionId);
@@ -7723,7 +7746,7 @@ const CATEGORY_I18N = {
         showAppToast(`Taille de l'action mise à jour (${cols} colonne${cols > 1 ? 's' : ''}) !`, "success");
       }
     }
-    window.updateActionSize = updateActionSize;
+    window.updateActionSize = setActionCardSpan;
 
     let currentActionCollabId = null;
 
@@ -7790,7 +7813,6 @@ const CATEGORY_I18N = {
     }
     window.clearActionCollab = clearActionCollab;
 
-    // --- Interactive Canvas Cropper & Rotator Controller ---
     const cropperState = {
       img: null,
       originalImg: null,
@@ -7982,7 +8004,6 @@ const CATEGORY_I18N = {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, cw, ch);
 
-      // Draw subtle light transparency checkerboard behind image
       const box = getCropperBox(cw, ch);
       const checkerSize = 14;
       for (let x = box.x; x < box.w + box.x; x += checkerSize) {
@@ -7994,7 +8015,6 @@ const CATEGORY_I18N = {
         }
       }
 
-      // 1. Draw transformed image
       ctx.save();
       ctx.translate(cw / 2 + cropperState.panX, ch / 2 + cropperState.panY);
       ctx.rotate((cropperState.rotation * Math.PI) / 180);
@@ -8008,20 +8028,16 @@ const CATEGORY_I18N = {
       ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
       ctx.restore();
 
-      // 2. Crop Window Mask
-      // Dark translucent overlay outside crop box
       ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
       ctx.fillRect(0, 0, cw, box.y);
       ctx.fillRect(0, box.y + box.h, cw, ch - (box.y + box.h));
       ctx.fillRect(0, box.y, box.x, box.h);
       ctx.fillRect(box.x + box.w, box.y, cw - (box.x + box.w), box.h);
 
-      // Crop box border
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2;
       ctx.strokeRect(box.x, box.y, box.w, box.h);
 
-      // Rule of thirds grid lines
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -8035,7 +8051,6 @@ const CATEGORY_I18N = {
       ctx.lineTo(box.x + box.w, box.y + (box.h * 2) / 3);
       ctx.stroke();
 
-      // Corner handles
       const handleSize = 12;
       ctx.fillStyle = '#0284c7';
       ctx.fillRect(box.x - 2, box.y - 2, handleSize, 4);
@@ -8106,7 +8121,7 @@ const CATEGORY_I18N = {
       const box = getCropperBox(cw, ch);
 
       const exportCanvas = document.createElement('canvas');
-      // Limit avatar / photo output to max 480px so Base64 PNG stays under ~70KB (well within Firestore 1MB ceiling)
+      
       const maxDim = 480;
       let outW = Math.round(box.w);
       let outH = Math.round(box.h);
@@ -8122,7 +8137,7 @@ const CATEGORY_I18N = {
       exportCanvas.width = Math.max(100, outW);
       exportCanvas.height = Math.max(100, outH);
       const eCtx = exportCanvas.getContext('2d');
-      // Clear transparently
+      
       eCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
 
       eCtx.save();
@@ -8143,7 +8158,6 @@ const CATEGORY_I18N = {
       eCtx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
       eCtx.restore();
 
-      // Detect if cropped result contains transparent / no background pixels
       let hasAlpha = Boolean(cropperState.preserveAlpha || cropperState.hasTransparentBg);
       try {
         const pData = eCtx.getImageData(0, 0, exportCanvas.width, exportCanvas.height).data;
@@ -8155,7 +8169,6 @@ const CATEGORY_I18N = {
         }
       } catch(e) {}
 
-      // If transparent, export as image/png to preserve alpha transparency, else image/jpeg
       const croppedDataUrl = exportCanvas.toDataURL('image/png');
       const cb = cropperState.callback;
       closeImageCropper();
@@ -8195,8 +8208,6 @@ const CATEGORY_I18N = {
     }
     window.removeSolidBackgroundFromCropper = removeSolidBackgroundFromCropper;
 
-
-    // --- Bureau Member Socials Controller ---
     let currentBureauSocialsId = null;
 
     function openBureauSocialsModal(mId, name) {
@@ -8270,8 +8281,6 @@ const CATEGORY_I18N = {
     }
     window.clearBureauSocials = clearBureauSocials;
 
-
-
     function cropCurrentPhotoModal() {
       if (!window.currentModalPhotoValue) {
         showAppToast("Veuillez d'abord choisir ou déposer une image.", "info");
@@ -8321,7 +8330,6 @@ const CATEGORY_I18N = {
     }
     window.removeBackgroundFromCurrentModalPhoto = removeBackgroundFromCurrentModalPhoto;
 
-
     function cropWorkingAlbumPhoto(idx) {
       if (!workingAlbumImages[idx]) return;
       openImageCropper(workingAlbumImages[idx], (newUrl) => {
@@ -8345,7 +8353,6 @@ const CATEGORY_I18N = {
     }
     window.cropNewBureauPhoto = cropNewBureauPhoto;
 
-    // --- Partners & Sponsors Controller ---
     function renderPartners(data) {
       if (!Array.isArray(data)) return;
       window.cachedPartnersList = data;
@@ -8411,19 +8418,17 @@ const CATEGORY_I18N = {
     }
     window.renderPartners = renderPartners;
 
-    // Boot trilingual preference
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('ictgc_lang') || 'fr';
       if (typeof setAppLanguage === 'function') setAppLanguage(savedLang);
       if (typeof updateRecruitmentUI === 'function') updateRecruitmentUI();
       if (typeof handleAppRouting === 'function') handleAppRouting();
     });
-    // Fallback if DOMContentLoaded already fired
+    
     if (document.readyState !== 'loading') {
       if (typeof updateRecruitmentUI === 'function') updateRecruitmentUI();
       if (typeof handleAppRouting === 'function') handleAppRouting();
     }
-
 
     async function syncFullPartnersToCloud(list) {
       if (!Array.isArray(list)) return;
@@ -8601,7 +8606,6 @@ const CATEGORY_I18N = {
     }
     window.removePartnerModalLogoBackground = removePartnerModalLogoBackground;
 
-
     function cropPartnerLogo(partnerId) {
       const list = window.cachedPartnersList || defaultPartners;
       const p = list.find(item => item.id === partnerId);
@@ -8685,8 +8689,6 @@ const CATEGORY_I18N = {
     }
     window.deletePartnerDoc = deletePartnerDoc;
 
-
-    // --- Action Album Manager & Bulk Importer ---
     let activeAlbumActionId = null;
     let workingAlbumImages = [];
 
@@ -8847,7 +8849,7 @@ const CATEGORY_I18N = {
         if (progressBar) progressBar.style.width = `${Math.round(((i + 1) / imageFiles.length) * 100)}%`;
 
         try {
-          const compressed = await compressImageFile(file, 1200, 1200, 0.85);
+          const compressed = await compressImageFile(file, 800, 800, 0.78);
           workingAlbumImages.push(compressed);
           completed++;
           renderAlbumManagerGrid();
@@ -8901,7 +8903,7 @@ const CATEGORY_I18N = {
 
       action.images = [...workingAlbumImages.filter(Boolean)];
 
-      if (window.firestoreDb && window.fs && activeAlbumActionId && !activeAlbumActionId.startsWith('act-')) {
+      if (window.firestoreDb && window.fs && activeAlbumActionId) {
         try {
           await window.fs.setDoc(window.fs.doc(window.firestoreDb, "actions", activeAlbumActionId), {
             images: action.images
@@ -8920,7 +8922,6 @@ const CATEGORY_I18N = {
     }
     window.saveActionAlbumManager = saveActionAlbumManager;
 
-    // --- Add Bureau Member Logic ---
     function openAddBureauMemberModal() {
       document.getElementById('add-bureau-member-modal').classList.remove('hidden');
     }
@@ -9066,7 +9067,6 @@ const CATEGORY_I18N = {
     }
     window.deleteBureauMember = deleteBureauMember;
 
-    // --- Live Instagram Follower Counter ---
     async function updateLiveInstagramFollowers() {
       try {
         const resp = await fetch('/api/instagram');
@@ -9083,13 +9083,11 @@ const CATEGORY_I18N = {
           } catch(e) {}
         }
       } catch (err) {
-        // Silently fallback to static count
+        
       }
     }
     window.updateLiveInstagramFollowers = updateLiveInstagramFollowers;
 
-  
-    // --- Animation fluide des Compteurs d'Impact (Count-Up) ---
     function animateCountUp(element, duration = 2600) {
       if (!element || element._hasAnimated) return;
       element._hasAnimated = true;
@@ -9144,7 +9142,6 @@ const CATEGORY_I18N = {
     }
     window.initCountUpObserver = initCountUpObserver;
 
-    // --- Live Facebook Follower Counter ---
     async function updateLiveFacebookFollowers() {
       try {
         const resp = await fetch('/api/facebook');
@@ -9166,7 +9163,6 @@ const CATEGORY_I18N = {
 
   </script>
 
-  <!-- In-Web Confirmation Dialog (Replaces native browser confirm()) -->
   <div id="app-confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center animate-scale-in">
       <div id="app-confirm-icon" class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto mb-3 shadow-inner">
