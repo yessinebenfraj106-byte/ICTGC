@@ -666,8 +666,8 @@
           <div class="flex items-center gap-2.5">
             <span class="text-2xl">🔒</span>
             <div>
-              <div class="font-extrabold text-sm text-slate-900">Candidatures Clôturées pour le Mandat 2026–2027</div>
-              <div class="text-[11px] text-amber-800 font-normal mt-0.5">La campagne de recrutement officiel est actuellement fermée. Merci pour votre enthousiasme et votre engagement !</div>
+              <div class="font-extrabold text-sm text-slate-900">Candidatures Clôturées pour le moment</div>
+              <div class="text-[11px] text-amber-800 font-normal mt-0.5 leading-relaxed">La campagne de recrutement officiel est actuellement fermée. Merci pour votre enthousiasme et votre engagement ! Suivez nos pages <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="font-bold underline text-blue-700 hover:text-blue-900">Facebook</a> et <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" rel="noopener noreferrer" class="font-bold underline text-pink-700 hover:text-pink-900">Instagram</a> pour savoir quand sera lancée la prochaine session de recrutement.</div>
             </div>
           </div>
         </div>
@@ -1744,7 +1744,7 @@
   </div>
 
   <div id="action-album-lightbox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/95 backdrop-blur-md select-none">
-    <div class="relative w-full max-w-5xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+    <div class="relative w-full max-w-6xl xl:max-w-7xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh]">
 
       <div class="px-4 sm:px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between gap-3 text-white">
         <div class="min-w-0">
@@ -1756,6 +1756,9 @@
         </div>
         
         <div class="flex items-center gap-2 flex-shrink-0">
+          <button onclick="openCurrentPhotoFullscreen()" class="px-2.5 py-1 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors text-xs font-bold flex items-center gap-1.5 border border-slate-700/60" title="Ouvrir la photo en pleine résolution">
+            <span>🔍</span> <span class="hidden sm:inline">Pleine Résolution</span>
+          </button>
           <button onclick="downloadCurrentLightboxPhoto()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors" title="Télécharger cette photo">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           </button>
@@ -1763,12 +1766,12 @@
         </div>
       </div>
 
-      <div class="relative flex-1 flex items-center justify-center p-2 sm:p-6 min-h-[300px] sm:min-h-[460px] max-h-[66vh] bg-slate-950/70 overflow-hidden">
+      <div class="relative flex-1 flex items-center justify-center p-2 sm:p-4 min-h-[360px] sm:min-h-[500px] max-h-[78vh] bg-slate-950/80 overflow-hidden">
         <button onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo précédente (←)">
           ◀
         </button>
 
-        <img id="lightbox-main-img" src="" alt="Photo Album" class="max-w-full max-h-[60vh] object-contain rounded-xl shadow-2xl transition-all duration-200" />
+        <img id="lightbox-main-img" src="" alt="Photo Album" onclick="toggleLightboxZoom()" class="max-w-full max-h-[74vh] object-contain rounded-xl shadow-2xl transition-all duration-200 cursor-zoom-in" title="Cliquez pour zoomer en pleine résolution" />
 
         <button onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo suivante (→)">
           ▶
@@ -3512,10 +3515,16 @@
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (targetAnchorId) {
-        setTimeout(() => {
+        const scrollToAnchor = () => {
           const anchor = document.getElementById(targetAnchorId);
-          if (anchor) anchor.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+          if (anchor) {
+            anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        };
+        setTimeout(scrollToAnchor, 100);
+        setTimeout(scrollToAnchor, 380);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       if (window.ICTGC_Analytics) {
@@ -3566,6 +3575,12 @@
         showView('public-view', 'partners-section', false);
       } else if (path === '/stats' || path === '/statistiques') {
         showView('public-view', 'stats-section', false);
+        const centerStats = () => {
+          const el = document.getElementById('stats-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+        setTimeout(centerStats, 120);
+        setTimeout(centerStats, 450);
       } else if (path === '/admin') {
         if (isAdminLoggedIn) {
           showView('admin-view', null, false);
@@ -4624,6 +4639,16 @@
         const locColorClass = isDark ? 'text-slate-300' : 'text-slate-400';
         const borderClass = isDark ? 'border-white/20 shadow-lg' : 'border-slate-200 shadow-sm';
         const catBadgeClass = isDark ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs' : 'bg-blue-50 text-blue-700 border border-blue-200';
+        const albumBtnClass = isDark
+          ? 'text-white hover:text-white bg-white/20 hover:bg-white/30 border-white/30 shadow-xs backdrop-blur-xs'
+          : (hasGradient
+              ? 'text-slate-900 hover:text-black bg-white/80 hover:bg-white border-white/80 shadow-xs backdrop-blur-xs'
+              : 'text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 border-blue-200/70 shadow-2xs');
+        const albumAdminBtnClass = isDark
+          ? 'text-white/90 hover:text-white bg-white/15 hover:bg-white/25 border-white/20 shadow-xs backdrop-blur-xs'
+          : (hasGradient
+              ? 'text-slate-700 hover:text-slate-950 bg-white/60 hover:bg-white border-white/60 shadow-xs backdrop-blur-xs'
+              : 'text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border-slate-200 shadow-2xs');
 
         const spanCols = span === 3 ? 'action-card col-span-3 col-span-full' : (span === 2 ? 'action-card col-span-2' : 'action-card');
         const cardHeight = parseInt(a.custom_height, 10);
@@ -4687,11 +4712,11 @@
 
               ${images.length > 0 ? `
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pt-1">
-                  <button onclick="openActionAlbumLightbox('${actionId}', 0)" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition-all border border-blue-200/70 shadow-2xs">
+                  <button onclick="openActionAlbumLightbox('${actionId}', 0)" class="inline-flex items-center gap-1.5 text-xs font-bold ${albumBtnClass} px-3 py-1.5 rounded-xl transition-all border">
                     <span>🖼️</span> ${dict.viewAlbum || 'Voir l\'album'} (${images.length} ${images.length > 1 ? (dict.photoCountPlural || 'photos') : (dict.photoCountSingular || 'photo')})
                   </button>
                   ${isAdminLoggedIn ? `
-                    <button onclick="openActionAlbumManager('${actionId}')" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition-all border border-slate-200 shadow-2xs" title="Gérer ou importer des photos en masse">
+                    <button onclick="openActionAlbumManager('${actionId}')" class="inline-flex items-center gap-1.5 text-xs font-bold ${albumAdminBtnClass} px-3 py-1.5 rounded-xl transition-all border" title="Gérer ou importer des photos en masse">
                       <span>⚙️</span> Gérer l'album / Importer en masse
                     </button>
                   ` : ''}
@@ -7728,6 +7753,34 @@ const CATEGORY_I18N = {
     }
     window.downloadCurrentLightboxPhoto = downloadCurrentLightboxPhoto;
 
+    function openCurrentPhotoFullscreen() {
+      if (!currentLightboxAction) return;
+      const images = (currentLightboxAction.images || []).filter(img => img && img.trim().length > 0);
+      const url = images[currentLightboxIndex];
+      if (url) {
+        const w = window.open('');
+        if (w) {
+          w.document.write(`<title>${escapeHtml(currentLightboxAction.title || 'Photo')} - Pleine Résolution</title><body style="margin:0;background:#050b14;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${url}" style="max-width:100%;max-height:100vh;object-fit:contain;box-shadow:0 0 50px rgba(0,0,0,0.8);"/></body>`);
+        }
+      }
+    }
+    window.openCurrentPhotoFullscreen = openCurrentPhotoFullscreen;
+
+    let isLightboxZoomed = false;
+    function toggleLightboxZoom() {
+      const img = document.getElementById('lightbox-main-img');
+      if (!img) return;
+      isLightboxZoomed = !isLightboxZoomed;
+      if (isLightboxZoomed) {
+        img.classList.remove('max-h-[74vh]', 'cursor-zoom-in');
+        img.classList.add('max-h-none', 'scale-125', 'cursor-zoom-out');
+      } else {
+        img.classList.remove('max-h-none', 'scale-125', 'cursor-zoom-out');
+        img.classList.add('max-h-[74vh]', 'cursor-zoom-in');
+      }
+    }
+    window.toggleLightboxZoom = toggleLightboxZoom;
+
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('action-album-lightbox-modal');
       if (!modal || modal.classList.contains('hidden')) return;
@@ -8849,7 +8902,7 @@ const CATEGORY_I18N = {
         if (progressBar) progressBar.style.width = `${Math.round(((i + 1) / imageFiles.length) * 100)}%`;
 
         try {
-          const compressed = await compressImageFile(file, 800, 800, 0.78);
+          const compressed = await compressImageFile(file, 1600, 1600, 0.83);
           workingAlbumImages.push(compressed);
           completed++;
           renderAlbumManagerGrid();
@@ -9088,10 +9141,12 @@ const CATEGORY_I18N = {
     }
     window.updateLiveInstagramFollowers = updateLiveInstagramFollowers;
 
-    function animateCountUp(element, duration = 2600) {
-      if (!element || element._hasAnimated) return;
-      element._hasAnimated = true;
-      const originalText = element.textContent.trim();
+    function animateCountUp(element, duration = 1600) {
+      if (!element) return;
+      if (!element._targetText) {
+        element._targetText = element.textContent.trim();
+      }
+      const originalText = element._targetText;
       const match = originalText.match(/([0-9\s\u202f\u00a0,]+)/);
       if (!match) return;
       const numStr = match[1].replace(/[\s\u202f\u00a0,]/g, '');
@@ -9101,44 +9156,68 @@ const CATEGORY_I18N = {
       const prefix = originalText.slice(0, match.index);
       const suffix = originalText.slice(match.index + match[1].length);
 
+      if (element._animFrameId) {
+        cancelAnimationFrame(element._animFrameId);
+      }
+
       let startTime = null;
       function step(timestamp) {
         if (!startTime) startTime = timestamp;
         const progress = Math.min((timestamp - startTime) / duration, 1);
         const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
         const current = Math.floor(ease * target);
-        element.textContent = `${prefix}${current.toLocaleString('fr-FR')}${suffix}`;
+        element.textContent = `${prefix}${current.toLocaleString('fr-FR').replace(/\u202f/g, ' ')}${suffix}`;
         if (progress < 1) {
-          requestAnimationFrame(step);
+          element._animFrameId = requestAnimationFrame(step);
         } else {
           element.textContent = originalText;
+          element._animFrameId = null;
         }
       }
-      requestAnimationFrame(step);
+      element._animFrameId = requestAnimationFrame(step);
     }
 
-    function initCountUpObserver() {
-      const grid = document.getElementById('metrics-grid');
-      if (!grid || window._countUpObserved) return;
+    function resetCountUp(element) {
+      if (!element) return;
+      if (element._animFrameId) {
+        cancelAnimationFrame(element._animFrameId);
+        element._animFrameId = null;
+      }
+      if (!element._targetText) {
+        element._targetText = element.textContent.trim();
+      }
+      const match = element._targetText.match(/([0-9\s\u202f\u00a0,]+)/);
+      if (!match) return;
+      const prefix = element._targetText.slice(0, match.index);
+      const suffix = element._targetText.slice(match.index + match[1].length);
+      element.textContent = `${prefix}0${suffix}`;
+    }
 
-      if (!('IntersectionObserver' in window)) {
-        return;
+    let globalCountUpObserver = null;
+    function initCountUpObserver() {
+      const statsSection = document.getElementById('stats-section') || document.getElementById('metrics-grid');
+      if (!statsSection || !('IntersectionObserver' in window)) return;
+
+      if (globalCountUpObserver) {
+        try { globalCountUpObserver.disconnect(); } catch(e){}
       }
 
-      const observer = new IntersectionObserver((entries) => {
+      globalCountUpObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && !window._countUpObserved) {
-            window._countUpObserved = true;
-            const counters = grid.querySelectorAll('[data-edit-key^="metric-val-"]');
+          const grid = document.getElementById('metrics-grid');
+          if (!grid) return;
+          const counters = grid.querySelectorAll('[data-edit-key^="metric-val-"]');
+          if (entry.isIntersecting) {
             counters.forEach((c, idx) => {
-              setTimeout(() => animateCountUp(c, 2600), idx * 110);
+              setTimeout(() => animateCountUp(c, 1600), idx * 80);
             });
-            observer.disconnect();
+          } else {
+            counters.forEach(c => resetCountUp(c));
           }
         });
-      }, { threshold: 0.15 });
+      }, { threshold: 0.2 });
 
-      observer.observe(grid);
+      globalCountUpObserver.observe(statsSection);
     }
     window.initCountUpObserver = initCountUpObserver;
 
