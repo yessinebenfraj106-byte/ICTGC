@@ -30,5 +30,19 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    { "source": "/recrutement", "destination": "/index.html" },
+    { "source": "/rejoindre", "destination": "/index.html" },
+    { "source": "/actions", "destination": "/index.html" },
+    { "source": "/bureau", "destination": "/index.html" },
+    { "source": "/filiation", "destination": "/index.html" },
+    { "source": "/sponsors", "destination": "/index.html" },
+    { "source": "/partenaires", "destination": "/index.html" },
+    { "source": "/stats", "destination": "/index.html" },
+    { "source": "/statistiques", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/espace-interne", "destination": "/index.html" },
+    { "source": "/portal", "destination": "/index.html" }
   ]
 }
