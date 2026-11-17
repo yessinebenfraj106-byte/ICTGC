@@ -662,14 +662,15 @@
           <p class="text-xs text-slate-500 mt-1" data-i18n="recruitSubtitle">Formulaire de candidature officiel pour le Mandat 2026–2027</p>
         </div>
 
-        <div id="recruitment-closed-banner" class="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold flex items-center justify-between gap-3 shadow-xs">
-          <div class="flex items-center gap-2.5">
-            <span class="text-2xl">🔒</span>
-            <div>
-              <div class="font-extrabold text-sm text-slate-900">Candidatures Clôturées pour le moment</div>
-              <div class="text-[11px] text-amber-800 font-normal mt-0.5 leading-relaxed">La campagne de recrutement officiel est actuellement fermée. Merci pour votre enthousiasme et votre engagement ! Suivez nos pages <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="font-bold underline text-blue-700 hover:text-blue-900">Facebook</a> et <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" rel="noopener noreferrer" class="font-bold underline text-pink-700 hover:text-pink-900">Instagram</a> pour savoir quand sera lancée la prochaine session de recrutement.</div>
+        <div id="recruitment-closed-banner" class="mb-6 p-6 rounded-3xl bg-amber-50/90 border border-amber-300/80 text-amber-950 shadow-sm flex items-start gap-4">
+          <span class="text-3xl flex-shrink-0 mt-0.5">🔒</span>
+          <div class="space-y-1.5">
+            <div class="font-black text-base text-slate-900 tracking-tight">Candidatures Clôturées pour le moment</div>
+            <div class="text-xs text-amber-900 leading-relaxed font-medium">
+              La campagne de recrutement officiel est actuellement fermée. Merci pour votre enthousiasme et votre engagement ! Suivez nos pages <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="font-bold underline text-blue-700 hover:text-blue-900 transition-colors">Facebook</a> et <a href="https://instagram.com/ic.tunisgolfecarthagene" target="_blank" rel="noopener noreferrer" class="font-bold underline text-pink-700 hover:text-pink-900 transition-colors">Instagram</a> pour savoir quand sera lancée la prochaine session de recrutement.
             </div>
           </div>
+        </div>
         </div>
         <form id="recruitment-form" onsubmit="handleRecruitmentSubmit(event)" class="mt-8 space-y-8">
           <div class="space-y-4">
@@ -4042,7 +4043,7 @@
     }
     window.filterActionsCategory = filterActionsCategory;
 
-    window.isRecruitmentOpen = (localStorage.getItem('ictgc_recruitment_open') === 'true');
+    window.isRecruitmentOpen = (localStorage.getItem('ictgc_recruitment_status_2026') === 'open');
 
     function updateRecruitmentUI() {
       const banner = document.getElementById('recruitment-closed-banner');
@@ -4052,17 +4053,20 @@
       const icon = document.getElementById('icon-toggle-recruitment');
       const btn = document.getElementById('btn-toggle-recruitment');
 
-      if (banner) banner.classList.toggle('hidden', window.isRecruitmentOpen);
+      if (banner) {
+        banner.classList.toggle('hidden', Boolean(window.isRecruitmentOpen));
+      }
+
       if (form) {
-        form.querySelectorAll('input, select, textarea, button[type="submit"]').forEach(el => {
-          if (!window.isRecruitmentOpen && !isAdminLoggedIn) {
-            el.setAttribute('disabled', 'disabled');
-            el.classList.add('opacity-60', 'cursor-not-allowed');
-          } else {
+        if (!window.isRecruitmentOpen && !isAdminLoggedIn) {
+          form.classList.add('hidden');
+        } else {
+          form.classList.remove('hidden');
+          form.querySelectorAll('input, select, textarea, button[type="submit"]').forEach(el => {
             el.removeAttribute('disabled');
             el.classList.remove('opacity-60', 'cursor-not-allowed');
-          }
-        });
+          });
+        }
       }
 
       if (heroBtn) {
@@ -4092,7 +4096,8 @@
     function toggleRecruitmentStatus() {
       window.isRecruitmentOpen = !window.isRecruitmentOpen;
       try {
-        localStorage.setItem('ictgc_recruitment_open', window.isRecruitmentOpen ? 'true' : 'false');
+        localStorage.setItem('ictgc_recruitment_status_2026', window.isRecruitmentOpen ? 'open' : 'closed');
+      try { localStorage.setItem('ictgc_recruitment_open', window.isRecruitmentOpen ? 'true' : 'false'); } catch(e){}
       } catch(e) {}
       updateRecruitmentUI();
       if (window.firestoreDb && window.fs) {
