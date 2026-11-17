@@ -662,7 +662,7 @@
           <p class="text-xs text-slate-500 mt-1" data-i18n="recruitSubtitle">Formulaire de candidature officiel pour le Mandat 2026–2027</p>
         </div>
 
-        <div id="recruitment-closed-banner" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold flex items-center justify-between gap-3 shadow-xs">
+        <div id="recruitment-closed-banner" class="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold flex items-center justify-between gap-3 shadow-xs">
           <div class="flex items-center gap-2.5">
             <span class="text-2xl">🔒</span>
             <div>
@@ -2344,13 +2344,30 @@
     }
     window.sanitizeUrl = sanitizeUrl;
 
-    let currentApproveCandidateId = null;
-    let currentAdjustMemberId = null;
-    let isInlineEditEnabled = false;
-    let currentLoggedMember = null;
-    let isAdminLoggedIn = false;
+    var currentApproveCandidateId = null;
+    var currentAdjustMemberId = null;
+    var isInlineEditEnabled = false;
+    var currentLoggedMember = null;
+    var isAdminLoggedIn = false;
     window.allVisitorSessions = [];
-    let analyticsSnapshotUnsub = null;
+    var analyticsSnapshotUnsub = null;
+    var globalCountUpObserver = null;
+    var currentLightboxAction = null;
+    var currentLightboxIndex = 0;
+    var isLightboxZoomed = false;
+    var activeAlbumActionId = null;
+    var workingAlbumImages = [];
+    var currentActionCollabId = null;
+    var currentStyleActionId = null;
+    var activeResizeCard = null;
+    var draggedActionId = null;
+    var draggedBureauMemberId = null;
+    var appToastTimer = null;
+    var footerClickTimer = null;
+    var cropperEventsInitialized = false;
+    var currentBureauSocialsId = null;
+    var editingPartnerId = null;
+    var metricsAnimFrames = [];
 
     (function initAnalyticsTracker() {
       const SESSION_KEY = 'ictgc_session_id';
@@ -3521,8 +3538,10 @@
             anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         };
-        setTimeout(scrollToAnchor, 100);
-        setTimeout(scrollToAnchor, 380);
+        requestAnimationFrame(scrollToAnchor);
+        setTimeout(scrollToAnchor, 120);
+        setTimeout(scrollToAnchor, 400);
+        setTimeout(scrollToAnchor, 850);
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -4023,7 +4042,7 @@
     }
     window.filterActionsCategory = filterActionsCategory;
 
-    window.isRecruitmentOpen = (localStorage.getItem('ictgc_recruitment_open') !== 'false');
+    window.isRecruitmentOpen = (localStorage.getItem('ictgc_recruitment_open') === 'true');
 
     function updateRecruitmentUI() {
       const banner = document.getElementById('recruitment-closed-banner');
@@ -4125,7 +4144,7 @@
     }
     window.toggleActionAsNews = toggleActionAsNews;
 
-    let draggedActionId = null;
+    draggedActionId = null;
 
     function handleActionDragStart(e, id) {
       draggedActionId = id;
@@ -4205,7 +4224,7 @@
     }
     window.moveAction = moveAction;
 
-    let currentStyleActionId = null;
+    currentStyleActionId = null;
 
     function openActionStyleModal(actionId) {
       const currentList = window.cachedActionsList || defaultActions;
@@ -4292,7 +4311,7 @@
     }
     window.resetActionCardHeight = resetActionCardHeight;
 
-    let activeResizeCard = null;
+    activeResizeCard = null;
     function startCardMouseResize(e, actionId) {
       e.preventDefault();
       e.stopPropagation();
@@ -5109,7 +5128,7 @@
       if (isAdminLoggedIn) enableGlobalTextEditing();
     }
 
-    let draggedBureauMemberId = null;
+    draggedBureauMemberId = null;
 
     function handleBureauDragStart(e, id) {
       draggedBureauMemberId = id;
@@ -6780,7 +6799,7 @@ const CATEGORY_I18N = {
       });
     }
 
-    let appToastTimer = null;
+    appToastTimer = null;
     function showAppToast(msg = '✓ Synchronisé en direct dans le Cloud', type = 'success', duration = 3000) {
       let toast = document.getElementById('auto-sync-toast');
       if (!toast) {
@@ -7039,7 +7058,7 @@ const CATEGORY_I18N = {
     });
 
         let footerClickCount = 0;
-    let footerClickTimer = null;
+    footerClickTimer = null;
     const footerBlock = document.getElementById('footer-copyright-block');
     if (footerBlock) {
       footerBlock.addEventListener('click', (e) => {
@@ -7634,8 +7653,8 @@ const CATEGORY_I18N = {
     }
     window.deleteActionDoc = deleteActionDoc;
 
-    let currentLightboxAction = null;
-    let currentLightboxIndex = 0;
+    currentLightboxAction = null;
+    currentLightboxIndex = 0;
 
     function openActionAlbumLightbox(actionId, photoIndex = 0) {
       const currentActions = window.cachedActionsList || defaultActions;
@@ -7766,7 +7785,7 @@ const CATEGORY_I18N = {
     }
     window.openCurrentPhotoFullscreen = openCurrentPhotoFullscreen;
 
-    let isLightboxZoomed = false;
+    isLightboxZoomed = false;
     function toggleLightboxZoom() {
       const img = document.getElementById('lightbox-main-img');
       if (!img) return;
@@ -7801,7 +7820,7 @@ const CATEGORY_I18N = {
     }
     window.updateActionSize = setActionCardSpan;
 
-    let currentActionCollabId = null;
+    currentActionCollabId = null;
 
     function openActionCollabModal(actionId) {
       currentActionCollabId = actionId;
@@ -8116,7 +8135,7 @@ const CATEGORY_I18N = {
       ctx.fillRect(box.x + box.w - 2, box.y + box.h - handleSize + 2, 4, handleSize);
     }
 
-    let cropperEventsInitialized = false;
+    cropperEventsInitialized = false;
     function initCropperCanvasEvents() {
       if (cropperEventsInitialized) return;
       cropperEventsInitialized = true;
@@ -8261,7 +8280,7 @@ const CATEGORY_I18N = {
     }
     window.removeSolidBackgroundFromCropper = removeSolidBackgroundFromCropper;
 
-    let currentBureauSocialsId = null;
+    currentBureauSocialsId = null;
 
     function openBureauSocialsModal(mId, name) {
       currentBureauSocialsId = mId;
@@ -8516,7 +8535,7 @@ const CATEGORY_I18N = {
     }
     window.syncFullPartnersToCloud = syncFullPartnersToCloud;
 
-    let editingPartnerId = null;
+    editingPartnerId = null;
 
     function openAddPartnerModal(partnerId = null) {
       editingPartnerId = partnerId;
@@ -8742,8 +8761,8 @@ const CATEGORY_I18N = {
     }
     window.deletePartnerDoc = deletePartnerDoc;
 
-    let activeAlbumActionId = null;
-    let workingAlbumImages = [];
+    activeAlbumActionId = null;
+    workingAlbumImages = [];
 
     function openActionAlbumManager(actionId) {
       activeAlbumActionId = actionId;
@@ -9193,7 +9212,7 @@ const CATEGORY_I18N = {
       element.textContent = `${prefix}0${suffix}`;
     }
 
-    let globalCountUpObserver = null;
+    globalCountUpObserver = null;
     function initCountUpObserver() {
       const statsSection = document.getElementById('stats-section') || document.getElementById('metrics-grid');
       if (!statsSection || !('IntersectionObserver' in window)) return;
