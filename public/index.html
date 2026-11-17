@@ -3527,9 +3527,15 @@
             try { localStorage.setItem('ictgc_deleted_actions', JSON.stringify(data.deletedActionsList)); } catch(e){}
           }
           if (data.metricsList && Array.isArray(data.metricsList) && data.metricsList.length > 0) {
-            window.cachedMetrics = data.metricsList;
-            try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(data.metricsList)); } catch(e){}
-            renderMetrics(data.metricsList);
+            const merged = [...defaultMetrics];
+            data.metricsList.forEach(m => {
+              const idx = merged.findIndex(def => def.key === m.key);
+              if (idx !== -1) merged[idx] = { ...merged[idx], ...m };
+              else merged.push(m);
+            });
+            window.cachedMetrics = merged;
+            try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(merged)); } catch(e){}
+            renderMetrics(merged);
           }
           // collection("partners") is the authoritative single source of truth for sponsors
         }
@@ -3537,8 +3543,14 @@
 
       onSnapshot(collection(window.firestoreDb, "metrics"), (snap) => {
         if (!snap.empty) {
-          const items = [];
-          snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+          const items = [...defaultMetrics];
+          snap.forEach(d => {
+            const itemData = d.data();
+            const key = itemData.key || d.id;
+            const idx = items.findIndex(def => def.key === key);
+            if (idx !== -1) items[idx] = { ...items[idx], ...itemData, id: d.id };
+            else items.push({ id: d.id, ...itemData });
+          });
           try { localStorage.setItem('ictgc_metrics_cache', JSON.stringify(items)); } catch(e){}
           renderMetrics(items);
           updateLiveInstagramFollowers();
