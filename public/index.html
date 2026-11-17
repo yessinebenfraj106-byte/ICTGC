@@ -1307,11 +1307,11 @@
       <form id="portal-login-form" onsubmit="handleUnifiedLogin(event)" class="mt-6 space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Adresse Email</label>
-          <input type="email" id="portal-login-email" placeholder="Flen@gmail.com" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <input type="text" id="portal-login-email" placeholder="Email ou Identifiant (ex: admin)" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe</label>
-          <input type="password" id="portal-login-password" placeholder="••••••••" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono" />
+          <input type="password" id="portal-login-password" placeholder="Code PIN (1968) ou Mot de passe" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono" />
         </div>
         <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
           Se connecter
@@ -6719,17 +6719,29 @@ const CATEGORY_I18N = {
       e.preventDefault();
       const emailInput = document.getElementById('portal-login-email');
       const passInput = document.getElementById('portal-login-password');
-      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
-      const password = passInput ? passInput.value.trim() : '';
+      let email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      let password = passInput ? passInput.value.trim() : '';
 
-      if (!email || !password) return;
+      if (!email && password) email = 'admin';
+      if (email && !password) {
+        if (email === '1968' || email === 'ictgc' || email === 'ictgc2026' || email === 'admin') {
+          password = email;
+          email = 'admin';
+        }
+      }
 
       const isAdminEmail = email === 'admin@ictgc.org' || 
+                           email === 'admin@ictgc.com' || 
                            email === 'president@ictgc.org' || 
                            email === 'admin' || 
                            email === 'yessinebenfraj09@gmail.com' ||
-                           email === 'yessine.benfraj@ictgc.org';
-      const isAdminPass = password === 'ictgc2026' || password === 'ictgc' || password === 'admin';
+                           email === 'yessine.benfraj@ictgc.org' ||
+                           email === '' ||
+                           password === '1968' ||
+                           password === 'ictgc2026' ||
+                           password === 'ictgc' ||
+                           password === 'admin';
+      const isAdminPass = password === '1968' || password === 'ictgc2026' || password === 'ictgc' || password === 'admin';
 
       if (isAdminEmail && isAdminPass) {
         isAdminLoggedIn = true;
@@ -7870,118 +7882,7 @@ const CATEGORY_I18N = {
         const w = window.open('');
         if (w) {
           w.document.write(`<title>${escapeHtml(currentLightboxAction.title || 'Photo')} - Pleine Résolution</title><body style="margin:0;background:#050b14;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${url}" style="max-width:100%;max-height:100vh;object-fit:contain;box-shadow:0 0 50px rgba(0,0,0,0.8);"/>
-  <div id="a2hs-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl shadow-2xs border border-blue-200/60">
-            📲
-          </div>
-          <div>
-            <h3 class="text-base font-extrabold text-slate-900">Installer l'Application ICTGC</h3>
-            <p class="text-xs text-slate-500">Ajouter à l'écran d'accueil de votre téléphone ou PC</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeA2hsModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors">✕</button>
-      </div>
-
-      <div class="mt-5 space-y-4 text-xs">
-        <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 flex items-center gap-3">
-          <img src="/assets/logos/logo-bleu-clair.png" alt="ICTGC App" class="w-12 h-12 rounded-xl object-contain bg-white p-1 shadow-2xs border border-blue-100" />
-          <div class="flex-1 min-w-0">
-            <h4 class="font-extrabold text-slate-900 text-xs">Interact Club Tunis Golfe Carthagène</h4>
-            <p class="text-[11px] text-slate-600 mt-0.5">Accès direct en 1 clic sans passer par le navigateur, mode plein écran et fluidité maximale.</p>
-          </div>
-          <button type="button" id="a2hs-native-install-btn" onclick="triggerNativeInstallPrompt()" class="hidden px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-xs text-xs whitespace-nowrap">
-            Installer
-          </button>
-        </div>
-
-        <div class="flex rounded-xl bg-slate-100 p-1 gap-1 font-bold text-xs">
-          <button type="button" id="tab-btn-ios" onclick="switchA2hsTab('ios')" class="flex-1 py-1.5 rounded-lg bg-white text-slate-900 shadow-2xs transition-all flex items-center justify-center gap-1.5">
-            <span>🍏</span> <span>iPhone / iPad</span>
-          </button>
-          <button type="button" id="tab-btn-android" onclick="switchA2hsTab('android')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
-            <span>🤖</span> <span>Android</span>
-          </button>
-          <button type="button" id="tab-btn-pc" onclick="switchA2hsTab('pc')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
-            <span>💻</span> <span>Ordinateur</span>
-          </button>
-        </div>
-
-        <div id="a2hs-guide-ios" class="space-y-3 pt-1">
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
-            <div>
-              <p class="font-bold text-slate-800">Ouvrez le site dans Safari</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">Sur votre iPhone ou iPad, ouvrez <strong>https://ictgc.vercel.app</strong> dans le navigateur Safari.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
-            <div>
-              <p class="font-bold text-slate-800">Appuyez sur Partager ⎋</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">Appuyez sur le bouton de partage au centre en bas de votre écran (icône carré avec une flèche vers le haut).</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</span>
-            <div>
-              <p class="font-bold text-slate-800">Sélectionnez « Sur l'écran d'accueil » ⊞</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">Faites défiler le menu puis appuyez sur <strong>« Sur l'écran d'accueil »</strong>, puis confirmez en cliquant sur <strong>« Ajouter »</strong> en haut à droite.</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="a2hs-guide-android" class="hidden space-y-3 pt-1">
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
-            <div>
-              <p class="font-bold text-slate-800">Appuyez sur le Menu (3 points ⋮)</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">Dans Google Chrome ou Samsung Internet, appuyez sur les <strong>3 points verticaux ⋮</strong> en haut à droite.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
-            <div>
-              <p class="font-bold text-slate-800">Sélectionnez « Installer l'application » ou « Ajouter à l'écran d'accueil »</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">Appuyez sur l'option pour démarrer l'installation automatique.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</span>
-            <div>
-              <p class="font-bold text-slate-800">Confirmez l'installation</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">L'icône officielle ICTGC apparaît sur votre écran d'accueil parmi vos applications mobiles.</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="a2hs-guide-pc" class="hidden space-y-3 pt-1">
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
-            <div>
-              <p class="font-bold text-slate-800">Repérez l'icône dans la barre d'adresse</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">Dans Google Chrome ou Microsoft Edge sur PC/Mac, repérez l'icône d'installation <strong>📥 (petit écran avec flèche)</strong> tout à droite de la barre d'adresse.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
-            <div>
-              <p class="font-bold text-slate-800">Cliquez sur « Installer »</p>
-              <p class="text-slate-500 text-[11px] mt-0.5">L'application s'ouvre dans sa propre fenêtre indépendante et s'ajoute à vos raccourcis Bureau et barre des tâches.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end">
-        <button type="button" onclick="closeA2hsModal()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-xs">
-          Fermer
-        </button>
-      </div>
-    </div>
-  </div>
+  
 </body>`);
         }
       }
@@ -9613,5 +9514,118 @@ const CATEGORY_I18N = {
     </div>
   </div>
 
+
+  <div id="a2hs-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl shadow-2xs border border-blue-200/60">
+            📲
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Installer l'Application ICTGC</h3>
+            <p class="text-xs text-slate-500">Ajouter à l'écran d'accueil de votre téléphone ou PC</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeA2hsModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors">✕</button>
+      </div>
+
+      <div class="mt-5 space-y-4 text-xs">
+        <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 flex items-center gap-3">
+          <img src="/assets/logos/logo-bleu-clair.png" alt="ICTGC App" class="w-12 h-12 rounded-xl object-contain bg-white p-1 shadow-2xs border border-blue-100" />
+          <div class="flex-1 min-w-0">
+            <h4 class="font-extrabold text-slate-900 text-xs">Interact Club Tunis Golfe Carthagène</h4>
+            <p class="text-[11px] text-slate-600 mt-0.5">Accès direct en 1 clic sans passer par le navigateur, mode plein écran et fluidité maximale.</p>
+          </div>
+          <button type="button" id="a2hs-native-install-btn" onclick="triggerNativeInstallPrompt()" class="hidden px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-xs text-xs whitespace-nowrap">
+            Installer
+          </button>
+        </div>
+
+        <div class="flex rounded-xl bg-slate-100 p-1 gap-1 font-bold text-xs">
+          <button type="button" id="tab-btn-ios" onclick="switchA2hsTab('ios')" class="flex-1 py-1.5 rounded-lg bg-white text-slate-900 shadow-2xs transition-all flex items-center justify-center gap-1.5">
+            <span>🍏</span> <span>iPhone / iPad</span>
+          </button>
+          <button type="button" id="tab-btn-android" onclick="switchA2hsTab('android')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
+            <span>🤖</span> <span>Android</span>
+          </button>
+          <button type="button" id="tab-btn-pc" onclick="switchA2hsTab('pc')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
+            <span>💻</span> <span>Ordinateur</span>
+          </button>
+        </div>
+
+        <div id="a2hs-guide-ios" class="space-y-3 pt-1">
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
+            <div>
+              <p class="font-bold text-slate-800">Ouvrez le site dans Safari</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">Sur votre iPhone ou iPad, ouvrez <strong>https://ictgc.vercel.app</strong> dans le navigateur Safari.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
+            <div>
+              <p class="font-bold text-slate-800">Appuyez sur Partager ⎋</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">Appuyez sur le bouton de partage au centre en bas de votre écran (icône carré avec une flèche vers le haut).</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</span>
+            <div>
+              <p class="font-bold text-slate-800">Sélectionnez « Sur l'écran d'accueil » ⊞</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">Faites défiler le menu puis appuyez sur <strong>« Sur l'écran d'accueil »</strong>, puis confirmez en cliquant sur <strong>« Ajouter »</strong> en haut à droite.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="a2hs-guide-android" class="hidden space-y-3 pt-1">
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
+            <div>
+              <p class="font-bold text-slate-800">Appuyez sur le Menu (3 points ⋮)</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">Dans Google Chrome ou Samsung Internet, appuyez sur les <strong>3 points verticaux ⋮</strong> en haut à droite.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
+            <div>
+              <p class="font-bold text-slate-800">Sélectionnez « Installer l'application » ou « Ajouter à l'écran d'accueil »</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">Appuyez sur l'option pour démarrer l'installation automatique.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</span>
+            <div>
+              <p class="font-bold text-slate-800">Confirmez l'installation</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">L'icône officielle ICTGC apparaît sur votre écran d'accueil parmi vos applications mobiles.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="a2hs-guide-pc" class="hidden space-y-3 pt-1">
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
+            <div>
+              <p class="font-bold text-slate-800">Repérez l'icône dans la barre d'adresse</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">Dans Google Chrome ou Microsoft Edge sur PC/Mac, repérez l'icône d'installation <strong>📥 (petit écran avec flèche)</strong> tout à droite de la barre d'adresse.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
+            <div>
+              <p class="font-bold text-slate-800">Cliquez sur « Installer »</p>
+              <p class="text-slate-500 text-[11px] mt-0.5">L'application s'ouvre dans sa propre fenêtre indépendante et s'ajoute à vos raccourcis Bureau et barre des tâches.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end">
+        <button type="button" onclick="closeA2hsModal()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-xs">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
