@@ -413,6 +413,9 @@
       <button onclick="saveAllSiteContent()" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[10px] transition-all shadow-xs flex items-center gap-1" title="Sauvegarder">
         <span>💾</span>
       </button>
+      <button onclick="showView('admin-view')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-[10px] transition-all flex items-center gap-1" title="Accès direct au CRM & Gestion">
+        <span>📊 CRM</span>
+      </button>
       <button onclick="expandMobileAdminBar()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold text-[10px] transition-all flex items-center gap-1" title="Déplier les outils d'administration">
         <span>▲ Outils</span>
       </button>
@@ -999,7 +1002,10 @@
                 <span>👑</span> Donner Accès Admin
               </button>
             </div>
-            <button onclick="openAddMemberModal()" class="px-4 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+            <button type="button" onclick="restoreOfficialMembers()" class="px-3.5 py-2.5 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl shadow-2xs transition-all flex items-center gap-1.5" title="Restaurer l'équipe officielle complète du Mandat 2026-2027">
+                <span>🔄</span> Restaurer 18 Membres Officiels
+              </button>
+              <button onclick="openAddMemberModal()" class="px-4 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-all flex items-center gap-1.5">
                 <span>+</span> Nouveau Membre
               </button>
             </div>
@@ -3671,12 +3677,24 @@
 ];
 
     const defaultMembers = [
-      { id: "mem-1", first_name: "Yasmine", last_name: "Cherif", role: "bureau", bureau_title: "Présidente", current_month_points: 120, lifetime_points: 450, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.cherif@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Ressources Humaines"] },
-      { id: "mem-2", first_name: "Nour El Houda", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
-      { id: "mem-3", first_name: "Yessine", last_name: "Ben Fraj", role: "bureau", bureau_title: "Secrétaire Général", current_month_points: 85, lifetime_points: 320, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yessine.benfraj@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission de Médiatisation"] },
-      { id: "mem-4", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
-      { id: "mem-5", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "co-Chef intérêt public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 50, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
-      { id: "mem-6", first_name: "Mahdi", last_name: "Ghabri", role: "member", bureau_title: "Chef des actions internationales", current_month_points: 55, lifetime_points: 210, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "mahdi.ghabri@ictgc.org", assigned_commissions: ["Commission des Actions Internationales", "Commission d'Intérêt Public"] }
+      { id: "mem-1", first_name: "Yasmine", last_name: "Cherif", role: "bureau", bureau_title: "Présidente", is_admin: true, current_month_points: 120, lifetime_points: 450, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.cherif@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Ressources Humaines"] },
+      { id: "mem-2", first_name: "Nour El Houda", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", is_admin: true, current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
+      { id: "mem-3", first_name: "Mohamed Ayoub", last_name: "Masmoudi", role: "bureau", bureau_title: "Chef du protocole", current_month_points: 80, lifetime_points: 300, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "mohamed.masmoudi@ictgc.org", assigned_commissions: ["Commission des Relations Internes & Externes"] },
+      { id: "mem-4", first_name: "Yessine", last_name: "Ben Fraj", role: "bureau", bureau_title: "Secrétaire Général", is_admin: true, current_month_points: 85, lifetime_points: 320, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yessine.benfraj@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission de Médiatisation"] },
+      { id: "mem-5", first_name: "Yasmine", last_name: "Chaabani", role: "bureau", bureau_title: "Conseillère générale", current_month_points: 75, lifetime_points: 290, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.chaabani@ictgc.org", assigned_commissions: ["Commission des Ressources Humaines"] },
+      { id: "mem-6", first_name: "Skander", last_name: "Mellouli", role: "bureau", bureau_title: "Représentant au sein de la CNIT", current_month_points: 75, lifetime_points: 280, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "skander.mellouli@ictgc.org", assigned_commissions: ["Commission des Relations Internes & Externes"] },
+      { id: "mem-7", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+      { id: "mem-8", first_name: "Louay", last_name: "Ben Mabrouk", role: "member", bureau_title: "Responsable Tiktok", current_month_points: 50, lifetime_points: 190, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "louay.mabrouk@ictgc.org", assigned_commissions: ["Commission de Médiatisation"] },
+      { id: "mem-9", first_name: "Leen", last_name: "Mabrouk", role: "member", bureau_title: "Cheffe médiatisation", current_month_points: 65, lifetime_points: 250, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "leen.mabrouk@ictgc.org", assigned_commissions: ["Commission de Médiatisation"] },
+      { id: "mem-10", first_name: "Adam", last_name: "Ben Ghodbane", role: "member", bureau_title: "Chef Sponsoring", current_month_points: 60, lifetime_points: 230, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "adam.ghodbane@ictgc.org", assigned_commissions: ["Commission des Finances"] },
+      { id: "mem-11", first_name: "Ritej Iris", last_name: "Mendili", role: "member", bureau_title: "Cheffe Finances", current_month_points: 65, lifetime_points: 260, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "ritej.mendili@ictgc.org", assigned_commissions: ["Commission des Finances"] },
+      { id: "mem-12", first_name: "Zeyneb", last_name: "Koubaa", role: "member", bureau_title: "co-Cheffe intérêt public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "zeyneb.koubaa@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public"] },
+      { id: "mem-13", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "co-Chef intérêt public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+      { id: "mem-14", first_name: "Kenza", last_name: "Miral", role: "member", bureau_title: "Responsable RH", current_month_points: 55, lifetime_points: 210, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "kenza.miral@ictgc.org", assigned_commissions: ["Commission des Ressources Humaines"] },
+      { id: "mem-15", first_name: "Mahdi", last_name: "Ghabri", role: "member", bureau_title: "Chef des actions internationales", current_month_points: 55, lifetime_points: 210, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "mahdi.ghabri@ictgc.org", assigned_commissions: ["Commission des Actions Internationales", "Commission d'Intérêt Public"] },
+      { id: "mem-16", first_name: "Yassmine", last_name: "Missaoui", role: "member", bureau_title: "Cheffe du protocole adjointe", current_month_points: 50, lifetime_points: 180, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yassmine.missaoui@ictgc.org", assigned_commissions: ["Commission des Relations Internes & Externes"] },
+      { id: "mem-17", first_name: "Youssef", last_name: "Neffati", role: "member", bureau_title: "Secrétaire adjoint", current_month_points: 50, lifetime_points: 180, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "youssef.neffati@ictgc.org", assigned_commissions: ["Commission de Médiatisation"] },
+      { id: "mem-18", first_name: "Iyed", last_name: "Tlili", role: "member", bureau_title: "Trésorier adjoint", current_month_points: 50, lifetime_points: 180, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "iyed.tlili@ictgc.org", assigned_commissions: ["Commission des Finances"] }
     ];
 
     const defaultResources = [
@@ -6940,6 +6958,84 @@ const CATEGORY_I18N = {
     }
     window.logoutMember = logoutMember;
 
+    function unlockAdminSession(openAdminDashboard = false) {
+      isAdminLoggedIn = true;
+      try { sessionStorage.setItem('ictgc_admin_logged', 'true'); } catch(e){}
+
+      const floatBar = document.getElementById('admin-floating-bar');
+      if (floatBar) {
+        floatBar.classList.remove('hidden');
+        floatBar.style.display = 'block';
+      }
+      const actCtrl = document.getElementById('admin-actions-controls');
+      if (actCtrl) {
+        actCtrl.classList.remove('hidden');
+        actCtrl.style.display = 'flex';
+      }
+      const bCtrl = document.getElementById('admin-bureau-controls');
+      if (bCtrl) {
+        bCtrl.classList.remove('hidden');
+        bCtrl.style.display = 'flex';
+      }
+      const pCtrl = document.getElementById('admin-partners-controls');
+      if (pCtrl) {
+        pCtrl.classList.remove('hidden');
+        pCtrl.style.display = 'flex';
+      }
+
+      if (window.cachedBureauList) renderBureau(window.cachedBureauList);
+      if (window.cachedActionsList) renderActions(window.cachedActionsList);
+      if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
+      if (typeof enableGlobalTextEditing === 'function') enableGlobalTextEditing();
+      if (typeof initPrivateCloudSync === 'function') initPrivateCloudSync();
+
+      if (openAdminDashboard) {
+        showView('admin-view', null, true);
+      }
+    }
+    window.unlockAdminSession = unlockAdminSession;
+
+    async function restoreOfficialMembers() {
+      showAppConfirm("Confirmez-vous la réinitialisation de la liste avec les 18 membres officiels du mandat 2026–2027 ?", async () => {
+        const fullOfficial = [
+          { id: "mem-1", first_name: "Yasmine", last_name: "Cherif", role: "bureau", bureau_title: "Présidente", is_admin: true, current_month_points: 120, lifetime_points: 450, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.cherif@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Ressources Humaines"] },
+          { id: "mem-2", first_name: "Nour El Houda", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", is_admin: true, current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
+          { id: "mem-3", first_name: "Mohamed Ayoub", last_name: "Masmoudi", role: "bureau", bureau_title: "Chef du protocole", current_month_points: 80, lifetime_points: 300, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "mohamed.masmoudi@ictgc.org", assigned_commissions: ["Commission des Relations Internes & Externes"] },
+          { id: "mem-4", first_name: "Yessine", last_name: "Ben Fraj", role: "bureau", bureau_title: "Secrétaire Général", is_admin: true, current_month_points: 85, lifetime_points: 320, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yessine.benfraj@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission de Médiatisation"] },
+          { id: "mem-5", first_name: "Yasmine", last_name: "Chaabani", role: "bureau", bureau_title: "Conseillère générale", current_month_points: 75, lifetime_points: 290, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.chaabani@ictgc.org", assigned_commissions: ["Commission des Ressources Humaines"] },
+          { id: "mem-6", first_name: "Skander", last_name: "Mellouli", role: "bureau", bureau_title: "Représentant au sein de la CNIT", current_month_points: 75, lifetime_points: 280, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "skander.mellouli@ictgc.org", assigned_commissions: ["Commission des Relations Internes & Externes"] },
+          { id: "mem-7", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+          { id: "mem-8", first_name: "Louay", last_name: "Ben Mabrouk", role: "member", bureau_title: "Responsable Tiktok", current_month_points: 50, lifetime_points: 190, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "louay.mabrouk@ictgc.org", assigned_commissions: ["Commission de Médiatisation"] },
+          { id: "mem-9", first_name: "Leen", last_name: "Mabrouk", role: "member", bureau_title: "Cheffe médiatisation", current_month_points: 65, lifetime_points: 250, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "leen.mabrouk@ictgc.org", assigned_commissions: ["Commission de Médiatisation"] },
+          { id: "mem-10", first_name: "Adam", last_name: "Ben Ghodbane", role: "member", bureau_title: "Chef Sponsoring", current_month_points: 60, lifetime_points: 230, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "adam.ghodbane@ictgc.org", assigned_commissions: ["Commission des Finances"] },
+          { id: "mem-11", first_name: "Ritej Iris", last_name: "Mendili", role: "member", bureau_title: "Cheffe Finances", current_month_points: 65, lifetime_points: 260, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "ritej.mendili@ictgc.org", assigned_commissions: ["Commission des Finances"] },
+          { id: "mem-12", first_name: "Zeyneb", last_name: "Koubaa", role: "member", bureau_title: "co-Cheffe intérêt public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "zeyneb.koubaa@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public"] },
+          { id: "mem-13", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "co-Chef intérêt public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+          { id: "mem-14", first_name: "Kenza", last_name: "Miral", role: "member", bureau_title: "Responsable RH", current_month_points: 55, lifetime_points: 210, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "kenza.miral@ictgc.org", assigned_commissions: ["Commission des Ressources Humaines"] },
+          { id: "mem-15", first_name: "Mahdi", last_name: "Ghabri", role: "member", bureau_title: "Chef des actions internationales", current_month_points: 55, lifetime_points: 210, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "mahdi.ghabri@ictgc.org", assigned_commissions: ["Commission des Actions Internationales", "Commission d'Intérêt Public"] },
+          { id: "mem-16", first_name: "Yassmine", last_name: "Missaoui", role: "member", bureau_title: "Cheffe du protocole adjointe", current_month_points: 50, lifetime_points: 180, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yassmine.missaoui@ictgc.org", assigned_commissions: ["Commission des Relations Internes & Externes"] },
+          { id: "mem-17", first_name: "Youssef", last_name: "Neffati", role: "member", bureau_title: "Secrétaire adjoint", current_month_points: 50, lifetime_points: 180, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "youssef.neffati@ictgc.org", assigned_commissions: ["Commission de Médiatisation"] },
+          { id: "mem-18", first_name: "Iyed", last_name: "Tlili", role: "member", bureau_title: "Trésorier adjoint", current_month_points: 50, lifetime_points: 180, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "iyed.tlili@ictgc.org", assigned_commissions: ["Commission des Finances"] }
+        ];
+
+        window.allMembersList = fullOfficial;
+        try { localStorage.setItem('ictgc_members_cache', JSON.stringify(fullOfficial)); } catch(e){}
+        renderMembersTable(fullOfficial);
+        renderLeaderboard(fullOfficial);
+
+        if (window.firestoreDb && window.fs) {
+          for (const m of fullOfficial) {
+            try {
+              await window.fs.setDoc(window.fs.doc(window.firestoreDb, "members", m.id), m, { merge: true });
+            } catch(e){}
+          }
+        }
+        if (typeof syncAllDataToSupabase === 'function') syncAllDataToSupabase();
+        showAppToast("Les 18 membres officiels ont été restaurés avec succès !", "success");
+      });
+    }
+    window.restoreOfficialMembers = restoreOfficialMembers;
+
     async function handleUnifiedLogin(e) {
       e.preventDefault();
       const emailInput = document.getElementById('portal-login-email');
@@ -6960,6 +7056,7 @@ const CATEGORY_I18N = {
                            email === 'president@ictgc.org' || 
                            email === 'admin' || 
                            email === 'yessinebenfraj09@gmail.com' ||
+                           email === 'yessinebenfraj106@gmail.com' ||
                            email === 'yessine.benfraj@ictgc.org' ||
                            email === '' ||
                            password === '1968' ||
@@ -6969,20 +7066,9 @@ const CATEGORY_I18N = {
       const isAdminPass = password === '1968' || password === 'ictgc2026' || password === 'ictgc' || password === 'admin';
 
       if (isAdminEmail && isAdminPass) {
-        isAdminLoggedIn = true;
         closeInternalPortal();
-        document.getElementById('admin-floating-bar').classList.remove('hidden');
-        document.getElementById('admin-actions-controls').classList.remove('hidden');
-        const bCtrl = document.getElementById('admin-bureau-controls');
-        if (bCtrl) bCtrl.classList.remove('hidden');
-        const pCtrl = document.getElementById('admin-partners-controls');
-        if (pCtrl) pCtrl.classList.remove('hidden');
-        if (window.cachedBureauList) renderBureau(window.cachedBureauList);
-        if (window.cachedActionsList) renderActions(window.cachedActionsList);
-        if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
-        enableGlobalTextEditing();
-        if (typeof initPrivateCloudSync === 'function') initPrivateCloudSync();
-        showAppToast("Bienvenue Administrateur ! L'accès d'administration est déverrouillé.", "success", 4000);
+        unlockAdminSession(true);
+        showAppToast("Bienvenue Administrateur ! L'accès d'administration et le CRM sont déverrouillés.", "success", 4000);
         return;
       }
 
@@ -7023,18 +7109,8 @@ const CATEGORY_I18N = {
       const isGrantedAdmin = Boolean(found.is_admin || found.role === 'admin' || adminEmails.includes(email));
 
       if (isGrantedAdmin) {
-        isAdminLoggedIn = true;
         closeInternalPortal();
-        document.getElementById('admin-floating-bar').classList.remove('hidden');
-        document.getElementById('admin-actions-controls').classList.remove('hidden');
-        const bCtrl = document.getElementById('admin-bureau-controls');
-        if (bCtrl) bCtrl.classList.remove('hidden');
-        const pCtrl = document.getElementById('admin-partners-controls');
-        if (pCtrl) pCtrl.classList.remove('hidden');
-        if (window.cachedBureauList) renderBureau(window.cachedBureauList);
-        if (window.cachedActionsList) renderActions(window.cachedActionsList);
-        if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
-        if (typeof enableGlobalTextEditing === 'function') enableGlobalTextEditing();
+        unlockAdminSession(true);
         setMemberActive(found);
         showAppToast(`Bienvenue Administrateur ${found.first_name || found.fullName || ''} ! Vos privilèges d'administration sont déverrouillés.`, "success", 4000);
         return;
@@ -7359,19 +7435,38 @@ const CATEGORY_I18N = {
     function logoutAdmin() {
       isAdminLoggedIn = false;
       currentLoggedMember = null;
+      try { sessionStorage.removeItem('ictgc_admin_logged'); } catch(e){}
       if (typeof disableGlobalTextEditing === 'function') disableGlobalTextEditing();
       const floatBar = document.getElementById('admin-floating-bar');
-      if (floatBar) floatBar.classList.add('hidden');
+      if (floatBar) {
+        floatBar.classList.add('hidden');
+        floatBar.style.display = 'none';
+      }
       const actCtrl = document.getElementById('admin-actions-controls');
-      if (actCtrl) actCtrl.classList.add('hidden');
+      if (actCtrl) {
+        actCtrl.classList.add('hidden');
+        actCtrl.style.display = 'none';
+      }
       const bCtrl = document.getElementById('admin-bureau-controls');
-      if (bCtrl) bCtrl.classList.add('hidden');
+      if (bCtrl) {
+        bCtrl.classList.add('hidden');
+        bCtrl.style.display = 'none';
+      }
       const pCtrl = document.getElementById('admin-partners-controls');
-      if (pCtrl) pCtrl.classList.add('hidden');
+      if (pCtrl) {
+        pCtrl.classList.add('hidden');
+        pCtrl.style.display = 'none';
+      }
       const adminView = document.getElementById('admin-view');
-      if (adminView) adminView.classList.add('hidden');
+      if (adminView) {
+        adminView.classList.add('hidden');
+        adminView.style.display = 'none';
+      }
       const memberView = document.getElementById('member-view');
-      if (memberView) memberView.classList.add('hidden');
+      if (memberView) {
+        memberView.classList.add('hidden');
+        memberView.style.display = 'none';
+      }
       const tbody = document.getElementById('members-table-body');
       if (tbody) tbody.innerHTML = '';
       const candBody = document.getElementById('candidates-table-body');
@@ -8871,6 +8966,11 @@ const CATEGORY_I18N = {
       const savedLang = localStorage.getItem('ictgc_lang') || 'fr';
       if (typeof setAppLanguage === 'function') setAppLanguage(savedLang);
       if (typeof updateRecruitmentUI === 'function') updateRecruitmentUI();
+      try {
+        if (sessionStorage.getItem('ictgc_admin_logged') === 'true') {
+          unlockAdminSession(window.location.pathname === '/admin');
+        }
+      } catch(e){}
       if (typeof handleAppRouting === 'function') handleAppRouting();
     });
     
