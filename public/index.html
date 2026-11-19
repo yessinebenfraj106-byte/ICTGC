@@ -8,6 +8,7 @@
   <title>Interact Club Tunis Golfe Carthagène | District 9010</title>
   <link rel="icon" type="image/jpeg" href="/assets/logos/tb-logo.jpg">
   <link rel="manifest" href="/manifest.json">
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{});});}</script>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -440,6 +441,9 @@
       </button>
       <button onclick="openAddActionModal()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5">
         <span>+</span> Nouvelle Action
+      </button>
+      <button onclick="openFollowersModal()" class="px-3.5 py-1.5 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-bold transition-all shadow flex items-center gap-1.5 text-xs" title="Mettre à jour le nombre d'abonnés Facebook et Instagram">
+        <span>📱</span> Abonnés
       </button>
       <button onclick="showView('admin-view')" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all flex items-center gap-1.5 shadow">
         <span>📊</span> Visiteurs & CRM
@@ -1766,6 +1770,13 @@
             </div>
 
             <div id="bureau-photo-position-controls" class="mt-3 pt-3 border-t border-slate-200">
+              <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-100 text-xs">
+                <span class="font-bold text-slate-700">Mode d'ajustement :</span>
+                <div class="inline-flex rounded-xl bg-slate-200/80 p-0.5 text-[11px] font-bold">
+                  <button type="button" id="btn-fit-cover" onclick="setBureauPhotoFitMode('cover')" class="px-2.5 py-1 rounded-lg bg-white text-blue-700 shadow-2xs transition-all">🖼️ Remplir (Zoom)</button>
+                  <button type="button" id="btn-fit-contain" onclick="setBureauPhotoFitMode('contain')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">🔍 Entier (Sans coupure)</button>
+                </div>
+              </div>
               <div class="flex items-center justify-between mb-1 text-xs">
                 <span class="font-bold text-slate-700 flex items-center gap-1">
                   <span>↕️</span> <span>Déplacer la photo (Haut / Bas) :</span>
@@ -1829,7 +1840,7 @@
           ◀
         </button>
 
-        <img id="lightbox-main-img" src="" alt="Photo Album" onclick="toggleLightboxZoom()" class="max-w-full max-h-[74vh] object-contain rounded-xl shadow-2xl transition-all duration-200 cursor-zoom-in" title="Cliquez pour zoomer en pleine résolution" />
+        <img id="lightbox-main-img" src="" alt="Photo Album" onclick="toggleLightboxZoom()" class="max-w-full max-h-[82vh] sm:max-h-[86vh] w-auto h-auto object-contain rounded-2xl shadow-2xl transition-all duration-300 cursor-zoom-in" style="image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;" title="Photo haute résolution — Cliquez pour basculer en taille 100%" />
 
         <button onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo suivante (→)">
           ▶
@@ -3842,6 +3853,7 @@
     window.syncFullMetricsToCloud = syncFullMetricsToCloud;
 
     function initCloudSync() {
+      loadPersistedSocialFollowers();
       window.initCloudSync = initCloudSync;
       const savedLang = localStorage.getItem('ictgc_lang') || 'fr';
       window.currentAppLanguage = savedLang;
@@ -4937,8 +4949,11 @@
               ${memberName}
             </h4>
 
-            <div class="mt-3 w-full h-52 rounded-2xl overflow-hidden bg-gradient-to-b from-slate-50 via-white to-blue-50/20 border border-slate-100 relative group flex items-center justify-center">
-              <img id="bureau-img-${mId}" src="${photo}" alt="${memberName}" data-has-custom="${isCustomPhoto}" class="w-full h-full object-cover hover:scale-105 transition-transform filter drop-shadow-xs" style="object-position: center ${(m.photo_pos || '20%').trim()};" loading="lazy" decoding="async" />
+            <div class="mt-3 w-full h-52 rounded-2xl overflow-hidden bg-gradient-to-b from-slate-100 via-white to-blue-50/20 border border-slate-200/80 relative group flex items-center justify-center">
+              ${isCustomPhoto ? `
+                <div class="absolute inset-0 bg-cover bg-center filter blur-lg opacity-35 scale-125 pointer-events-none" style="background-image: url('${photo}');"></div>
+              ` : ''}
+              <img id="bureau-img-${mId}" src="${photo}" alt="${memberName}" data-has-custom="${isCustomPhoto}" class="w-full h-full ${(m.photo_fit || 'cover') === 'contain' ? 'object-contain p-1.5' : 'object-cover'} hover:scale-105 transition-all duration-300 filter drop-shadow-xs relative z-10" style="object-position: center ${(m.photo_pos || '20%').trim()};" loading="lazy" decoding="async" />
               ${isAdminLoggedIn ? `
                 <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                   <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="px-3 py-1.5 bg-white text-slate-900 font-bold text-xs rounded-xl shadow-md hover:bg-slate-50 transition-colors">
@@ -4950,12 +4965,15 @@
 
             ${isAdminLoggedIn && isCustomPhoto ? `
               <div class="mt-1.5 flex items-center justify-between text-[10px] text-slate-500 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200">
-                <span class="font-medium text-slate-600 flex items-center gap-1"><span>↕️</span> <span>Cadrage :</span></span>
                 <div class="inline-flex items-center gap-1">
-                  <button type="button" onclick="nudgeBureauCardPhotoPos('${mId}', -10)" class="px-2 py-0.5 rounded-lg bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs" title="Monter la photo">⬆️</button>
-                  <span id="card-pos-indicator-${mId}" class="font-extrabold text-blue-700 w-8 text-center">${(m.photo_pos || '20%').trim()}</span>
-                  <button type="button" onclick="nudgeBureauCardPhotoPos('${mId}', 10)" class="px-2 py-0.5 rounded-lg bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs" title="Descendre la photo">⬇️</button>
+                  <span class="font-medium text-slate-600">↕️</span>
+                  <button type="button" onclick="nudgeBureauCardPhotoPos('${mId}', -10)" class="px-1.5 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs" title="Monter la photo">⬆️</button>
+                  <span id="card-pos-indicator-${mId}" class="font-extrabold text-blue-700 w-7 text-center">${(m.photo_pos || '20%').trim()}</span>
+                  <button type="button" onclick="nudgeBureauCardPhotoPos('${mId}', 10)" class="px-1.5 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs" title="Descendre la photo">⬇️</button>
                 </div>
+                <button type="button" onclick="toggleBureauCardPhotoFit('${mId}')" class="px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs text-[10px]" title="Basculer entre cadrage Remplir (Zoom) et Entier (Sans rognage)">
+                  ${(m.photo_fit || 'cover') === 'contain' ? '🔍 Entier' : '🖼️ Remplir'}
+                </button>
               </div>
             ` : ''}
 
@@ -5966,6 +5984,7 @@
         navActions: "Flagship Actions",
         navBureau: "Board 2026-2027",
         navSponsors: "Sponsors",
+        navStats: "Key Figures",
         navJoinUs: "Join Us",
         'actionsSection.financialLabel': "FINANCIAL",
         'actionsSection.humanitarianLabel': "HUMANITARIAN",
@@ -6099,6 +6118,7 @@
         navActions: "أبرز الأنشطة",
         navBureau: "الهيئة 2026-2027",
         navSponsors: "الرعاة",
+        navStats: "الأرقام الرئيسية",
         navJoinUs: "انضم إلينا",
         'actionsSection.financialLabel': "مالية",
         'actionsSection.humanitarianLabel': "إنسانية",
@@ -7451,7 +7471,7 @@ const CATEGORY_I18N = {
     }
     window.removeBackgroundFromCanvas = removeBackgroundFromCanvas;
 
-    function compressImageFile(file, maxWidth = 800, maxHeight = 800, quality = 0.82) {
+    function compressImageFile(file, maxWidth = 1600, maxHeight = 1600, quality = 0.90) {
       return new Promise((resolve, reject) => {
         if (!file || !file.type.startsWith('image/')) {
           return reject(new Error('Fichier image invalide.'));
@@ -7533,6 +7553,8 @@ const CATEGORY_I18N = {
       const posControls = document.getElementById('bureau-photo-position-controls');
       if (posControls) posControls.classList.remove('hidden');
       const posVal = member ? (parseInt(member.photo_pos, 10) || 20) : 20;
+      const fitVal = member ? (member.photo_fit || 'cover') : 'cover';
+      setBureauPhotoFitMode(fitVal);
       if (typeof setBureauPhotoPosPreset === 'function') setBureauPhotoPosPreset(posVal);
       document.getElementById('photo-manager-modal').classList.remove('hidden');
     }
@@ -7657,13 +7679,15 @@ const CATEGORY_I18N = {
         if (member) {
           member.photo_url = photoVal;
           member.photo_pos = photoPos;
+          member.photo_fit = window.activeBureauPhotoFit || 'cover';
         }
 
         if (window.firestoreDb && window.fs && target.id) {
           try {
             await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", target.id), {
               photo_url: photoVal,
-              photo_pos: photoPos
+              photo_pos: photoPos,
+              photo_fit: window.activeBureauPhotoFit || 'cover'
             }, { merge: true });
           } catch (err) {
             console.warn("Firestore bureau photo update error:", err);
@@ -9025,7 +9049,7 @@ const CATEGORY_I18N = {
         if (progressBar) progressBar.style.width = `${Math.round(((i + 1) / imageFiles.length) * 100)}%`;
 
         try {
-          const compressed = await compressImageFile(file, 1600, 1600, 0.83);
+          const compressed = await compressImageFile(file, 2800, 2800, 0.88);
           workingAlbumImages.push(compressed);
           completed++;
           renderAlbumManagerGrid();
@@ -9245,6 +9269,16 @@ const CATEGORY_I18N = {
 
     async function updateLiveInstagramFollowers() {
       try {
+        const stored = localStorage.getItem('ictgc_social_followers');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.instagram) {
+            document.querySelectorAll('.header-insta-count').forEach(h => h.textContent = parsed.instagram);
+            const el = document.querySelector('[data-edit-key="metric-val-community_reach"]');
+            if (el) el.textContent = parsed.instagram;
+            return;
+          }
+        }
         const resp = await fetch('/api/instagram');
         if (!resp.ok) return;
         const data = await resp.json();
@@ -9258,9 +9292,7 @@ const CATEGORY_I18N = {
             localStorage.setItem('ictgc_site_content', JSON.stringify(window.cachedSiteContent));
           } catch(e) {}
         }
-      } catch (err) {
-        
-      }
+      } catch (err) {}
     }
     window.updateLiveInstagramFollowers = updateLiveInstagramFollowers;
 
@@ -9346,6 +9378,16 @@ const CATEGORY_I18N = {
 
     async function updateLiveFacebookFollowers() {
       try {
+        const stored = localStorage.getItem('ictgc_social_followers');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.facebook) {
+            document.querySelectorAll('.header-fb-count').forEach(h => h.textContent = parsed.facebook);
+            const el = document.querySelector('[data-edit-key="metric-val-facebook_community"]');
+            if (el) el.textContent = parsed.facebook;
+            return;
+          }
+        }
         const resp = await fetch('/api/facebook');
         if (!resp.ok) return;
         const data = await resp.json();
@@ -9387,6 +9429,22 @@ const CATEGORY_I18N = {
     window.triggerNativeInstallPrompt = triggerNativeInstallPrompt;
 
     function openA2hsModal() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt().then((choice) => {
+          if (choice && choice.outcome === 'accepted') {
+            showAppToast("Application installée avec succès !", "success");
+            deferredInstallPrompt = null;
+          }
+        }).catch(() => {
+          showA2hsModalGuide();
+        });
+        return;
+      }
+      showA2hsModalGuide();
+    }
+    window.openA2hsModal = openA2hsModal;
+
+    function showA2hsModalGuide() {
       const modal = document.getElementById('a2hs-modal');
       if (modal) modal.classList.remove('hidden');
       const ua = navigator.userAgent || '';
@@ -9493,6 +9551,134 @@ const CATEGORY_I18N = {
       }
     }
     window.nudgeBureauCardPhotoPos = nudgeBureauCardPhotoPos;
+
+  
+    window.activeBureauPhotoFit = 'cover';
+
+    function setBureauPhotoFitMode(fit) {
+      window.activeBureauPhotoFit = fit || 'cover';
+      const img = document.getElementById('photo-preview-img');
+      if (img) {
+        if (fit === 'contain') {
+          img.className = "w-full h-full object-contain p-2 transition-all";
+        } else {
+          img.className = "w-full h-full object-cover transition-all";
+        }
+      }
+      const btnCover = document.getElementById('btn-fit-cover');
+      const btnContain = document.getElementById('btn-fit-contain');
+      if (btnCover && btnContain) {
+        if (fit === 'contain') {
+          btnContain.className = "px-2.5 py-1 rounded-lg bg-white text-blue-700 shadow-2xs transition-all";
+          btnCover.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+        } else {
+          btnCover.className = "px-2.5 py-1 rounded-lg bg-white text-blue-700 shadow-2xs transition-all";
+          btnContain.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+        }
+      }
+    }
+    window.setBureauPhotoFitMode = setBureauPhotoFitMode;
+
+    async function toggleBureauCardPhotoFit(memberId) {
+      const currentList = window.cachedBureauList || window.defaultBureau;
+      const member = currentList.find(b => (b.id || '') === memberId);
+      if (!member) return;
+      const currentFit = (member.photo_fit || 'cover').trim();
+      member.photo_fit = currentFit === 'contain' ? 'cover' : 'contain';
+      renderBureau(currentList);
+      syncFullBureauToCloud(currentList);
+      if (window.firestoreDb && window.fs && memberId) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", memberId), {
+            photo_fit: member.photo_fit
+          }, { merge: true });
+        } catch(e){}
+      }
+      showAppToast(member.photo_fit === 'contain' ? "Cadrage : Entier (Sans rognage)" : "Cadrage : Remplir (Zoom)", "info");
+    }
+    window.toggleBureauCardPhotoFit = toggleBureauCardPhotoFit;
+
+    function openFollowersModal() {
+      const fbEl = document.querySelector('.header-fb-count');
+      const inEl = document.querySelector('.header-insta-count');
+      const fbIn = document.getElementById('input-followers-fb');
+      const inIn = document.getElementById('input-followers-insta');
+      if (fbIn && fbEl) fbIn.value = fbEl.textContent.trim();
+      if (inIn && inEl) inIn.value = inEl.textContent.trim();
+      const modal = document.getElementById('followers-manager-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    window.openFollowersModal = openFollowersModal;
+
+    function closeFollowersModal() {
+      const modal = document.getElementById('followers-manager-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+    window.closeFollowersModal = closeFollowersModal;
+
+    async function saveFollowersModal() {
+      const fbIn = document.getElementById('input-followers-fb');
+      const inIn = document.getElementById('input-followers-insta');
+      const fbVal = fbIn ? fbIn.value.trim() : '';
+      const inVal = inIn ? inIn.value.trim() : '';
+      if (!fbVal && !inVal) {
+        closeFollowersModal();
+        return;
+      }
+
+      if (fbVal) {
+        document.querySelectorAll('.header-fb-count').forEach(el => el.textContent = fbVal);
+        const statFb = document.querySelector('[data-edit-key="metric-val-facebook_community"]');
+        if (statFb) statFb.textContent = fbVal;
+      }
+      if (inVal) {
+        document.querySelectorAll('.header-insta-count').forEach(el => el.textContent = inVal);
+        const statIn = document.querySelector('[data-edit-key="metric-val-community_reach"]');
+        if (statIn) statIn.textContent = inVal;
+      }
+
+      if (!window.cachedSiteContent) window.cachedSiteContent = {};
+      if (fbVal) window.cachedSiteContent['metric-val-facebook_community'] = fbVal;
+      if (inVal) window.cachedSiteContent['metric-val-community_reach'] = inVal;
+      try {
+        localStorage.setItem('ictgc_site_content', JSON.stringify(window.cachedSiteContent));
+        localStorage.setItem('ictgc_social_followers', JSON.stringify({ facebook: fbVal, instagram: inVal, updatedAt: Date.now() }));
+      } catch(e){}
+
+      if (window.firestoreDb && window.fs) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteSettings", "socialFollowers"), {
+            facebook: fbVal,
+            instagram: inVal,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch(e){}
+      }
+
+      closeFollowersModal();
+      showAppToast("Compteurs d'abonnés enregistrés avec succès !", "success");
+    }
+    window.saveFollowersModal = saveFollowersModal;
+
+    function loadPersistedSocialFollowers() {
+      try {
+        const stored = localStorage.getItem('ictgc_social_followers');
+        if (stored) {
+          const data = JSON.parse(stored);
+          if (data.facebook) {
+            document.querySelectorAll('.header-fb-count').forEach(el => el.textContent = data.facebook);
+            const statFb = document.querySelector('[data-edit-key="metric-val-facebook_community"]');
+            if (statFb) statFb.textContent = data.facebook;
+          }
+          if (data.instagram) {
+            document.querySelectorAll('.header-insta-count').forEach(el => el.textContent = data.instagram);
+            const statIn = document.querySelector('[data-edit-key="metric-val-community_reach"]');
+            if (statIn) statIn.textContent = data.instagram;
+          }
+        }
+      } catch(e){}
+    }
+    window.loadPersistedSocialFollowers = loadPersistedSocialFollowers;
 
   </script>
 
@@ -9623,6 +9809,54 @@ const CATEGORY_I18N = {
       <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end">
         <button type="button" onclick="closeA2hsModal()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-xs">
           Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="followers-manager-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shadow-2xs border border-blue-100">📱</span>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Abonnés Réseaux Sociaux</h3>
+            <p class="text-xs text-slate-500">Mise à jour en temps réel des compteurs</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeFollowersModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors">✕</button>
+      </div>
+
+      <div class="mt-5 space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><span class="text-blue-600">Facebook</span> (@ICTGC)</span>
+            <span class="text-[11px] text-slate-400">Affiché en en-tête & stats</span>
+          </label>
+          <input type="text" id="input-followers-fb" placeholder="Ex: 9 414+" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><span class="text-pink-600">Instagram</span> (@ic.tunisgolfecarthagene)</span>
+            <span class="text-[11px] text-slate-400">Affiché en en-tête & stats</span>
+          </label>
+          <input type="text" id="input-followers-insta" placeholder="Ex: 3 601+" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none" />
+        </div>
+
+        <div class="p-3 bg-blue-50/70 border border-blue-200/60 rounded-2xl text-[11px] text-blue-900 flex items-start gap-2">
+          <span>💡</span>
+          <span>Les nouveaux chiffres d'abonnés sont immédiatement appliqués sur le site public, sauvegardés dans le Cloud Firestore et synchronisés pour tous les visiteurs.</span>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+        <button type="button" onclick="closeFollowersModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+          Annuler
+        </button>
+        <button type="button" onclick="saveFollowersModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+          Enregistrer
         </button>
       </div>
     </div>

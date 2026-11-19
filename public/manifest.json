@@ -3,11 +3,14 @@
   "short_name": "ICTGC",
   "description": "Application officielle de l'Interact Club Tunis Golfe Carthagène — Club #219646 • District 9010",
   "start_url": "/",
+  "scope": "/",
   "id": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#081226",
   "theme_color": "#002060",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "categories": ["community", "social", "education"],
   "icons": [
     {
       "src": "/assets/logos/logo-bleu-clair.png",
