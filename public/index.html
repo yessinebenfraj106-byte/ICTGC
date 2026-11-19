@@ -147,6 +147,10 @@
   </script>
   <style>
 
+    .hidden {
+      display: none !important;
+    }
+
     :root {
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -402,7 +406,7 @@
     </div>
   </header>
 
-  <div id="admin-floating-bar" class="hidden fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-auto max-w-[95vw]">
+  <div id="admin-floating-bar" class="hidden fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-auto max-w-[95vw]" style="display: none;">
     <div id="admin-mobile-minimized" class="sm:hidden flex items-center gap-2 bg-slate-900/95 backdrop-blur-md text-white px-3.5 py-2 rounded-full shadow-2xl border border-slate-700 text-xs">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
       <span class="font-bold text-[11px] text-slate-200 whitespace-nowrap">Mode Admin</span>
@@ -682,7 +686,7 @@
 
     </div>
 
-    <div id="recruitment-view" class="hidden max-w-3xl mx-auto px-4 py-12">
+    <div id="recruitment-view" class="hidden max-w-3xl mx-auto px-4 py-12" style="display: none;">
       <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
         <div class="text-center pb-8 border-b border-slate-100">
           <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold" data-i18n="recruitBadge">Tunnel d'Acquisition Officiel</span>
@@ -829,7 +833,7 @@
       </div>
     </div>
 
-    <div id="member-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div id="member-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8" style="display: none;">
       
       <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div class="flex items-center gap-4">
@@ -883,7 +887,7 @@
       <div id="resource-library-container"></div>
     </div>
 
-    <div id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8" style="display: none;">
 
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
         <div>
@@ -931,7 +935,6 @@
             Édition Directe de Texte
           </button>
         </div>
-      </div>
 
       <div class="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-2xs">
@@ -3705,7 +3708,11 @@
 
       ['public-view', 'recruitment-view', 'member-view', 'admin-view'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.classList.toggle('hidden', id !== viewId);
+        if (el) {
+          const isMatch = (id === viewId);
+          el.classList.toggle('hidden', !isMatch);
+          el.style.display = isMatch ? '' : 'none';
+        }
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (targetAnchorId) {
@@ -3782,6 +3789,8 @@
       } else if (path === '/espace-interne' || path === '/portal') {
         showView('public-view', null, false);
         if (typeof openInternalPortal === 'function') openInternalPortal();
+      } else {
+        showView('public-view', null, false);
       }
     }
     window.handleAppRouting = handleAppRouting;
@@ -4774,8 +4783,16 @@
         const title = (a.title || 'Action Phare').trim();
         const description = (a.description || 'Action menée par l\'Interact Club Tunis Golfe Carthagène.').trim();
         const lang = window.currentAppLanguage || 'fr';
-        const dict = (typeof I18N_DICT !== 'undefined' && I18N_DICT[lang]) ? I18N_DICT[lang] : I18N_DICT.fr;
-        const dyn = (typeof translateDynamicAction === 'function') ? translateDynamicAction({ ...a, id: actionId, title, category, location, beneficiary_unit: a.beneficiary_unit, description }, lang) : {};
+        const fallbackDict = {
+          viewAlbum: "Voir l'album",
+          photoCountSingular: "photo",
+          photoCountPlural: "photos",
+          impactLabel: "Impact :",
+          collabWith: "🤝 En collaboration avec :",
+          noCollab: "Aucune collaboration renseignée"
+        };
+        const dict = (window.I18N_DICT && window.I18N_DICT[lang]) ? window.I18N_DICT[lang] : ((window.I18N_DICT && window.I18N_DICT.fr) || fallbackDict);
+        const dyn = (typeof window.translateDynamicAction === 'function') ? window.translateDynamicAction({ ...a, id: actionId, title, category, location, beneficiary_unit: a.beneficiary_unit, description }, lang) : ((typeof translateDynamicAction === 'function') ? translateDynamicAction({ ...a, id: actionId, title, category, location, beneficiary_unit: a.beneficiary_unit, description }, lang) : {});
         let displayTitle = dyn.title || title;
         let displayDesc = dyn.description || description;
         let displayCat = dyn.category || category;
@@ -6024,7 +6041,7 @@
 
     window.currentAppLanguage = localStorage.getItem('ictgc_lang') || 'fr';
 
-    const I18N_DICT = {
+    window.I18N_DICT = {
       fr: {
         navHome: "Accueil",
         navActions: "Actions Phares",
@@ -6429,7 +6446,7 @@
         footerContact: "راسلنا عبر البريد الإلكتروني"
       }
     };
-
+    const I18N_DICT = window.I18N_DICT;
     const ROLE_I18N = {
       "Présidente": { en: "President", ar: "الرئيسة" },
       "Vice-présidente": { en: "Vice-President", ar: "نائبة الرئيسة" },
