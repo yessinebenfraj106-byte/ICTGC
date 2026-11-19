@@ -1687,6 +1687,8 @@
             <option value="Commission des Finances">
             <option value="Commission Actions Internationales">
             <option value="Commission Médiatisation">
+            <option value="Commission Sponsoring">
+            <option value="Pôle TikTok">
             <option value="Commission Camaraderie">
           </datalist>
           <p class="text-[10px] text-slate-500 mt-1.5 flex items-center gap-1">
@@ -3587,7 +3589,7 @@
     "full_name": "Zeyneb Koubaa",
     "role": "co-Cheffe intérêt public",
     "tier": "commission",
-    "commission_name": "Intérêt Public",
+    "commission_name": "Commission d'Intérêt Public (CIP)",
     "photo_url": "",
     "photo_pos": "20%",
     "photo_fit": "cover",
@@ -3599,7 +3601,7 @@
     "full_name": "Omar Jerbi",
     "role": "co-Chef intérêt public",
     "tier": "commission",
-    "commission_name": "Intérêt Public",
+    "commission_name": "Commission d'Intérêt Public (CIP)",
     "photo_url": "",
     "photo_pos": "20%",
     "photo_fit": "cover",
@@ -5166,12 +5168,15 @@
                 <button type="button" onclick="toggleBureauCardPhotoFit('${mId}')" class="px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs text-[10px]" title="Basculer entre cadrage Remplir (Zoom) et Entier (Sans rognage)">
                   ${(m.photo_fit || 'cover') === 'contain' ? '🔍 Entier' : '🖼️ Remplir'}
                 </button>
+                <button type="button" onclick="editBureauMemberCommission('${mId}', '${(m.commission_name || '').replace(/'/g, "\\'")}')" class="px-2 py-0.5 rounded bg-white hover:bg-rose-50 hover:text-rose-700 border border-slate-200 font-bold shadow-2xs text-[10px]" title="Associer à une commission (Duo de Co-chefs)">
+                  🤝 Co-chef
+                </button>
               </div>
             ` : ''}
 
             <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5 flex-wrap min-h-[34px]">
               <div class="flex items-center gap-1.5 flex-wrap">
-                ${(!m.instagram && !m.facebook && !isAdminLoggedIn) ? `<span class="text-[10px] text-slate-400 font-medium italic">Interact Club Tunis Golfe Carthagène</span>` : ''}
+                
                 ${m.instagram ? `
                   <a href="${m.instagram.startsWith('http') ? m.instagram : `https://instagram.com/${m.instagram.replace(/^@/, '')}`}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 text-[10px] font-bold border border-pink-200/80 transition-all hover:scale-105 shadow-2xs" title="Profil Instagram de ${memberName}">
                     <svg class="w-3 h-3 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -5298,7 +5303,7 @@
                 ${memberName}
               </h5>
               <div class="w-full h-36 sm:h-44 rounded-xl overflow-hidden bg-gradient-to-b from-slate-50 via-white to-blue-50/20 border border-slate-100 relative group flex items-center justify-center">
-                <img id="bureau-img-${mId}" src="${photo}" alt="${memberName}" data-has-custom="${isCustomPhoto}" class="w-full h-full object-cover object-top hover:scale-105 transition-transform filter drop-shadow-xs" loading="lazy" decoding="async" />
+                <img id="bureau-img-${mId}" src="${photo}" alt="${memberName}" data-has-custom="${isCustomPhoto}" class="w-full h-full ${(m.photo_fit || 'cover') === 'contain' ? 'object-contain' : 'object-cover'} hover:scale-105 transition-transform filter drop-shadow-xs" style="object-position: center ${(m.photo_pos || '20%').trim()};" loading="lazy" decoding="async" />
                 ${isAdminLoggedIn ? `
                   <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-1">
                     <button onclick="openBureauPhotoModal('${mId}', '${safeName}')" class="px-2 py-1 bg-white text-slate-900 font-bold text-[10px] rounded-lg shadow hover:bg-slate-50">
@@ -5307,6 +5312,20 @@
                   </div>
                 ` : ''}
               </div>
+
+              ${isAdminLoggedIn ? `
+                <div class="mt-1.5 px-1.5 py-1 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-[9px]">
+                  <div class="flex items-center gap-0.5">
+                    <span class="font-medium text-slate-600">↕️</span>
+                    <button type="button" onclick="nudgeBureauCardPhotoPos('${mId}', -10)" class="px-1 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs" title="Monter">⬆️</button>
+                    <span id="card-pos-indicator-${mId}" class="font-extrabold text-blue-700 w-5 text-center">${(m.photo_pos || '20%').trim()}</span>
+                    <button type="button" onclick="nudgeBureauCardPhotoPos('${mId}', 10)" class="px-1 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs" title="Descendre">⬇️</button>
+                  </div>
+                  <button type="button" onclick="toggleBureauCardPhotoFit('${mId}')" class="px-1.5 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 font-bold shadow-2xs text-[9px]" title="Cadrage">
+                    ${(m.photo_fit || 'cover') === 'contain' ? '🔍 Entier' : '🖼️ Remplir'}
+                  </button>
+                </div>
+              ` : ''}
 
               <div class="mt-2 flex items-center justify-between gap-1 flex-wrap">
                 <div class="flex items-center gap-1 flex-wrap">
@@ -5324,9 +5343,14 @@
                   ` : ''}
                 </div>
                 ${isAdminLoggedIn ? `
-                  <button type="button" onclick="openBureauSocialsModal('${mId}', '${safeName}')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[9px] font-bold border border-slate-200" title="Modifier Réseaux">
-                    📱
-                  </button>
+                  <div class="flex items-center gap-1">
+                    <button type="button" onclick="openBureauSocialsModal('${mId}', '${safeName}')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[9px] font-bold border border-slate-200" title="Modifier Réseaux">
+                      📱
+                    </button>
+                    <button type="button" onclick="editBureauMemberCommission('${mId}', '${(m.commission_name || '').replace(/'/g, "\\'")}')" class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[9px] font-bold border border-slate-200" title="Modifier la commission du co-chef">
+                      🤝
+                    </button>
+                  </div>
                 ` : ''}
               </div>
             </div>
@@ -5404,7 +5428,27 @@
       }
 
       if (commissionGrid) {
-        commissionGrid.innerHTML = commission.map((m, i) => renderBureauCard(m, m.id || `comm-${i}`, 'text-rose-600')).join('');
+        const commissionGroups = [];
+        const groupMap = new Map();
+
+        commission.forEach(m => {
+          const key = normalizeCommissionKey(m);
+          if (!groupMap.has(key)) {
+            const grp = { commissionName: key, members: [] };
+            groupMap.set(key, grp);
+            commissionGroups.push(grp);
+          }
+          groupMap.get(key).members.push(m);
+        });
+
+        commissionGrid.innerHTML = commissionGroups.map((group, grpIdx) => {
+          if (group.members.length === 1) {
+            const m = group.members[0];
+            return renderBureauCard(m, m.id || `comm-${grpIdx}`, 'text-rose-600');
+          } else {
+            return renderCommissionDuoCard(group, grpIdx);
+          }
+        }).join('');
       }
 
       if (elargiGrid) {
