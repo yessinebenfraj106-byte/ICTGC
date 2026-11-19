@@ -407,10 +407,13 @@
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
       <span class="font-bold text-[11px] text-slate-200 whitespace-nowrap">Mode Admin</span>
       <button onclick="saveAllSiteContent()" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[10px] transition-all shadow-xs flex items-center gap-1" title="Sauvegarder">
-        <span>💾</span> Sauvegarder
+        <span>💾</span>
       </button>
       <button onclick="expandMobileAdminBar()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold text-[10px] transition-all flex items-center gap-1" title="Déplier les outils d'administration">
         <span>▲ Outils</span>
+      </button>
+      <button onclick="logoutAdmin()" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px] transition-all flex items-center gap-1" title="Quitter le Mode Admin et voir le site normal">
+        <span>✕ Quitter</span>
       </button>
     </div>
 
@@ -601,12 +604,7 @@
           </div>
         </div>
         
-        <div class="flex items-center justify-center mb-8">
-          <div class="tabs" role="group" aria-label="Catégories d’actions">
-            <button type="button" class="tab is-on" data-cat="humanitaire" data-site="actionsSection.humanitarianLabel" aria-pressed="true" onclick="filterActionsCategory('humanitaire')">HUMANITAIRES</button>
-            <button type="button" class="tab" data-cat="financiere" data-site="actionsSection.financialLabel" aria-pressed="false" onclick="filterActionsCategory('financiere')">FINANCIÈRES</button>
-          </div>
-        </div>
+        
 
         <div id="actions-bento" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 [column-fill:_balance]"></div>
       </section>
@@ -1843,42 +1841,42 @@
     </div>
   </div>
 
-  <div id="action-album-lightbox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/95 backdrop-blur-md select-none">
+  <div id="action-album-lightbox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/95 backdrop-blur-xl select-none">
     <div class="relative w-full max-w-6xl xl:max-w-7xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh]">
 
-      <div class="px-4 sm:px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between gap-3 text-white">
-        <div class="min-w-0">
-          <div class="flex items-center gap-2 mb-0.5">
-            <span id="lightbox-category-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">Action</span>
-            <span id="lightbox-counter" class="text-xs font-bold text-slate-400">Photo 1 sur 1</span>
+      <div class="px-4 sm:px-6 py-3.5 border-b border-slate-800/80 flex items-center justify-between gap-3 text-white bg-slate-900/90 backdrop-blur-md flex-shrink-0">
+        <div class="min-w-0 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm border border-blue-500/30 flex-shrink-0">
+            📸
           </div>
-          <h3 id="lightbox-action-title" class="text-sm sm:text-base font-extrabold text-white truncate">Titre de l'action</h3>
+          <div class="min-w-0">
+            <h3 id="lightbox-action-title" class="text-sm sm:text-base font-extrabold text-white truncate leading-tight">Titre de l'action</h3>
+            <span id="lightbox-counter" class="text-[11px] font-bold text-slate-400 mt-0.5 block">Photo 1 sur 1</span>
+          </div>
         </div>
         
         <div class="flex items-center gap-2 flex-shrink-0">
-          <button onclick="openCurrentPhotoFullscreen()" class="px-2.5 py-1 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors text-xs font-bold flex items-center gap-1.5 border border-slate-700/60" title="Ouvrir la photo en pleine résolution">
-            <span>🔍</span> <span class="hidden sm:inline">Pleine Résolution</span>
+          <button type="button" onclick="downloadCurrentLightboxPhoto()" class="px-3 py-1.5 text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/90 rounded-xl transition-all text-xs font-semibold flex items-center gap-1.5 border border-slate-700/60 shadow-xs" title="Télécharger cette photo">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span class="hidden sm:inline">Télécharger</span>
           </button>
-          <button onclick="downloadCurrentLightboxPhoto()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors" title="Télécharger cette photo">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          </button>
-          <button onclick="closeActionAlbumLightbox()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors text-base font-bold" title="Fermer (Échap)">✕</button>
+          <button type="button" onclick="closeActionAlbumLightbox()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-slate-300 hover:text-white bg-slate-800/80 hover:bg-rose-600 rounded-xl transition-all text-sm font-bold border border-slate-700/60 shadow-xs" title="Fermer (Échap)">✕</button>
         </div>
       </div>
 
-      <div class="relative flex-1 flex items-center justify-center p-2 sm:p-4 min-h-[360px] sm:min-h-[500px] max-h-[78vh] bg-slate-950/80 overflow-hidden">
-        <button onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo précédente (←)">
-          ◀
+      <div class="relative flex-1 flex items-center justify-center p-3 sm:p-5 min-h-[360px] sm:min-h-[500px] max-h-[78vh] bg-slate-950 overflow-hidden">
+        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-white flex items-center justify-center shadow-xl border border-slate-700/80 backdrop-blur-md transition-all hover:scale-110 active:scale-95 text-lg font-bold" title="Photo précédente (←)">
+          ‹
         </button>
 
-        <img id="lightbox-main-img" src="" alt="Photo Album" onclick="toggleLightboxZoom()" class="max-w-full max-h-[82vh] sm:max-h-[86vh] w-auto h-auto object-contain rounded-2xl shadow-2xl transition-all duration-300 cursor-zoom-in" style="image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;" title="Photo haute résolution — Cliquez pour basculer en taille 100%" />
+        <img id="lightbox-main-img" src="" alt="Photo Album" onclick="toggleLightboxZoom()" class="max-w-full max-h-[76vh] sm:max-h-[80vh] w-auto h-auto object-contain rounded-2xl shadow-2xl transition-all duration-300 cursor-zoom-in filter drop-shadow-2xl" fetchpriority="high" decoding="async" style="image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;" title="Photo haute résolution — Cliquez pour basculer en taille 100%" />
 
-        <button onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-5 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center shadow-lg border border-slate-700/80 transition-all hover:scale-105 active:scale-95" title="Photo suivante (→)">
-          ▶
+        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-white flex items-center justify-center shadow-xl border border-slate-700/80 backdrop-blur-md transition-all hover:scale-110 active:scale-95 text-lg font-bold" title="Photo suivante (→)">
+          ›
         </button>
       </div>
 
-      <div id="lightbox-filmstrip-container" class="px-4 py-3 bg-slate-900 border-t border-slate-800/80 overflow-x-auto flex gap-2 items-center justify-center">
+      <div id="lightbox-filmstrip-container" class="px-4 py-3 bg-slate-900/95 border-t border-slate-800/80 overflow-x-auto flex gap-2 items-center justify-center min-h-[64px]">
       </div>
     </div>
   </div>
@@ -4291,21 +4289,7 @@
     window.currentActionCategoryFilter = 'humanitaire';
 
     function filterActionsCategory(category) {
-      const tabs = document.querySelectorAll('.tabs .tab');
-      if (window.currentActionCategoryFilter === category) {
-        window.currentActionCategoryFilter = 'all';
-        tabs.forEach(btn => {
-          btn.classList.remove('is-on');
-          btn.setAttribute('aria-pressed', 'false');
-        });
-      } else {
-        window.currentActionCategoryFilter = category;
-        tabs.forEach(btn => {
-          const isTarget = btn.getAttribute('data-cat') === category;
-          btn.classList.toggle('is-on', isTarget);
-          btn.setAttribute('aria-pressed', isTarget ? 'true' : 'false');
-        });
-      }
+      window.currentActionCategoryFilter = 'all';
       renderActions(window.cachedActionsList || defaultActions);
     }
     window.filterActionsCategory = filterActionsCategory;
@@ -4736,47 +4720,11 @@
       const bento = document.getElementById('actions-bento');
       if (!bento) return;
 
-      const catFilter = window.currentActionCategoryFilter || 'humanitaire';
-      let filteredData = data;
-      if (catFilter === 'financiere') {
-        filteredData = data.filter(a => {
-          const t = (a.action_type || '').toLowerCase();
-          const c = (a.category || '').toLowerCase();
-          const tit = (a.title || '').toLowerCase();
-          return t === 'financiere' || c.includes('financ') || c.includes('autofinance') || c.includes('culture') || c.includes('loisir') || tit.includes('midnight') || tit.includes('pool') || tit.includes('gala');
-        });
-        
-        filteredData.sort((a, b) => {
-          if (a.is_news && !b.is_news) return -1;
-          if (!a.is_news && b.is_news) return 1;
-          return 0;
-        });
-      } else if (catFilter === 'humanitaire') {
-        filteredData = data.filter(a => {
-          const t = (a.action_type || '').toLowerCase();
-          const c = (a.category || '').toLowerCase();
-          const tit = (a.title || '').toLowerCase();
-          const isFin = t === 'financiere' || c.includes('financ') || c.includes('autofinance') || tit.includes('midnight');
-          return !isFin || t === 'humanitaire';
-        });
-        
-        filteredData.sort((a, b) => {
-          if (a.is_news && !b.is_news) return -1;
-          if (!a.is_news && b.is_news) return 1;
-          return 0;
-        });
-      } else {
-        
-        filteredData = [...data].sort((a, b) => {
-          if (a.is_news && !b.is_news) return -1;
-          if (!a.is_news && b.is_news) return 1;
-          const aIsFin = (a.action_type === 'financiere' || (a.category || '').toLowerCase().includes('financ') || (a.category || '').toLowerCase().includes('autofinanc'));
-          const bIsFin = (b.action_type === 'financiere' || (b.category || '').toLowerCase().includes('financ') || (b.category || '').toLowerCase().includes('autofinanc'));
-          if (!aIsFin && bIsFin) return -1;
-          if (aIsFin && !bIsFin) return 1;
-          return 0;
-        });
-      }
+      let filteredData = [...data].sort((a, b) => {
+        if (a.is_news && !b.is_news) return -1;
+        if (!a.is_news && b.is_news) return 1;
+        return (a.order_index || 0) - (b.order_index || 0);
+      });
 
       if (filteredData.length === 0) {
         bento.innerHTML = `
@@ -7393,13 +7341,20 @@ const CATEGORY_I18N = {
 
     function logoutAdmin() {
       isAdminLoggedIn = false;
-      disableGlobalTextEditing();
-      document.getElementById('admin-floating-bar').classList.add('hidden');
-      document.getElementById('admin-actions-controls').classList.add('hidden');
+      currentLoggedMember = null;
+      if (typeof disableGlobalTextEditing === 'function') disableGlobalTextEditing();
+      const floatBar = document.getElementById('admin-floating-bar');
+      if (floatBar) floatBar.classList.add('hidden');
+      const actCtrl = document.getElementById('admin-actions-controls');
+      if (actCtrl) actCtrl.classList.add('hidden');
       const bCtrl = document.getElementById('admin-bureau-controls');
       if (bCtrl) bCtrl.classList.add('hidden');
       const pCtrl = document.getElementById('admin-partners-controls');
       if (pCtrl) pCtrl.classList.add('hidden');
+      const adminView = document.getElementById('admin-view');
+      if (adminView) adminView.classList.add('hidden');
+      const memberView = document.getElementById('member-view');
+      if (memberView) memberView.classList.add('hidden');
       const tbody = document.getElementById('members-table-body');
       if (tbody) tbody.innerHTML = '';
       const candBody = document.getElementById('candidates-table-body');
@@ -7416,7 +7371,10 @@ const CATEGORY_I18N = {
       if (window.cachedBureauList) renderBureau(window.cachedBureauList);
       if (window.cachedActionsList) renderActions(window.cachedActionsList);
       if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
-      showView('public-view');
+      showView('public-view', null, true);
+      if (typeof showAppToast === 'function') {
+        showAppToast("Mode Administrateur fermé. Affichage standard pour les visiteurs.", "info", 3500);
+      }
     }
 
     window.addEventListener('keydown', (e) => {
@@ -8071,10 +8029,8 @@ const CATEGORY_I18N = {
       }
 
       const modal = document.getElementById('action-album-lightbox-modal');
-      const catBadge = document.getElementById('lightbox-category-badge');
       const titleEl = document.getElementById('lightbox-action-title');
 
-      if (catBadge) catBadge.textContent = action.category || 'Action Phare';
       if (titleEl) titleEl.textContent = action.title || 'Album Photos';
 
       updateLightboxDisplay();
@@ -8106,25 +8062,30 @@ const CATEGORY_I18N = {
       const mainImg = document.getElementById('lightbox-main-img');
       const filmstrip = document.getElementById('lightbox-filmstrip-container');
 
-      if (counterEl) counterEl.textContent = `Photo ${currentLightboxIndex + 1} sur ${images.length}`;
+      if (counterEl) counterEl.textContent = `${currentLightboxIndex + 1} / ${images.length}`;
       if (mainImg) {
         mainImg.src = images[currentLightboxIndex];
         mainImg.alt = `${currentLightboxAction.title} - Photo ${currentLightboxIndex + 1}`;
       }
 
       if (filmstrip) {
-        filmstrip.innerHTML = images.map((img, idx) => {
-          const isActive = idx === currentLightboxIndex;
-          return `
-            <button type="button" onclick="jumpToLightboxPhoto(${idx})" class="relative flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer ${isActive ? 'border-blue-400 ring-2 ring-blue-500/40 scale-105' : 'border-slate-700/80 opacity-60 hover:opacity-100 hover:border-slate-500'}">
-              <img src="${img}" alt="Miniature ${idx + 1}" class="w-full h-full object-cover" />
-              <span class="absolute bottom-0 right-0 bg-slate-950/80 text-[9px] text-white font-black px-1 rounded-tl-sm">${idx + 1}</span>
-            </button>
-          `;
-        }).join('');
-        const activeThumb = filmstrip.children[currentLightboxIndex];
-        if (activeThumb && activeThumb.scrollIntoView) {
-          activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        if (images.length <= 1) {
+          filmstrip.classList.add('hidden');
+        } else {
+          filmstrip.classList.remove('hidden');
+          filmstrip.innerHTML = images.map((img, idx) => {
+            const isActive = idx === currentLightboxIndex;
+            return `
+              <button type="button" onclick="jumpToLightboxPhoto(${idx})" class="relative flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer ${isActive ? 'border-sky-400 ring-2 ring-sky-500/50 scale-105 shadow-md' : 'border-slate-800 opacity-50 hover:opacity-100 hover:border-slate-600'}">
+                <img src="${img}" alt="Miniature ${idx + 1}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <span class="absolute bottom-0 right-0 bg-slate-950/80 text-[8px] text-white font-black px-1 rounded-tl-sm">${idx + 1}</span>
+              </button>
+            `;
+          }).join('');
+          const activeThumb = filmstrip.children[currentLightboxIndex];
+          if (activeThumb && activeThumb.scrollIntoView) {
+            activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
         }
       }
     }
