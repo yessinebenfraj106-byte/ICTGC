@@ -4018,7 +4018,7 @@
         const storedB = localStorage.getItem('ictgc_bureau_cache');
         if (storedB) {
           const parsed = JSON.parse(storedB);
-          if (Array.isArray(parsed) && parsed.length > 0) initialBureau = parsed;
+          if (Array.isArray(parsed) && parsed.length >= defaultBureau.length) initialBureau = parsed;
         }
       } catch(e) {}
       renderBureau(initialBureau);
@@ -5193,7 +5193,7 @@
 
       const r = (b.role || '').toLowerCase();
       if (r.includes('adjoint')) return 'adjoint';
-      if (r.includes('commission')) return 'commission';
+      if (r.includes('commission') || r.includes('tiktok') || r.includes('média') || r.includes('media') || r.includes('sponsoring') || r.includes('finance') || r.includes('intérêt') || r.includes('interet') || r.includes('rh') || r.includes('international')) return 'commission';
       return 'executif';
     }
 
@@ -7263,6 +7263,7 @@ const CATEGORY_I18N = {
         localStorage.setItem('ictgc_site_content', JSON.stringify(payload));
       } catch (e) {}
 
+      const sbRows = Object.entries(payload).map(([k, v]) => ({ key: k, value: String(v), updated_at: new Date().toISOString() }));
       await raceFastestWrite(
         async () => {
           if (window.firestoreDb && window.fs) {
@@ -7270,7 +7271,9 @@ const CATEGORY_I18N = {
           }
         },
         async () => {
-          await replicateToSupabase('site_content', [{ id: 'main', content: payload, updated_at: new Date().toISOString() }]);
+          if (sbRows.length > 0) {
+            await replicateToSupabase('site_content', sbRows);
+          }
         }
       );
 
