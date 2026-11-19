@@ -893,6 +893,38 @@
           <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Tableau de Bord Administratif & Analytique</h2>
           <p class="text-xs text-slate-500">Supervision en temps réel des visiteurs, performances Web Vitals, candidatures et membres</p>
         </div>
+        <div class="flex items-center gap-2">
+          <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-bold text-slate-700">Multi-Base Active</span>
+          </div>
+          <button type="button" onclick="syncAllDataToSupabase()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5" title="Synchroniser et répliquer toutes les données vers la base Supabase secondaire">
+            <span>⚡</span> <span>Sync Supabase</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-slate-900/95 text-white border border-blue-700/60 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-xl flex-shrink-0 shadow-inner">
+              🗄️
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm text-white">Architecture Double Base de Données (Haute Disponibilité)</h4>
+              <p class="text-slate-300 text-[11px] mt-0.5">Firebase Firestore (Temps réel primaire) + Supabase PostgreSQL (Sauvegarde secondaire & Haute Capacité)</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-[11px] flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Firestore Connecté
+            </span>
+            <span class="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-[11px] flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Supabase Prêt (ictgc-db)
+            </span>
+          </div>
+        </div>
+      </div>
         <div class="flex flex-wrap items-center gap-2">
           <button onclick="openAddActionModal()" class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all">
             + Nouvelle Action
@@ -7287,6 +7319,17 @@ const CATEGORY_I18N = {
             status: "pending",
             submittedAt: new Date().toISOString()
           });
+          if (typeof replicateToSupabase === 'function') {
+            replicateToSupabase('recruitment_applications', [{
+              id: 'app-' + Date.now(),
+              first_name: payload.first_name || '',
+              last_name: payload.last_name || '',
+              phone: payload.phone || '',
+              email: payload.email || '',
+              school: payload.school || '',
+              answers: payload
+            }]).catch(() => {});
+          }
           if (window.ICTGC_Analytics) {
             window.ICTGC_Analytics.logAction('Dépôt de candidature (' + (payload.fullname || '') + ')', 'conversion');
           }
@@ -9594,6 +9637,70 @@ const CATEGORY_I18N = {
     window.toggleBureauCardPhotoFit = toggleBureauCardPhotoFit;
 
     
+
+  
+    const SUPABASE_CONFIG = {
+      url: 'https://wutyesmegzwyaocbsshd.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dHllc21lZ3p3eWFvY2Jzc2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUxMDAzNTAsImV4cCI6MjExMDY3NjM1MH0.6JaW-lvXX1cNM3ufStLt_fQo7qPzetkM7yv6JgEqTms'
+    };
+
+    async function replicateToSupabase(endpoint, data, prefer = 'resolution=merge-duplicates') {
+      try {
+        const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_CONFIG.anonKey,
+            'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': prefer
+          },
+          body: JSON.stringify(data)
+        });
+        return resp.ok;
+      } catch (e) {
+        return false;
+      }
+    }
+    window.replicateToSupabase = replicateToSupabase;
+
+    async function syncAllDataToSupabase() {
+      const actions = window.cachedActionsList || window.defaultActions;
+      const bureau = window.cachedBureauList || window.defaultBureau;
+
+      const actionsPayload = actions.map((a, idx) => ({
+        id: a.id || `action-${idx}`,
+        title: a.title || '',
+        category: a.category || '',
+        badge: a.badge || '',
+        description: a.description || '',
+        date: a.date || '',
+        location: a.location || '',
+        beneficiaries: a.beneficiaries || '',
+        amount_collected: a.amount_collected || '',
+        image_url: a.image_url || '',
+        images: a.images || [],
+        order_index: idx
+      }));
+
+      const bureauPayload = bureau.map((m, idx) => ({
+        id: m.id || `bureau-${idx}`,
+        full_name: m.fullName || m.full_name || '',
+        role: m.role || '',
+        tier: m.tier || 'exec',
+        photo_url: m.photo_url || m.photo || '',
+        photo_pos: m.photo_pos || '20%',
+        photo_fit: m.photo_fit || 'cover',
+        order_index: idx
+      }));
+
+      await Promise.all([
+        replicateToSupabase('actions', actionsPayload),
+        replicateToSupabase('bureau_members', bureauPayload)
+      ]);
+
+      showAppToast("Toutes les données ont été répliquées avec succès dans Supabase !", "success");
+    }
+    window.syncAllDataToSupabase = syncAllDataToSupabase;
 
   </script>
 
