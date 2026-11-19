@@ -3669,10 +3669,11 @@
 
     const defaultMembers = [
       { id: "mem-1", first_name: "Yasmine", last_name: "Cherif", role: "bureau", bureau_title: "Présidente", current_month_points: 120, lifetime_points: 450, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yasmine.cherif@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Ressources Humaines"] },
-      { id: "mem-2", first_name: "Nour", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
+      { id: "mem-2", first_name: "Nour El Houda", last_name: "Tajouri", role: "bureau", bureau_title: "Vice-présidente", current_month_points: 95, lifetime_points: 380, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "nour.tajouri@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Actions Internationales"] },
       { id: "mem-3", first_name: "Yessine", last_name: "Ben Fraj", role: "bureau", bureau_title: "Secrétaire Général", current_month_points: 85, lifetime_points: 320, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "yessine.benfraj@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission de Médiatisation"] },
-      { id: "mem-4", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière Générale", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
-      { id: "mem-5", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "Co-chef Commission Intérêt Public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 50, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] }
+      { id: "mem-4", first_name: "Eya", last_name: "Houas", role: "bureau", bureau_title: "Trésorière", current_month_points: 70, lifetime_points: 310, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "eya.houas@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+      { id: "mem-5", first_name: "Omar", last_name: "Jerbi", role: "member", bureau_title: "co-Chef intérêt public", current_month_points: 60, lifetime_points: 240, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 50, email: "omar.jerbi@ictgc.org", assigned_commissions: ["Commission d'Intérêt Public", "Commission des Relations Internes & Externes", "Commission des Finances"] },
+      { id: "mem-6", first_name: "Mahdi", last_name: "Ghabri", role: "member", bureau_title: "Chef des actions internationales", current_month_points: 55, lifetime_points: 210, cotisation_assessed_tnd: 100, cotisation_paid_tnd: 100, email: "mahdi.ghabri@ictgc.org", assigned_commissions: ["Commission des Actions Internationales", "Commission d'Intérêt Public"] }
     ];
 
     const defaultResources = [
@@ -3689,6 +3690,19 @@
     ];
 
     function showView(viewId, targetAnchorId, updateUrl = true) {
+      if (viewId === 'admin-view' && !isAdminLoggedIn) {
+        showAppToast("Accès réservé exclusivement aux administrateurs autorisés.", "error");
+        viewId = 'public-view';
+        targetAnchorId = null;
+      }
+
+      if (viewId === 'member-view' && !currentLoggedMember && !isAdminLoggedIn) {
+        showAppToast("Veuillez vous connecter pour accéder à l'espace interne.", "info");
+        viewId = 'public-view';
+        targetAnchorId = null;
+        if (typeof openInternalPortal === 'function') openInternalPortal();
+      }
+
       ['public-view', 'recruitment-view', 'member-view', 'admin-view'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== viewId);
@@ -3714,11 +3728,6 @@
         window.ICTGC_Analytics.logAction(desc, 'navigation');
       }
 
-      if (viewId === 'admin-view' && !isAdminLoggedIn) {
-        showAppToast("Accès réservé exclusivement aux administrateurs autorisés.", "error");
-        showView('public-view', null, true);
-        return;
-      }
       if (viewId === 'admin-view' && isAdminLoggedIn) {
         if (typeof switchAdminTab === 'function') switchAdminTab('analytics');
       }
@@ -4170,47 +4179,67 @@
       });
 
       try {
-        const cachedM = localStorage.getItem('ictgc_members_cache');
-        if (cachedM) {
-          const parsed = JSON.parse(cachedM);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            window.allMembersList = parsed;
-            renderMembersTable(parsed);
-            renderLeaderboard(parsed);
-          }
+        if (!isAdminLoggedIn && !currentLoggedMember) {
+          localStorage.removeItem('ictgc_members_cache');
         }
       } catch(e) {}
 
-      onSnapshot(collection(window.firestoreDb, "members"), (snap) => {
-        if (!snap.empty) {
-          const fsItems = [];
-          snap.forEach(d => fsItems.push({ id: d.id, ...d.data() }));
-          const baseList = window.allMembersList || defaultMembers;
-          const merged = baseList.map(bm => {
-            const fsMatch = fsItems.find(f => f.id === bm.id || (f.email && bm.email && f.email.toLowerCase() === bm.email.toLowerCase()));
-            return fsMatch ? { ...bm, ...fsMatch } : bm;
-          });
-          fsItems.forEach(fi => {
-            if (!merged.some(m => m.id === fi.id || (m.email && fi.email && m.email.toLowerCase() === fi.email.toLowerCase()))) {
-              merged.push(fi);
-            }
-          });
-          window.allMembersList = merged;
-          try { localStorage.setItem('ictgc_members_cache', JSON.stringify(merged)); } catch(e){}
-          renderLeaderboard(merged);
-          renderMembersTable(merged);
-          if (currentLoggedMember) {
-            const updated = merged.find(m => m.id === currentLoggedMember.id || m.email === currentLoggedMember.email);
-            if (updated) setMemberActive(updated);
-          }
-        }
-      });
+      function initPrivateCloudSync() {
+        if (!window.firestoreDb || !window.fs) return;
+        if (!isAdminLoggedIn && !currentLoggedMember) return;
+        const { collection: fsCol, onSnapshot: fsSnap } = window.fs;
 
-      onSnapshot(collection(window.firestoreDb, "candidates"), (snap) => {
-        const items = [];
-        snap.forEach(d => items.push({ id: d.id, ...d.data() }));
-        renderCandidatesTable(items);
-      });
+        if (window.membersSnapshotUnsub) {
+          window.membersSnapshotUnsub();
+          window.membersSnapshotUnsub = null;
+        }
+
+        window.membersSnapshotUnsub = fsSnap(fsCol(window.firestoreDb, "members"), (snap) => {
+          if (!snap.empty) {
+            const fsItems = [];
+            snap.forEach(d => {
+              const itemData = d.data();
+              delete itemData.password;
+              fsItems.push({ id: d.id, ...itemData });
+            });
+            const baseList = [...defaultMembers];
+            const merged = baseList.map(bm => {
+              const fsMatch = fsItems.find(f => f.id === bm.id || (f.email && bm.email && f.email.toLowerCase() === bm.email.toLowerCase()));
+              return fsMatch ? { ...bm, ...fsMatch } : bm;
+            });
+            fsItems.forEach(fi => {
+              if (!merged.some(m => m.id === fi.id || (m.email && fi.email && m.email.toLowerCase() === fi.email.toLowerCase()))) {
+                merged.push(fi);
+              }
+            });
+            window.allMembersList = merged;
+            try { localStorage.setItem('ictgc_members_cache', JSON.stringify(merged)); } catch(e){}
+            renderLeaderboard(merged);
+            renderMembersTable(merged);
+            if (currentLoggedMember) {
+              const updated = merged.find(m => m.id === currentLoggedMember.id || m.email === currentLoggedMember.email);
+              if (updated) setMemberActive(updated);
+            }
+          }
+        });
+
+        if (isAdminLoggedIn) {
+          if (window.candidatesSnapshotUnsub) {
+            window.candidatesSnapshotUnsub();
+            window.candidatesSnapshotUnsub = null;
+          }
+          window.candidatesSnapshotUnsub = fsSnap(fsCol(window.firestoreDb, "candidates"), (snap) => {
+            const items = [];
+            snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+            renderCandidatesTable(items);
+          });
+        }
+      }
+      window.initPrivateCloudSync = initPrivateCloudSync;
+
+      if (isAdminLoggedIn || currentLoggedMember) {
+        initPrivateCloudSync();
+      }
 
       onSnapshot(collection(window.firestoreDb, "resources"), (snap) => {
         if (!snap.empty) {
@@ -5984,23 +6013,20 @@
         memberName = found ? ((found.first_name || found.firstName || '') + ' ' + (found.last_name || found.lastName || '')).trim() : 'ce membre';
       }
       showAppConfirm(`Confirmez-vous la suppression définitive du membre "${memberName}" ? Cette opération retirera le compte de la base de données.`, async () => {
-        if (window.firestoreDb && window.fs && window.fs.deleteDoc) {
+        if (window.firestoreDb && window.fs && window.fs.deleteDoc && memberId && !memberId.startsWith('mem-')) {
           try {
             await window.fs.deleteDoc(window.fs.doc(window.firestoreDb, "members", memberId));
-            showAppToast(`Le membre "${memberName}" a été supprimé de la base de données.`, "success");
-            return;
           } catch (err) {
             console.warn("Firestore delete member error:", err);
           }
         }
 
-        const idx = defaultMembers.findIndex(m => m.id === memberId);
-        if (idx !== -1) {
-          defaultMembers.splice(idx, 1);
-          renderMembersTable(defaultMembers);
-          renderLeaderboard(defaultMembers);
-        }
-        showAppToast(`Le membre "${memberName}" a été supprimé.`, "success");
+        const current = (window.allMembersList || defaultMembers).filter(m => m.id !== memberId && m.email !== memberId);
+        window.allMembersList = current;
+        try { localStorage.setItem('ictgc_members_cache', JSON.stringify(current)); } catch(e){}
+        renderMembersTable(current);
+        renderLeaderboard(current);
+        showAppToast(`Le membre "${memberName}" a été supprimé.`, "info");
       });
     }
 
@@ -6894,6 +6920,13 @@ const CATEGORY_I18N = {
 
     function logoutMember() {
       currentLoggedMember = null;
+      const lead = document.getElementById('leaderboard-container');
+      if (lead) lead.innerHTML = '';
+      if (typeof window.membersSnapshotUnsub === 'function') {
+        window.membersSnapshotUnsub();
+        window.membersSnapshotUnsub = null;
+      }
+      try { localStorage.removeItem('ictgc_members_cache'); } catch(e){}
       showView('public-view');
     }
     window.logoutMember = logoutMember;
@@ -6939,6 +6972,7 @@ const CATEGORY_I18N = {
         if (window.cachedActionsList) renderActions(window.cachedActionsList);
         if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
         enableGlobalTextEditing();
+        if (typeof initPrivateCloudSync === 'function') initPrivateCloudSync();
         showAppToast("Bienvenue Administrateur ! L'accès d'administration est déverrouillé.", "success", 4000);
         return;
       }
@@ -7322,6 +7356,19 @@ const CATEGORY_I18N = {
       if (bCtrl) bCtrl.classList.add('hidden');
       const pCtrl = document.getElementById('admin-partners-controls');
       if (pCtrl) pCtrl.classList.add('hidden');
+      const tbody = document.getElementById('members-table-body');
+      if (tbody) tbody.innerHTML = '';
+      const candBody = document.getElementById('candidates-table-body');
+      if (candBody) candBody.innerHTML = '';
+      if (typeof window.membersSnapshotUnsub === 'function') {
+        window.membersSnapshotUnsub();
+        window.membersSnapshotUnsub = null;
+      }
+      if (typeof window.candidatesSnapshotUnsub === 'function') {
+        window.candidatesSnapshotUnsub();
+        window.candidatesSnapshotUnsub = null;
+      }
+      try { localStorage.removeItem('ictgc_members_cache'); } catch(e){}
       if (window.cachedBureauList) renderBureau(window.cachedBureauList);
       if (window.cachedActionsList) renderActions(window.cachedActionsList);
       if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
