@@ -2565,10 +2565,21 @@
       });
 
       try {
+        let stopLcp = false;
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+          window.addEventListener(evt, () => {
+            stopLcp = true;
+            try { if (lcpObs) lcpObs.disconnect(); } catch(e){}
+          }, { once: true, passive: true });
+        });
         const lcpObs = new PerformanceObserver((entryList) => {
+          if (stopLcp) return;
           const entries = entryList.getEntries();
           if (entries.length > 0) {
-            perfVitals.lcp = Math.round(entries[entries.length - 1].startTime);
+            const last = entries[entries.length - 1];
+            if (last && last.startTime && last.startTime < 10000) {
+              perfVitals.lcp = Math.round(last.startTime);
+            }
           }
         });
         lcpObs.observe({ type: 'largest-contentful-paint', buffered: true });
@@ -2776,10 +2787,10 @@
       const kpiDuration = document.getElementById('kpi-avg-duration');
       if (kpiDuration) kpiDuration.innerText = formatDuration(avgSec);
 
-      const validLcpSessions = sessions.filter(s => s.performance && s.performance.lcp > 0);
+      const validLcpSessions = sessions.filter(s => s.performance && s.performance.lcp > 0 && s.performance.lcp <= 8000);
       const avgLcpMs = validLcpSessions.length > 0 
         ? Math.round(validLcpSessions.reduce((acc, s) => acc + s.performance.lcp, 0) / validLcpSessions.length)
-        : 800;
+        : Math.round(perfVitals.domReady || 240);
       const kpiLcp = document.getElementById('kpi-avg-lcp');
       if (kpiLcp) kpiLcp.innerText = (avgLcpMs / 1000).toFixed(2) + 's';
 
@@ -3812,6 +3823,18 @@
       }
     }
     window.handleAppRouting = handleAppRouting;
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        if (isAdminLoggedIn) {
+          showView('admin-view', null, true);
+        } else {
+          openInternalPortal();
+        }
+      }
+    });
+
 
     document.addEventListener('paste', function(e) {
       const target = e.target;
@@ -6960,7 +6983,10 @@ const CATEGORY_I18N = {
 
     function unlockAdminSession(openAdminDashboard = false) {
       isAdminLoggedIn = true;
-      try { sessionStorage.setItem('ictgc_admin_logged', 'true'); } catch(e){}
+      try {
+        sessionStorage.setItem('ictgc_admin_logged', 'true');
+        localStorage.setItem('ictgc_admin_logged', 'true');
+      } catch(e){}
 
       const floatBar = document.getElementById('admin-floating-bar');
       if (floatBar) {
@@ -7435,7 +7461,10 @@ const CATEGORY_I18N = {
     function logoutAdmin() {
       isAdminLoggedIn = false;
       currentLoggedMember = null;
-      try { sessionStorage.removeItem('ictgc_admin_logged'); } catch(e){}
+      try {
+        sessionStorage.removeItem('ictgc_admin_logged');
+        localStorage.removeItem('ictgc_admin_logged');
+      } catch(e){}
       if (typeof disableGlobalTextEditing === 'function') disableGlobalTextEditing();
       const floatBar = document.getElementById('admin-floating-bar');
       if (floatBar) {
@@ -8967,7 +8996,8 @@ const CATEGORY_I18N = {
       if (typeof setAppLanguage === 'function') setAppLanguage(savedLang);
       if (typeof updateRecruitmentUI === 'function') updateRecruitmentUI();
       try {
-        if (sessionStorage.getItem('ictgc_admin_logged') === 'true') {
+        const isLogged = (sessionStorage.getItem('ictgc_admin_logged') === 'true') || (localStorage.getItem('ictgc_admin_logged') === 'true');
+        if (isLogged) {
           unlockAdminSession(window.location.pathname === '/admin');
         }
       } catch(e){}
