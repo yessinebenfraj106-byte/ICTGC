@@ -1,8 +1,8 @@
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=180');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 
-  const defaultFollowers = '9 414+';
+  const defaultFollowers = '9 413+';
 
   try {
     const controller = new AbortController();
@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
         const raw = match[1].replace(/[\s\u202f\u00a0,.]/g, '').trim();
         const num = parseInt(raw, 10);
         if (!isNaN(num) && num > 1000) {
-          const formatted = num.toLocaleString('fr-FR') + '+';
+          const formatted = num.toLocaleString('fr-FR').replace(/\u202f/g, ' ') + '+';
           return res.status(200).json({ success: true, followers: formatted, raw: num, source: 'live' });
         }
       }
