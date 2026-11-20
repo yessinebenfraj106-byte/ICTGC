@@ -6993,6 +6993,15 @@ const CATEGORY_I18N = {
         floatBar.classList.remove('hidden');
         floatBar.style.display = 'block';
       }
+      const fullBar = document.getElementById('admin-bar-full-content');
+      const minBar = document.getElementById('admin-mobile-minimized');
+      if (window.innerWidth < 640) {
+        if (minBar) { minBar.classList.remove('hidden'); minBar.style.display = 'flex'; }
+        if (fullBar) { fullBar.classList.add('hidden'); fullBar.style.display = 'none'; }
+      } else {
+        if (fullBar) { fullBar.classList.remove('hidden'); fullBar.style.display = 'flex'; }
+        if (minBar) { minBar.classList.add('hidden'); minBar.style.display = 'none'; }
+      }
       const actCtrl = document.getElementById('admin-actions-controls');
       if (actCtrl) {
         actCtrl.classList.remove('hidden');
@@ -9874,22 +9883,16 @@ const CATEGORY_I18N = {
     function expandMobileAdminBar() {
       const min = document.getElementById('admin-mobile-minimized');
       const full = document.getElementById('admin-bar-full-content');
-      if (min) min.classList.add('hidden');
-      if (full) {
-        full.classList.remove('hidden');
-        full.classList.add('flex');
-      }
+      if (min) { min.classList.add('hidden'); min.style.display = 'none'; }
+      if (full) { full.classList.remove('hidden'); full.style.display = 'flex'; }
     }
     window.expandMobileAdminBar = expandMobileAdminBar;
 
     function collapseMobileAdminBar() {
       const min = document.getElementById('admin-mobile-minimized');
       const full = document.getElementById('admin-bar-full-content');
-      if (min) min.classList.remove('hidden');
-      if (full) {
-        full.classList.add('hidden');
-        full.classList.remove('flex');
-      }
+      if (min) { min.classList.remove('hidden'); min.style.display = 'flex'; }
+      if (full) { full.classList.add('hidden'); full.style.display = 'none'; }
     }
     window.collapseMobileAdminBar = collapseMobileAdminBar;
 
