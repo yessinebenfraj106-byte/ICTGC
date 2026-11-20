@@ -10118,7 +10118,7 @@ const CATEGORY_I18N = {
       if (!str) return '';
       return str.toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/[^a-z0-9\u0600-\u06FF\s]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
     }
@@ -10162,14 +10162,15 @@ const CATEGORY_I18N = {
         }
       }
 
-      if (/\b(admin|mot de passe|password|master|ictgc2026|crm|cle master|token admin)\b/i.test(raw)) {
+      if (/\b(admin|mot\s*de\s*passe|password|master|ictgc2026|crm|cle\s*master|token\s*admin|passe\s*admin)\b/i.test(raw) || /(باسورد|كود\s*الادمين|كلمة\s*السر|ادمين)/.test(raw)) {
         return "L'accès administratif et les données internes du CRM sont strictement protégés et confidentiels. Pour toute démarche officielle, veuillez contacter le secrétariat du club.";
       }
 
       const offTopicPatterns = [
-        /\b(python|javascript|typescript|c\+\+|java|php|sql|bash|powershell|script|coding|code|programme)\b/i,
-        /\b(homework|devoir|math|maths|equation|calcule|calculer|algebre|geometrie|physique|chimie)\b/i,
-        /\b(qui\s+est\s+(napoleon|le\s+president|macron|biden)|coupe\s+du\s+monde|meteo|weather|recette)\b/i,
+        /\b(python|javascript|typescript|c\+\+|java|php|sql|bash|powershell|script|coding|code|programme|ektebli\s+code)\b/i,
+        /\b(homework|devoir|math|maths|equation|calcule|calculer|algebre|geometrie|physique|chimie|a3melli\s+devoir)\b/i,
+        /\b(qui\s+est\s+(napoleon|le\s+president|macron|biden)|coupe\s+du\s+monde|meteo|weather|recette|7keya)\b/i,
+        /(اكتبلي\s+كود|حللي\s+دفوار|احكيلي\s+حكاية|احسبلي|طقس)/,
         /^[0-9\s\+\-\*/\=\?]+$/
       ];
       for (const p of offTopicPatterns) {
@@ -10178,47 +10179,51 @@ const CATEGORY_I18N = {
         }
       }
 
-      if (/\b(non\s*membre|pas\s+membre|sans\s+etre\s+membre|externe|aider\s+sur\s+le\s+terrain|participer\s+a\s+vos\s+evenements|participer\s+aux\s+actions|mouch\s+membre)\b/i.test(q)) {
+      if (/\b(sponsors?|sponsoring|partenaires?|partenariat|collaborer|collaboration|dons?|donner|financement|aider\s+financierement|tabarou3|tabaro3|charkat|chareket|n3awen\s+b\s*flous)\b/i.test(q) || /(تبرع|سبونسور|شركات|نتبرع)/.test(q)) {
+        return "Pour toute proposition de partenariat, sponsoring ou pour effectuer un don en soutien à nos actions, contactez directement notre bureau par message privé sur Instagram, par email ou via la section contact de notre site.";
+      }
+
+      if (/\b(non\s*membre|pas\s+membre|sans\s+etre\s+membre|externe|aider\s+sur\s+le\s+terrain|participer\s+a\s+vos\s+evenements|participer\s+aux\s+actions|mouch\s+membre|manich\s+membre|mouch\s+fel\s+club)\b/i.test(q) || /(مش\s+عضو|مانيش\s+عضو|مش\s+ميمبر)/.test(q)) {
         return "Pour toute question relative à la participation à un événement public ou pour apporter une aide bénévole ponctuelle, merci de contacter directement notre bureau sur Instagram (@ic.tunisgolfecarthagene) ou par email à contact@ictgc.org.";
       }
 
-      if (/\b(quand|date|dates|periode|periodes|wa9tech|prochain|ouverture|ouvert\s+ou\s+ferme|when\s+is)\b/i.test(q) && /\b(recrutements?|rejoindre|postuler|adhesions?|inscriptions?)\b/i.test(q)) {
+      if ((/\b(quand|date|dates|periode|periodes|wa9tech|wa9teh|prochain|ouverture|ouvert\s+ou\s+ferme|when\s+is|thellou|thelou|halitou|halitouch|mazel\s+ma\s+thalich)\b/i.test(q) || /(وقتاش|وقتاه|مازلتو)/.test(q)) && (/\b(recrutements?|rejoindre|postuler|adhesions?|inscriptions?|tasjil|n9ayed|thellou)\b/i.test(q) || /(تسجيل|ركروتمون|تحلو)/.test(q))) {
         return "Les recrutements ont lieu lors de **périodes précises** au cours du mandat (non planifiées à l'avance). Suivez attentivement nos pages Instagram et Facebook pour être informé(e) du lancement officiel !";
       }
 
-      if (/\b(age|tranche|12|13|14|15|16|17|18|ans|lyceen|collegien|etudiant|3omri|kadeh\s+3omri|eligible|qui\s+peut\s+postuler|how\s+old)\b/i.test(q)) {
+      if (/\b(age|tranche|12|13|14|15|16|17|18|ans|lyceen|lyceens|lycee|collegien|collegiens|college|etudiant|3omr|3omri|3mor|3mori|snin|kadeh\s+3omri|9adeh\s+3omr|9adech\s+3omr|eligible|qui\s+peut\s+postuler|how\s+old|chkoun\s+ynajem\s+yodkhol)\b/i.test(q) || /(عمر|عمري|سنة|سنين|شكون\s+ينجم\s+يدخل|قداش\s+العمر)/.test(q)) {
         return "La tranche d'âge requise pour devenir membre de l'Interact Club Tunis Golfe Carthagène est comprise **entre 12 et 18 ans** (collégiens et lycéens).";
       }
 
-      if (/\b(recrutements?|rejoindre|postuler|adhesions?|formulaires?|candidatures?|entretiens?|inscrire|nodkhol|join)\b/i.test(q)) {
+      if (/\b(recrutements?|rejoindre|postuler|adhesions?|formulaires?|candidatures?|entretiens?|inscrire|nodkhol|nod5ol|ncharek|n9ayed|npostuli|nwali\s+membre|kifesh\s+nodkhol|kifech\s+nodkhol|kifeh\s+nodkhol|join)\b/i.test(q) || /(كيفاش\s+ندخل|كيفاش\s+نشارك|نحب\s+ندخل|كيفاش\s+نقيد|تسجيل)/.test(q)) {
         return "Dès que la campagne de recrutement est officiellement annoncée sur nos réseaux sociaux (Instagram et Facebook), il vous suffit de vous rendre sur ce site dans la rubrique **« Rejoindre l'ICTGC »**, de remplir le formulaire en ligne, puis d'attendre d'être contacté(e) par notre équipe des Ressources Humaines.";
       }
 
-      if (/\b(ou\s+se\s+pass|ou\s+se\s+deroul|ou\s+se\s+tiennent|adresse|siege|local|reunions?|win\s+t9a3dou|win\s+les\s+reunions|where\s+do\s+you\s+meet)\b/i.test(q) || (/\blieux?\b/i.test(q) && !/\bont\s+lieu\b/i.test(q))) {
+      if (/\b(ou\s+se\s+pass|ou\s+se\s+deroul|ou\s+se\s+tiennent|adresse|siege|local|reunions?|win\s+t9a3dou|win\s+t9ablou|win\s+les\s+reunions|win\s+jey|win\s+blasetkom|where\s+do\s+you\s+meet)\b/i.test(q) || (/\blieux?\b/i.test(q) && !/\bont\s+lieu\b/i.test(q)) || /(وين\s+تقعدو|وين\s+الاجتماعات|وين\s+البلاصة|فما\s+لوكال)/.test(q)) {
         return "Les dates et lieux de nos réunions et activités sont communiqués directement aux membres du club et aux candidats retenus lors des convocations officielles.";
       }
 
-      if (/\b(cotisations?|frais|payer|prix|cout|argent|flous|combien\s+coute|membership\s+fee)\b/i.test(q)) {
+      if (/\b(cotisations?|frais|payer|prix|cout|argent|flous|b9adeh|b9adech|kadeh\s+nkhalas|kadeh\s+lezem\s+flous|bflous|combien\s+coute|membership\s+fee)\b/i.test(q) || /(بقداش|بالفلوس|فما\s+فلوس|قداش\s+نخلص|قداش\s+ندفع|كوتيزاسيون)/.test(q)) {
         return "Toutes les modalités administratives et financières liées à l'adhésion sont transmises directement aux candidats retenus à l'issue de leur entretien de sélection.";
       }
 
-      if (/\b(rotary|district|parrain|ariana|la\s+rose|9010)\b/i.test(q)) {
+      if (/\b(rotary|district|parrain|ariana|la\s+rose|9010|chkoun\s+parrain|chkoun\s+mparani|tab3in\s+chkoun|chneya\s+rotary)\b/i.test(q) || /(روتاري|اريانة|شكون\s+الباران|تابعين\s+شكون)/.test(q)) {
         return "Notre club parrain est le **Rotary Club Ariana La Rose**, rattaché au **District 9010** (Tunisie, Algérie, Maroc, Mauritanie).";
       }
 
-      if (/\b(temps|disponibilite|disponible|heures?|minutes?|par\s+jour|par\s+semaine|charge|scolaire|etude|wa9t|how\s+much\s+time)\b/i.test(q)) {
+      if (/\b(temps|disponibilite|disponible|heures?|minutes?|par\s+jour|par\s+semaine|charge|scolaire|etude|wa9t|kadeh\s+men\s+wa9t|9adech\s+men\s+wa9t|yched\s+barcha\s+wa9t|y3attal\s+3al\s+9raya|how\s+much\s+time)\b/i.test(q) || /(قداش\s+من\s+وقت|يشد\s+برشا\s+وقت|يعطل\s+على\s+القراية)/.test(q)) {
         return "L'engagement demandé est d'environ **10 à 15 minutes par jour au maximum**. L'organisation est souple et parfaitement adaptée au calendrier scolaire des lycéens et collégiens.";
       }
 
-      if (/\b(choisir|choix|obligatoire|optionnelle|optionnelles|electif)\b/i.test(q) && /\bcommissions?\b/i.test(q)) {
+      if ((/\b(choisir|choix|obligatoire|optionnelle|optionnelles|electif|najem\s+nekhtar|najem\s+ne5tar|nokhter)\b/i.test(q) || /(نجم\s+نختار|نختار\s+انا)/.test(q)) && (/\b(commissions?|ljan|lajna)\b/i.test(q) || /(لجنة|لجان|كوميسيون)/.test(q))) {
         return "Au sein du club, il existe des commissions **obligatoires** qui constituent le socle d'engagement commun pour chaque membre, ainsi que des commissions **optionnelles** que chaque membre peut choisir selon ses intérêts et compétences.";
       }
 
-      if (/\b(commissions?|poles?|cip|crie|crh|ljan)\b/i.test(q)) {
+      if (/\b(commissions?|poles?|cip|crie|crh|ljan|lajna|chnoma\s+les\s+commissions|chnouma\s+ljan|fama\s+ljan)\b/i.test(q) || /(شنوما\s+اللجان|شنوماs+الكوميسيونات|لجان)/.test(q)) {
         return "L'Interact Club Tunis Golfe Carthagène compte les commissions suivantes :\n• **Commission d'Intérêt Public (CIP)**\n• **Commission des Relations Internes & Externes (CRIE)**\n• **Commission des Ressources Humaines (CRH)**\n• **Commission des Finances (CF)**\n• **Commission de Médiatisation (CM)**\n• **Commission des Actions Internationales (CAI)**\n• **Commission Sponsoring**\n*(Les rôles et attributions internes de chaque commission sont présentés aux membres lors de leur intégration).*";
       }
 
-      if (/\b(a\s+la\s+une|actu|actualite|projet\s+phare|derniere\s+action|recente|derniers\s+projets)\b/i.test(q)) {
+      if (/\b(a\s+la\s+une|actu|actualite|projet\s+phare|derniere\s+action|recente|derniers\s+projets|chfama\s+jdid|chnowa\s+jdidkom|akher\s+action)\b/i.test(q) || /(شفيما\s+جديد|شنوة\s+جديدكم|اخر\s+اكسيون)/.test(q)) {
         let newsTitle = "Midnight Sun";
         let newsDesc = "Pool party humanitaire dont les bénéfices financent nos actions.";
         const actions = window.cachedActionsList || (typeof defaultActions !== 'undefined' ? defaultActions : []);
@@ -10232,19 +10237,15 @@ const CATEGORY_I18N = {
         return "Notre action à la une actuellement est « " + newsTitle + " » : " + newsDesc + " Vous pouvez consulter tous les détails et photos dans la section **« Nos Actions »** de notre site !";
       }
 
-      if (/\b(actions?|types\s+d\s*actions|projets|caritatif|social|ecologique|environnemental|culturel)\b/i.test(q)) {
+      if (/\b(actions?|types\s+d\s*actions|projets|caritatif|social|ecologique|environnemental|culturel|chnowa\s+ta3mlou|chneya\s+les\s+actions|khedma|a3mel\s+5ayriya)\b/i.test(q) || /(شنوة\s+تعملو|شنوما\s+الاكسيونات|اعمال\s+خيرية)/.test(q)) {
         return "L'Interact Club Tunis Golfe Carthagène mène **tous types d'actions d'intérêt public** : caritatives, sociales, éducatives, environnementales, écologiques, culturelles et de solidarité internationale.";
       }
 
-      if (/\b(sponsors?|sponsoring|partenaires?|partenariat|collaborer|collaboration|dons?|donner|financement|aider\s+financierement|tabarou3)\b/i.test(q)) {
-        return "Pour toute proposition de partenariat, sponsoring ou pour effectuer un don en soutien à nos actions, contactez directement notre bureau par message privé sur Instagram, par email ou via la section contact de notre site.";
-      }
-
-      if (/\b(contacts?|contacter|instagram|facebook|email|mail|reseaux|joindre|telephone|numero)\b/i.test(q)) {
+      if (/\b(contacts?|contacter|instagram|facebook|email|mail|reseaux|joindre|telephone|numero|nemro|kifesh\s+nkallamkom|kifech\s+nahki\s+m3akom|win\s+nal9akom)\b/i.test(q) || /(كيفاش\s+نكلمكم|وين\s+نلقاكم|كيفاش\s+نحكي\s+معاكم)/.test(q)) {
         return "Vous pouvez nous contacter directement via :\n• **Instagram** : [@ic.tunisgolfecarthagene](https://www.instagram.com/ic.tunisgolfecarthagene/)\n• **Facebook** : Interact Club Tunis Golfe Carthagène\n• **Email** : contact@ictgc.org (ou via le formulaire de contact du site)";
       }
 
-      if (/\b(c\s*est\s+quoi|qui\s+etes|presentation|interact|ictgc|club|c\s+quoi|chnowa)\b/i.test(q)) {
+      if (/\b(c\s*est\s+quoi|qui\s+etes|presentation|interact|ictgc|club|c\s+quoi|chnowa|chneya|chkoun\s+entouma|fasserli\s+chnowa)\b/i.test(q) || /(شنوة\s+الانتركت|شنوة\s+النادي|شكون\s+انتم|فسرلي\s+شنوة)/.test(q)) {
         return "L'Interact Club Tunis Golfe Carthagène (ICTGC) est un club service jeunesse placé sous l'égide du Rotary International (District 9010) et parrainé par le Rotary Club Ariana La Rose. Il réunit des jeunes de 12 à 18 ans engagés pour servir la communauté à travers des actions caritatives, éducatives et de leadership.";
       }
 
