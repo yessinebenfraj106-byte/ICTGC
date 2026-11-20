@@ -7301,13 +7301,11 @@
       await raceFastestWrite(
         async () => {
           if (window.firestoreDb && window.fs) {
-            await window.fs.setDoc(window.fs.doc(window.firestoreDb, "siteContent", "main"), {
-              bureauMembersList: list,
-              bureauUpdatedAt: new Date().toISOString()
-            }, { merge: true });
             for (const m of list) {
               if (m.id) {
-                await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", m.id), m, { merge: true });
+                try {
+                  await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", m.id), m, { merge: true });
+                } catch(e) {}
               }
             }
           }
@@ -10858,11 +10856,22 @@ const CATEGORY_I18N = {
         }
       );
 
+      if (window.cachedBureauList) {
+        try {
+          await syncFullBureauToCloud(window.cachedBureauList);
+        } catch(e) {}
+      }
+      if (window.cachedActionsList) {
+        try {
+          await syncFullActionsToCloud(window.cachedActionsList);
+        } catch(e) {}
+      }
+
       window.cachedSiteContent = { ...(window.cachedSiteContent || {}), ...payload };
       if (btn) {
-        btn.innerText = "✅ Tous les textes sont sauvegardés !";
+        btn.innerText = "✅ Tout le site (textes & photos) est sauvegardé !";
         setTimeout(() => {
-          btn.innerHTML = "<span>💾</span> Sauvegarder TOUS les textes dans le Cloud";
+          btn.innerHTML = "<span>💾</span> Sauvegarder le site dans le Cloud";
         }, 3000);
       }
     }
@@ -11492,7 +11501,11 @@ const CATEGORY_I18N = {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
       try {
-        const compressed = await compressImageFile(file);
+        const isBureau = window.activePhotoModalTarget && window.activePhotoModalTarget.type === 'bureau';
+        const maxWidth = isBureau ? 640 : 1200;
+        const maxHeight = isBureau ? 800 : 1200;
+        const quality = isBureau ? 0.78 : 0.82;
+        const compressed = await compressImageFile(file, maxWidth, maxHeight, quality);
         setModalPhotoValue(compressed);
       } catch (err) {
         showAppToast(err.message || 'Erreur lors de la compression de la photo.', 'error');
@@ -11522,7 +11535,11 @@ const CATEGORY_I18N = {
       if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
         const file = e.dataTransfer.files[0];
         try {
-          const compressed = await compressImageFile(file);
+          const isBureau = window.activePhotoModalTarget && window.activePhotoModalTarget.type === 'bureau';
+          const maxWidth = isBureau ? 640 : 1200;
+          const maxHeight = isBureau ? 800 : 1200;
+          const quality = isBureau ? 0.78 : 0.82;
+          const compressed = await compressImageFile(file, maxWidth, maxHeight, quality);
           setModalPhotoValue(compressed);
         } catch (err) {
           showAppToast(err.message || 'Erreur lors de la compression de l\'image glissée.', 'error');
@@ -11565,6 +11582,27 @@ const CATEGORY_I18N = {
           member.photo_fit = window.activeBureauPhotoFit || 'cover';
         }
 
+        if (target.id) {
+          try {
+            await fetch(`${SUPABASE_CONFIG.url}/rest/v1/bureau_members?id=eq.${encodeURIComponent(target.id)}`, {
+              method: 'PATCH',
+              headers: {
+                'apikey': SUPABASE_CONFIG.anonKey,
+                'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({
+                photo_url: photoVal,
+                photo_pos: photoPos,
+                photo_fit: window.activeBureauPhotoFit || 'cover'
+              })
+            });
+          } catch (err) {
+            console.warn("Supabase single bureau photo patch error:", err);
+          }
+        }
+
         if (window.firestoreDb && window.fs && target.id) {
           try {
             await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", target.id), {
@@ -11577,7 +11615,7 @@ const CATEGORY_I18N = {
           }
         }
         renderBureau(currentList);
-        syncFullBureauToCloud(currentList);
+        await syncFullBureauToCloud(currentList);
         closePhotoManagerModal();
         showAppToast("Photo et cadrage enregistrés avec succès !", "success");
       } else if (target.type === 'action') {
