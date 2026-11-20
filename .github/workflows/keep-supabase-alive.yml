@@ -1,0 +1,26 @@
+name: Keep Supabase Awake
+
+on:
+  schedule:
+    # Run every 2 days at 06:00 UTC to prevent the 7-day free tier pause
+    - cron: '0 6 */2 * *'
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          echo "Pinging Supabase database to prevent pause..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dHllc21lZ3p3eWFvY2Jzc2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUxMDAzNTAsImV4cCI6MjExMDY3NjM1MH0.6JaW-lvXX1cNM3ufStLt_fQo7qPzetkM7yv6JgEqTms' }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dHllc21lZ3p3eWFvY2Jzc2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUxMDAzNTAsImV4cCI6MjExMDY3NjM1MH0.6JaW-lvXX1cNM3ufStLt_fQo7qPzetkM7yv6JgEqTms' }}" \
+            "https://wutyesmegzwyaocbsshd.supabase.co/rest/v1/site_metrics?limit=1")
+          echo "HTTP Status: $STATUS"
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]; then
+            echo "Success! Supabase database is active and keep-alive timer reset."
+          else
+            echo "Warning: Received status $STATUS"
+            exit 1
+          fi

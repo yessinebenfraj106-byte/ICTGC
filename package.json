@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "python server.py",
     "db:init": "python database/init_db.py",
-    "start": "python server.py"
+    "start": "python server.py",
+    "keep-alive": "node scripts/keep-supabase-alive.js"
   },
   "keywords": [
     "interact",
