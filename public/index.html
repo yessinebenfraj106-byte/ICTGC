@@ -7295,7 +7295,8 @@
         photo_url: m.photo_url || m.photo || '',
         photo_pos: m.photo_pos || '20%',
         photo_fit: m.photo_fit || 'cover',
-        order_index: idx
+        order_index: idx,
+        commission_name: m.commission_name || null
       }));
 
       await raceFastestWrite(
@@ -10652,6 +10653,7 @@ const CATEGORY_I18N = {
 
     appToastTimer = null;
     function showAppToast(msg = '✓ Synchronisé en direct dans le Cloud', type = 'success', duration = 3000) {
+      if ((!msg || msg.includes('Synchronisé') || msg.includes('Cloud')) && !isAdminLoggedIn) return;
       let toast = document.getElementById('auto-sync-toast');
       if (!toast) {
         toast = document.createElement('div');
@@ -10669,6 +10671,7 @@ const CATEGORY_I18N = {
         icon = '<span class="text-sm flex-shrink-0">ℹ️</span>';
       }
 
+      toast.style.display = 'flex';
       toast.className = `fixed top-5 right-5 z-50 ${bgClass} border px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 pointer-events-none transition-all duration-300 opacity-0 translate-y-[-10px]`;
       toast.innerHTML = `${icon} <span class="leading-tight">${msg}</span>`;
 
@@ -10676,9 +10679,14 @@ const CATEGORY_I18N = {
         toast.classList.remove('opacity-0', 'translate-y-[-10px]');
       });
 
-      clearTimeout(appToastTimer);
+      if (appToastTimer) clearTimeout(appToastTimer);
       appToastTimer = setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-y-[-10px]');
+        setTimeout(() => {
+          if (toast && toast.classList.contains('opacity-0')) {
+            toast.style.display = 'none';
+          }
+        }, 350);
       }, duration);
     }
     window.showAppToast = showAppToast;
@@ -10942,6 +10950,7 @@ const CATEGORY_I18N = {
     function exportCurrentHtml() {
       const clone = document.documentElement.cloneNode(true);
       clone.classList.remove('admin-editing'); if (clone.body) clone.body.classList.remove('admin-editing');
+      const toast = clone.querySelector('#auto-sync-toast'); if (toast) toast.remove();
       const bar = clone.querySelector('#admin-floating-bar');
       if (bar) { bar.classList.add('hidden'); bar.style.display = 'none'; }
       const act = clone.querySelector('#admin-actions-controls');
@@ -13534,6 +13543,27 @@ const CATEGORY_I18N = {
     }
     window.toggleBureauCardPhotoFit = toggleBureauCardPhotoFit;
 
+    async function editBureauMemberCommission(memberId, currentComm = '') {
+      const currentList = window.cachedBureauList || window.defaultBureau;
+      const member = currentList.find(b => (b.id || '') === memberId);
+      if (!member) return;
+      const memberName = member.name || member.fullName || 'ce membre';
+      const promptVal = prompt(`Commission ou pôle associé pour ${memberName} (laisser vide pour aucun) :`, member.commission_name || currentComm || '');
+      if (promptVal === null) return;
+      member.commission_name = promptVal.trim();
+      renderBureau(currentList);
+      syncFullBureauToCloud(currentList);
+      if (window.firestoreDb && window.fs && memberId) {
+        try {
+          await window.fs.setDoc(window.fs.doc(window.firestoreDb, "bureauMembers", memberId), {
+            commission_name: member.commission_name
+          }, { merge: true });
+        } catch(e){}
+      }
+      showAppToast(member.commission_name ? `Commission "${member.commission_name}" associée à ${memberName} !` : `Commission retirée pour ${memberName}.`, "success");
+    }
+    window.editBureauMemberCommission = editBureauMemberCommission;
+
     
 
   
@@ -13577,9 +13607,15 @@ const CATEGORY_I18N = {
     }
     window.deleteFromSupabase = deleteFromSupabase;
 
-    async function fetchFromSupabase(endpoint, queryParams = 'order=order_index.asc,created_at.asc') {
+    async function fetchFromSupabase(endpoint, queryParams = null) {
+      if (!queryParams) {
+        if (endpoint === 'site_content') queryParams = '';
+        else if (endpoint === 'site_metrics') queryParams = 'order=order_index.asc';
+        else queryParams = 'order=order_index.asc,created_at.asc';
+      }
+      const q = queryParams ? `?${queryParams}` : '';
       try {
-        const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${endpoint}?${queryParams}`, {
+        const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${endpoint}${q}`, {
           headers: {
             'apikey': SUPABASE_CONFIG.anonKey,
             'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`
@@ -13691,7 +13727,8 @@ const CATEGORY_I18N = {
         photo_url: m.photo_url || m.photo || '',
         photo_pos: m.photo_pos || '20%',
         photo_fit: m.photo_fit || 'cover',
-        order_index: idx
+        order_index: idx,
+        commission_name: m.commission_name || null
       }));
 
       await Promise.all([
@@ -13845,4 +13882,4 @@ const CATEGORY_I18N = {
 
   
 
-<div id="auto-sync-toast" class="fixed top-5 right-5 z-50 bg-slate-900/95 text-emerald-400 border-slate-700 shadow-emerald-950/20 border px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 pointer-events-none transition-all duration-300"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span> <span class="leading-tight">✓ Synchronisé en direct dans le Cloud</span></div></body></html>
+</body></html>
