@@ -131,7 +131,7 @@
             observer.disconnect();
             for (var key in cached) {
               var el = document.querySelector('[data-edit-key="' + key + '"]') || document.getElementById(key);
-              if (el && cached[key] !== undefined) el.innerText = cached[key];
+              if (el && cached[key] !== undefined && el.innerText !== cached[key]) el.innerText = cached[key];
             }
           });
         }
@@ -613,7 +613,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-interact_clubs_tunisia" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0</span>
+              <span data-edit-key="metric-val-interact_clubs_tunisia" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">60</span>
               <span data-edit-key="metric-lbl-interact_clubs_tunisia" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Clubs Interact en Tunisie</span>
             </div>
             <span data-edit-key="metric-sub-interact_clubs_tunisia" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Clubs actifs fédérés sous le District 9010</span>
@@ -622,7 +622,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-interactiens_tunisia" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0+</span>
+              <span data-edit-key="metric-val-interactiens_tunisia" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">2 500+</span>
               <span data-edit-key="metric-lbl-interactiens_tunisia" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Interactiens en Tunisie</span>
             </div>
             <span data-edit-key="metric-sub-interactiens_tunisia" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Jeunes engagés au service de la communauté</span>
@@ -631,7 +631,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-beneficiaries_total" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0+</span>
+              <span data-edit-key="metric-val-beneficiaries_total" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">1 940+</span>
               <span data-edit-key="metric-lbl-beneficiaries_total" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Bénéficiaires Directs Soutenus</span>
             </div>
             <span data-edit-key="metric-sub-beneficiaries_total" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Familles et enfants équipés ou soutenus lors des caravanes</span>
@@ -649,7 +649,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-food_baskets" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0</span>
+              <span data-edit-key="metric-val-food_baskets" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">1 000</span>
               <span data-edit-key="metric-lbl-food_baskets" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Paniers Alimentaires Distribués</span>
             </div>
             <span data-edit-key="metric-sub-food_baskets" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Couffin de Ramadan (Mahdia)</span>
@@ -658,7 +658,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-school_kids" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0</span>
+              <span data-edit-key="metric-val-school_kids" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">800</span>
               <span data-edit-key="metric-lbl-school_kids" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Écoliers Dotés de Cartables</span>
             </div>
             <span data-edit-key="metric-sub-school_kids" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Action Rentrée Scolaire (Nabeul)</span>
@@ -667,7 +667,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-winter_families" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0</span>
+              <span data-edit-key="metric-val-winter_families" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">120</span>
               <span data-edit-key="metric-lbl-winter_families" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Foyers Réchauffés en Hiver</span>
             </div>
             <span data-edit-key="metric-sub-winter_families" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Hiver au Chaud (Testour)</span>
@@ -676,7 +676,7 @@
           <div class=" bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-400 transition-all text-center group relative overflow-hidden flex flex-col items-center justify-center text-center">
             <div class="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-50/50 pointer-events-none group-hover:scale-150 transition-transform"></div>
             <div class="w-full flex flex-col items-center justify-center text-center">
-              <span data-edit-key="metric-val-years_active" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">0+</span>
+              <span data-edit-key="metric-val-years_active" class="editable-field text-2xl sm:text-3xl font-black text-[#081226] block tracking-tight text-center">8+</span>
               <span data-edit-key="metric-lbl-years_active" class="editable-field text-xs font-bold text-sky-700 block mt-1.5 text-center">Années d'Engagement</span>
             </div>
             <span data-edit-key="metric-sub-years_active" class="editable-field text-[10px] text-slate-500 mt-2 block leading-tight font-medium text-center">Depuis mars 2017 (Charte officielle le 7 janvier 2019)</span>
@@ -1156,7 +1156,7 @@
               </div>
 
               <h3 data-edit-key="action-title-action-couffin-ramadan" class="editable-field text-lg font-black text-white mb-2 leading-snug">Couffin de Ramadan (Koffet Romdhan)</h3>
-              <p data-edit-key="action-desc-action-couffin-ramadan" class="editable-field text-xs text-slate-200 leading-relaxed mb-4">Ensemble pour illuminer Ramadan Guides par l'esprit du partage, l'Interact Anastasia, P'interact Lunis Golte Carthagene, Lunis Inner City et Sidı Bou Saïd unissent leurs efforts pour offrir un soutien chaleureux à 1000 familles بقفة اليوم فرحة الصيام تدوم Née de l'esprit du Ramadan, cette action prend vie à travers un couffin préparé avec soin, des mains tendues et une volonté sincère de transformer un simple don en réconfort durable. Parce que le jeûne se vit aussi dans l'attention portée à l'autre, et que la générosité, lorsqu'elle s'invite à table, fait durer la joie du Ramadan</p>
+              <p data-edit-key="action-desc-action-couffin-ramadan" class="editable-field text-xs text-slate-200 leading-relaxed mb-4">Ensemble pour illuminer Ramadan Guides par l'esprit du partage, l'Interact Anastasia, l'Interact Tunis Golte Carthagene, l'Interact  Tunis Inner City et l'Interact  Sidı Bou Saïd unissent leurs efforts pour offrir un soutien chaleureux à 1000 familles بقفة اليوم فرحة الصيام تدوم Née de l'esprit du Ramadan, cette action prend vie à travers un couffin préparé avec soin, des mains tendues et une volonté sincère de transformer un simple don en réconfort durable. Parce que le jeûne se vit aussi dans l'attention portée à l'autre, et que la générosité, lorsqu'elle s'invite à table, fait durer la joie du Ramadan</p>
 
               
             <div class="mb-4">
@@ -1511,7 +1511,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-1" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Présidente
+                  PRÉSIDENTE
                 </span>
               </div>
               
@@ -1585,7 +1585,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-2" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Vice-présidente
+                  VICE-PRÉSIDENTE
                 </span>
               </div>
               
@@ -1659,7 +1659,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-3" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Chef du protocol
+                  CHEF DU PROTOCOL
                 </span>
               </div>
               
@@ -1733,7 +1733,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-4" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Secrétaire général
+                  SECRÉTAIRE GÉNÉRAL
                 </span>
               </div>
               
@@ -1807,7 +1807,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-5" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Conseillère générale
+                  CONSEILLÈRE GÉNÉRALE
                 </span>
               </div>
               
@@ -1881,7 +1881,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-6" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Représentant au sein de la CNIT
+                  REPRÉSENTANT AU SEIN DE LA CNIT
                 </span>
               </div>
               
@@ -1955,7 +1955,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-7" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-blue-600 block leading-tight text-balance break-words">
-                  Trésorière
+                  TRÉSORIÈRE
                 </span>
               </div>
               
@@ -2036,9 +2036,7 @@
           
           <div>
             <div class="mb-3 pb-2.5 border-b border-rose-100 flex items-center justify-between gap-2">
-              <h4 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2 leading-snug" data-edit-key="auto-text-92">
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-600 ring-2 ring-rose-200 flex-shrink-0"></span>
-                Commission d'Intérêt Public&nbsp;</h4>
+              <h4 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2 leading-snug"><span class="w-2.5 h-2.5 rounded-full bg-rose-600 ring-2 ring-rose-200 flex-shrink-0"></span><span data-edit-key="auto-text-92">Commission d'Intérêt Public (CIP)</span></h4>
             </div>
 
             <div class="grid grid-cols-2 gap-2.5 sm:gap-4 relative items-stretch">
@@ -2047,7 +2045,7 @@
             <div>
               <div class="flex items-center justify-between gap-1 mb-1">
                 <span data-edit-key="bureau-role-bm-12" class="editable-field text-[10px] font-extrabold uppercase tracking-wide text-rose-600 block line-clamp-1">
-                  co-Cheffe intérêt public
+                  CO-CHEFFE INTÉRÊT PUBLIC
                 </span>
                 
                   <div class="flex items-center gap-1">
@@ -2121,7 +2119,7 @@
             <div>
               <div class="flex items-center justify-between gap-1 mb-1">
                 <span data-edit-key="bureau-role-bm-13" class="editable-field text-[10px] font-extrabold uppercase tracking-wide text-rose-600 block line-clamp-1">
-                  co-Chef intérêt public
+                  CO-CHEF INTÉRÊT PUBLIC
                 </span>
                 
                   <div class="flex items-center gap-1">
@@ -2206,7 +2204,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-15" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-rose-600 block leading-tight text-balance break-words">
-                  Chef des actions internationales
+                  CHEF DES ACTIONS INTERNATIONALES
                 </span>
               </div>
               
@@ -2307,7 +2305,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-8" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-rose-600 block leading-tight text-balance break-words">
-                  Responsable TikTok
+                  RESPONSABLE TIKTOK
                 </span>
               </div>
               
@@ -2381,7 +2379,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-9" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-rose-600 block leading-tight text-balance break-words">
-                  Cheffe médiatisation
+                  CHEFFE MÉDIATISATION
                 </span>
               </div>
               
@@ -2455,7 +2453,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-10" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-rose-600 block leading-tight text-balance break-words">
-                  Chef Sponsoring
+                  CHEF SPONSORING
                 </span>
               </div>
               
@@ -2529,7 +2527,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-11" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-rose-600 block leading-tight text-balance break-words">
-                  Cheffe Finances
+                  CHEFFE FINANCES
                 </span>
               </div>
               
@@ -2603,7 +2601,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-14" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-rose-600 block leading-tight text-balance break-words">
-                  Responsable RH
+                  RESPONSABLE RH
                 </span>
               </div>
               
@@ -2687,7 +2685,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-16" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-amber-700 block leading-tight text-balance break-words">
-                  Cheffe du protocole adjointe
+                  CHEFFE DU PROTOCOLE ADJOINTE
                 </span>
               </div>
               
@@ -2761,7 +2759,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-17" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-amber-700 block leading-tight text-balance break-words">
-                  Secrétaire adjoint
+                  SECRÉTAIRE ADJOINT
                 </span>
               </div>
               
@@ -2835,7 +2833,7 @@
                   <span class="text-slate-300 hover:text-slate-600 cursor-grab active:cursor-grabbing font-black text-xs select-none" title="Glisser pour déplacer">⋮⋮</span>
                 
                 <span data-edit-key="bureau-role-bm-18" class="editable-field text-[11px] font-extrabold uppercase tracking-wider text-amber-700 block leading-tight text-balance break-words">
-                  Trésorier adjoint
+                  TRÉSORIER ADJOINT
                 </span>
               </div>
               
@@ -2906,7 +2904,7 @@
 
       <section id="partners-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto mb-10">
-          <span data-edit-key="partnersBadge" data-i18n="partnersBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-amber-600">Soutiens &amp; Mécénat</span>
+          <span data-edit-key="partnersBadge" data-i18n="partnersBadge" class="editable-field text-xs font-bold uppercase tracking-wider text-amber-600">SOUTIENS & MÉCÉNAT</span>
           <h2 data-edit-key="partnersSectionTitle" data-i18n="partnersSectionTitle" class="editable-field text-2xl sm:text-3xl font-extrabold text-[#081226] mt-1">Nos Sponsors</h2>
           <p data-edit-key="partnersSectionSubtitle" data-i18n="partnersSectionSubtitle" class="editable-field text-sm text-slate-500 mt-2">Entreprises, partenaires et mécènes qui soutiennent nos caravanes et actions solidaires à travers la Tunisie.</p>
           <div id="admin-partners-controls" class="hidden mt-4 flex items-center justify-center gap-3" style="display: none;">
@@ -6699,16 +6697,61 @@
     window.purgeOldTestSessions = purgeOldTestSessions;
 
     const defaultMetrics = [
-      { key: "interact_clubs_tunisia", label: "Clubs Interact en Tunisie", value_display: "60", subtext: "Clubs actifs fédérés sous le District 9010" },
-      { key: "interactiens_tunisia", label: "Interactiens en Tunisie", value_display: "2 500+", subtext: "Jeunes engagés au service de la communauté" },
-      { key: "beneficiaries_total", label: "Bénéficiaires Directs Soutenus", value_display: "940+", subtext: "Familles et enfants équipés ou soutenus lors des caravanes" },
-      { key: "community_reach", label: "Communauté Digitale", value_display: "3 601+", subtext: "Abonnés engagés sur Instagram (@ic.tunisgolfecarthagene)" },
-      { key: "food_baskets", label: "Paniers Alimentaires Distribués", value_display: "1 000", subtext: "Couffin de Ramadan (Mahdia)" },
-      { key: "school_kids", label: "Écoliers Dotés de Cartables", value_display: "800", subtext: "Action Rentrée Scolaire (Nabeul)" },
-      { key: "winter_families", label: "Foyers Réchauffés en Hiver", value_display: "120", subtext: "Hiver au Chaud (Testour)" },
-      { key: "years_active", label: "Années d'Engagement", value_display: "8+", subtext: "Depuis mars 2017 (Charte officielle le 7 janvier 2019)" },
-      { key: "facebook_community", label: "Communauté Facebook", value_display: "9 414+", subtext: "Abonnés officiels sur Facebook (@ICTGC)" }
-    ];
+  {
+    "key": "interact_clubs_tunisia",
+    "label": "Clubs Interact en Tunisie",
+    "value_display": "60",
+    "subtext": "Clubs actifs fédérés sous le District 9010"
+  },
+  {
+    "key": "interactiens_tunisia",
+    "label": "Interactiens en Tunisie",
+    "value_display": "2 500+",
+    "subtext": "Jeunes engagés au service de la communauté"
+  },
+  {
+    "key": "beneficiaries_total",
+    "label": "Bénéficiaires Directs Soutenus",
+    "value_display": "1 940+",
+    "subtext": "Familles et enfants équipés ou soutenus lors des caravanes"
+  },
+  {
+    "key": "community_reach",
+    "label": "Communauté Digitale",
+    "value_display": "3 584+",
+    "subtext": "Abonnés engagés sur Instagram (@ic.tunisgolfecarthagene)"
+  },
+  {
+    "key": "food_baskets",
+    "label": "Paniers Alimentaires Distribués",
+    "value_display": "1 000",
+    "subtext": "Couffin de Ramadan (Mahdia)"
+  },
+  {
+    "key": "school_kids",
+    "label": "Écoliers Dotés de Cartables",
+    "value_display": "800",
+    "subtext": "Action Rentrée Scolaire (Nabeul)"
+  },
+  {
+    "key": "winter_families",
+    "label": "Foyers Réchauffés en Hiver",
+    "value_display": "120",
+    "subtext": "Hiver au Chaud (Testour)"
+  },
+  {
+    "key": "years_active",
+    "label": "Années d'Engagement",
+    "value_display": "8+",
+    "subtext": "Depuis mars 2017 (Charte officielle le 7 janvier 2019)"
+  },
+  {
+    "key": "facebook_community",
+    "label": "Communauté Facebook",
+    "value_display": "9 413+",
+    "subtext": "Abonnés officiels sur Facebook (@ICTGC)"
+  }
+];
 
     const defaultPartners = [
   {
@@ -6823,7 +6866,7 @@
     "category": "Intérêt Public & Solidarité",
     "status": "Completed",
     "custom_gradient": "linear-gradient(135deg, #500724 0%, #9d174d 50%, #f43f5e 100%)",
-    "description": "Marathon Solidaire Octobre Rose au Lac 1 pour sensibiliser le grand public et soutenir activement la lutte contre le cancer du sein.",
+    "description": "Le Marathon Solidaire Octobre Rose, organisé par l’Interact Club Carthage le 1er novembre 2026 au Lac, est une initiative qui vise à sensibiliser le public à la lutte contre le cancer du sein et à l’importance du dépistage précoce. À travers cet événement sportif et solidaire, nous souhaitons mobiliser les participants autour d’une cause qui nous concerne tous, tout en transmettant un message d’espoir, de soutien et de solidarité envers les femmes touchées par cette maladie. Plus qu’une simple course, ce marathon représente un engagement collectif où chaque pas compte et chaque participation contribue à faire passer un message essentiel.",
     "location": "Lac 1 , Tunisie",
     "is_news": true,
     "action_type": "humanitaire",
@@ -6833,7 +6876,10 @@
     "title": "Run For Pink",
     "beneficiaries_count": 0,
     "grid_cols": 3,
-    "images": ["/assets/photos/action-action-midnight-sun-1.jpg", "/assets/photos/action-action-midnight-sun-2.jpg"]
+    "images": [
+      "/assets/photos/action-action-midnight-sun-1.jpg",
+      "/assets/photos/action-action-midnight-sun-2.jpg"
+    ]
   },
   {
     "id": "5raAK8SISKxtyWdhkicu",
@@ -6843,10 +6889,15 @@
     "is_news": false,
     "grid_cols": 2,
     "beneficiaries_count": 1000,
-    "description": "🎒خطوة بخطوة، نبنيو مستقبل غدوة. ✨\nSix clubs, six horizons, mais une même volonté : avancer ensemble, apprendre les uns des autres et transformer notre engagement en actions \nconcrètes. 🤝\nDe Kairouan à Nabeul, Hammamet, Ennasr, Golfe Carthagène et El Madina, nous unissons nos forces sous l’esprit de l’Interact et du District 9010 pour porter une ambition qui nous tient à cœur : atteindre 1000 cartabels à Kairouan et faire de chaque action une nouvelle raison d’espérer. 💙\nDans le cadre de notre action « Rentrée Scolaire », notre objectif est de préparer et distribuer 1000 cartables afin d’offrir à 1000 élèves un meilleur départ pour leur nouvelle année scolaire. 💙\n1000 cartables, 1000 sourires, 1000 nouvelles chances. 🌟\nPas à pas, construisons le futur de demain. 🤝\nParce que chaque grand changement commence par un premier pas.\nEt lorsque nous avançons ensemble, chaque pas nous rapproche d’un avenir meilleur. 🌍\n🎯 1000 cartables, 6 clubs, 1 vision.",
+    "description": "🎒خطوة بخطوة، نبنيو مستقبل غدوة. ✨\nSix clubs, six horizons, mais une même volonté : avancer ensemble, apprendre les uns des autres et transformer notre engagement en actions concrètes. 🤝 De Kairouan à Nabeul, Hammamet, Ennasr, Golfe Carthagène et El Madina, nous unissons nos forces sous l’esprit de l’Interact et du District 9010 pour porter une ambition qui nous tient à cœur : atteindre 1000 cartabels à Kairouan et faire de chaque action une nouvelle raison d’espérer. 💙 Dans le cadre de notre action « Rentrée Scolaire », notre objectif est de préparer et distribuer 1000 cartables afin d’offrir à 1000 élèves un meilleur départ pour leur nouvelle année scolaire. 💙 1000 cartables, 1000 sourires, 1000 nouvelles chances. 🌟 Pas à pas, construisons le futur de demain. 🤝 Parce que chaque grand changement commence par un premier pas. Et lorsque nous avançons ensemble, chaque pas nous rapproche d’un avenir meilleur. 🌍 🎯 1000 cartables, 6 clubs, 1 vision.",
     "title": "Action Rentrée Scolaire",
     "beneficiary_unit": "Eleves",
-    "images": ["/assets/photos/action-5raAK8SISKxtyWdhkicu-1.jpg", "/assets/photos/action-5raAK8SISKxtyWdhkicu-2.jpg", "/assets/photos/action-5raAK8SISKxtyWdhkicu-3.jpg", "/assets/photos/action-5raAK8SISKxtyWdhkicu-4.jpg"],
+    "images": [
+      "/assets/photos/action-5raAK8SISKxtyWdhkicu-1.jpg",
+      "/assets/photos/action-5raAK8SISKxtyWdhkicu-2.jpg",
+      "/assets/photos/action-5raAK8SISKxtyWdhkicu-3.jpg",
+      "/assets/photos/action-5raAK8SISKxtyWdhkicu-4.jpg"
+    ],
     "createdAt": "2026-11-15T16:46:59.546Z"
   },
   {
@@ -6857,7 +6908,7 @@
     "is_news": false,
     "title": "Action Mouled 1.0",
     "status": "Completed",
-    "description": "À l’occasion du Mouled, notre club a eu le plaisir de partager un moment de solidarité et de convivialité avec les enfants du SOS Village de Mornag, à travers la distribution de plus de 50 assida zgougou. 🥣❤️\nAu-delà des traditions, cette action nous rappelle que les petits gestes peuvent créer de grands sourires. ",
+    "description": "À l’occasion du Mouled, notre club a eu le plaisir de partager un moment de solidarité et de convivialité avec les enfants du SOS Village de Mornag, à travers la distribution de plus de 50 assida zgougou. 🥣❤️ Au-delà des traditions, cette action nous rappelle que les petits gestes peuvent créer de grands sourires.",
     "location": "SOS Village Mornag , Tunisie",
     "createdAt": "2026-11-15T17:28:31.765Z"
   },
@@ -6890,7 +6941,7 @@
     "title": "Couffin de Ramadan (Koffet Romdhan)",
     "location": "Mahdia, Tunisie",
     "is_news": false,
-    "description": "Distribution massive de paniers alimentaires complets pour soutenir les familles vulnérables durant le mois saint."
+    "description": "Ensemble pour illuminer Ramadan Guides par l'esprit du partage, l'Interact Anastasia, l'Interact Tunis Golte Carthagene, l'Interact  Tunis Inner City et l'Interact  Sidı Bou Saïd unissent leurs efforts pour offrir un soutien chaleureux à 1000 familles بقفة اليوم فرحة الصيام تدوم Née de l'esprit du Ramadan, cette action prend vie à travers un couffin préparé avec soin, des mains tendues et une volonté sincère de transformer un simple don en réconfort durable. Parce que le jeûne se vit aussi dans l'attention portée à l'autre, et que la générosité, lorsqu'elle s'invite à table, fait durer la joie du Ramadan"
   },
   {
     "id": "action-hiver-au-chaud",
@@ -6908,7 +6959,7 @@
     "status": "Completed",
     "location": "Nabeul, Tunisie",
     "title": "Rentrée Scolaire",
-    "description": "Campagne de collecte et don de cartables garnis, livres et fournitures scolaires pour lutter contre le décrochage scolaire.",
+    "description": "Ensemble, nous unissons nos forces pour offrir à de nombreux élèves les fournitures et le soutien nécessaires pour commencer cette nouvelle année dans les meilleures conditions Unis, on peut changer des vies et semer les graines d'un monde meilleur.",
     "beneficiaries_count": 800,
     "beneficiary_unit": "écoliers équipés",
     "is_news": false,
@@ -6931,8 +6982,12 @@
     "beneficiary_unit": "Individus",
     "is_news": false,
     "title": "Action Mouled 2.0",
-    "description": "Le Mouled est avant tout une fête de partage. À cette occasion, notre club a eu le bonheur d’offrir une deuxième distribution d’assida zgougou aux résidents de Dar El Iila à Médina Jedida, dans une ambiance empreinte de solidarité et de convivialité. 🥣❤️\n",
-    "images": ["/assets/photos/action-jvDibt0YjYdeetoKmqbF-1.jpg", "/assets/photos/action-jvDibt0YjYdeetoKmqbF-2.jpg", "/assets/photos/action-jvDibt0YjYdeetoKmqbF-3.jpg"]
+    "description": "Le Mouled est avant tout une fête de partage. À cette occasion, notre club a eu le bonheur d’offrir une deuxième distribution d’assida zgougou aux résidents de Dar El Iila à Médina Jedida, dans une ambiance empreinte de solidarité et de convivialité. 🥣❤️",
+    "images": [
+      "/assets/photos/action-jvDibt0YjYdeetoKmqbF-1.jpg",
+      "/assets/photos/action-jvDibt0YjYdeetoKmqbF-2.jpg",
+      "/assets/photos/action-jvDibt0YjYdeetoKmqbF-3.jpg"
+    ]
   }
 ];
 
@@ -6941,7 +6996,7 @@
     "id": "bm-1",
     "fullName": "Yasmine Cherif",
     "full_name": "Yasmine Cherif",
-    "role": "Présidente",
+    "role": "PRÉSIDENTE",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -6952,7 +7007,7 @@
     "id": "bm-2",
     "fullName": "Nour El Houda Tajouri",
     "full_name": "Nour El Houda Tajouri",
-    "role": "Vice-présidente",
+    "role": "VICE-PRÉSIDENTE",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -6963,7 +7018,7 @@
     "id": "bm-3",
     "fullName": "Mohamed Ayoub Masmoudi",
     "full_name": "Mohamed Ayoub Masmoudi",
-    "role": "Chef du protocol",
+    "role": "CHEF DU PROTOCOL",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -6974,7 +7029,7 @@
     "id": "bm-4",
     "fullName": "Yessine Ben Fraj",
     "full_name": "Yessine Ben Fraj",
-    "role": "Secrétaire général",
+    "role": "SECRÉTAIRE GÉNÉRAL",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -6985,7 +7040,7 @@
     "id": "bm-5",
     "fullName": "Yasmine Chaabani",
     "full_name": "Yasmine Chaabani",
-    "role": "Conseillère générale",
+    "role": "CONSEILLÈRE GÉNÉRALE",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -6996,7 +7051,7 @@
     "id": "bm-6",
     "fullName": "Skander Mellouli",
     "full_name": "Skander Mellouli",
-    "role": "Représentant au sein de la CNIT",
+    "role": "REPRÉSENTANT AU SEIN DE LA CNIT",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -7007,7 +7062,7 @@
     "id": "bm-7",
     "fullName": "Eya Houas",
     "full_name": "Eya Houas",
-    "role": "Trésorière",
+    "role": "TRÉSORIÈRE",
     "tier": "executif",
     "photo_url": "",
     "photo_pos": "20%",
@@ -7018,7 +7073,7 @@
     "id": "bm-8",
     "fullName": "Louay Ben Mabrouk",
     "full_name": "Louay Ben Mabrouk",
-    "role": "Responsable TikTok",
+    "role": "RESPONSABLE TIKTOK",
     "tier": "commission",
     "commission_name": "TikTok",
     "photo_url": "",
@@ -7030,7 +7085,7 @@
     "id": "bm-9",
     "fullName": "Leen Mabrouk",
     "full_name": "Leen Mabrouk",
-    "role": "Cheffe médiatisation",
+    "role": "CHEFFE MÉDIATISATION",
     "tier": "commission",
     "commission_name": "Médiatisation",
     "photo_url": "/assets/photos/bureau-bm-9.jpg",
@@ -7042,7 +7097,7 @@
     "id": "bm-10",
     "fullName": "Adam Ben Ghodbane",
     "full_name": "Adam Ben Ghodbane",
-    "role": "Chef Sponsoring",
+    "role": "CHEF SPONSORING",
     "tier": "commission",
     "commission_name": "Sponsoring",
     "photo_url": "",
@@ -7054,7 +7109,7 @@
     "id": "bm-11",
     "fullName": "Ritej Iris Mendili",
     "full_name": "Ritej Iris Mendili",
-    "role": "Cheffe Finances",
+    "role": "CHEFFE FINANCES",
     "tier": "commission",
     "commission_name": "Finances",
     "photo_url": "",
@@ -7066,7 +7121,7 @@
     "id": "bm-12",
     "fullName": "Zeyneb Koubaa",
     "full_name": "Zeyneb Koubaa",
-    "role": "co-Cheffe intérêt public",
+    "role": "CO-CHEFFE INTÉRÊT PUBLIC",
     "tier": "commission",
     "commission_name": "Commission d'Intérêt Public (CIP)",
     "photo_url": "",
@@ -7078,7 +7133,7 @@
     "id": "bm-13",
     "fullName": "Omar Jerbi",
     "full_name": "Omar Jerbi",
-    "role": "co-Chef intérêt public",
+    "role": "CO-CHEF INTÉRÊT PUBLIC",
     "tier": "commission",
     "commission_name": "Commission d'Intérêt Public (CIP)",
     "photo_url": "",
@@ -7090,7 +7145,7 @@
     "id": "bm-14",
     "fullName": "Kenza Miral",
     "full_name": "Kenza Miral",
-    "role": "Responsable RH",
+    "role": "RESPONSABLE RH",
     "tier": "commission",
     "commission_name": "Ressources Humaines",
     "photo_url": "/assets/photos/bureau-bm-14.png",
@@ -7102,7 +7157,7 @@
     "id": "bm-15",
     "fullName": "Mahdi Ghabri",
     "full_name": "Mahdi Ghabri",
-    "role": "Chef des actions internationales",
+    "role": "CHEF DES ACTIONS INTERNATIONALES",
     "tier": "commission",
     "commission_name": "Actions Internationales",
     "photo_url": "/assets/photos/bureau-bm-15.jpg",
@@ -7114,7 +7169,7 @@
     "id": "bm-16",
     "fullName": "Yassmine Missaoui",
     "full_name": "Yassmine Missaoui",
-    "role": "Cheffe du protocole adjointe",
+    "role": "CHEFFE DU PROTOCOLE ADJOINTE",
     "tier": "elargi",
     "commission_name": "Protocole",
     "photo_url": "",
@@ -7126,7 +7181,7 @@
     "id": "bm-17",
     "fullName": "Youssef Neffati",
     "full_name": "Youssef Neffati",
-    "role": "Secrétaire adjoint",
+    "role": "SECRÉTAIRE ADJOINT",
     "tier": "elargi",
     "commission_name": "Secrétariat",
     "photo_url": "",
@@ -7138,7 +7193,7 @@
     "id": "bm-18",
     "fullName": "Iyed Tlili",
     "full_name": "Iyed Tlili",
-    "role": "Trésorier adjoint",
+    "role": "TRÉSORIER ADJOINT",
     "tier": "elargi",
     "commission_name": "Trésorerie",
     "photo_url": "",
@@ -11055,6 +11110,14 @@ const CATEGORY_I18N = {
         fileContent = fileContent.replace(actionsRegex, 'const defaultActions = ' + JSON.stringify(currentActions, null, 2) + ';');
       }
 
+            document.querySelectorAll('[data-edit-key]').forEach(el => {
+        const k = el.getAttribute('data-edit-key');
+        if (k && el.innerText) {
+          const escK = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const tagRe = new RegExp('(<[^>]+data-edit-key=["\']' + escK + '["\'][^>]*>)[\\s\\S]*?(<\\/[^>]+>)', 'gi');
+          fileContent = fileContent.replace(tagRe, '$1' + el.innerHTML + '$2');
+        }
+      });
       const blob = new Blob([fileContent], { type: 'text/html;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
