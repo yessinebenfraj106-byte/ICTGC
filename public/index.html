@@ -3339,7 +3339,7 @@
     "category": "Intérêt Public & Solidarité",
     "status": "Completed",
     "custom_gradient": "linear-gradient(135deg, #500724 0%, #9d174d 50%, #f43f5e 100%)",
-    "description": "Événement festif estival avec pool party et DJ dont les bénéfices intégraux financent les actions humanitaires du club.",
+    "description": "Marathon Solidaire Octobre Rose au Lac 1 pour sensibiliser le grand public et soutenir activement la lutte contre le cancer du sein.",
     "location": "Lac 1 , Tunisie",
     "is_news": true,
     "action_type": "humanitaire",
@@ -10224,17 +10224,26 @@ const CATEGORY_I18N = {
       }
 
       if (/\b(a\s+la\s+une|actu|actualite|projet\s+phare|derniere\s+action|recente|derniers\s+projets|chfama\s+jdid|chnowa\s+jdidkom|akher\s+action)\b/i.test(q) || /(شفيما\s+جديد|شنوة\s+جديدكم|اخر\s+اكسيون)/.test(q)) {
-        let newsTitle = "Midnight Sun";
-        let newsDesc = "Pool party humanitaire dont les bénéfices financent nos actions.";
-        const actions = window.cachedActionsList || (typeof defaultActions !== 'undefined' ? defaultActions : []);
+        let newsTitle = "Run For Pink";
+        let newsDesc = "Marathon Solidaire Octobre Rose au Lac 1 pour sensibiliser le grand public et soutenir activement la lutte contre le cancer du sein.";
+        const actions = (typeof window !== 'undefined' && window.cachedActionsList) ? window.cachedActionsList : (typeof defaultActions !== 'undefined' ? defaultActions : []);
         if (actions && actions.length) {
           const featured = actions.find(a => a.is_news) || actions[0];
           if (featured) {
             newsTitle = featured.title || newsTitle;
-            newsDesc = featured.description || newsDesc;
+            if (typeof translateDynamicAction === 'function') {
+              const dyn = translateDynamicAction(featured, 'fr');
+              if (dyn && dyn.description) newsDesc = dyn.description;
+              else if (featured.description) newsDesc = featured.description;
+            } else if (featured.description) {
+              newsDesc = featured.description;
+            }
           }
         }
-        return "Notre action à la une actuellement est « " + newsTitle + " » : " + newsDesc + " Vous pouvez consulter tous les détails et photos dans la section **« Nos Actions »** de notre site !";
+        if (/(شفيما\s+جديد|شنوة\s+جديدكم|اخر\s+اكسيون)/.test(q)) {
+          return "أحدث مشاريعنا وأكشن على الواجهة حالياً هي « " + newsTitle + " » : ماراثون خيري توعوي نُظم بضفاف البحيرة 1 بمناسبة أكتوبر الوردي للتوعية ودعم مريضات سرطان الثدي. تنجم تلقى كل التفاصيل والتصاور في قسم « Nos Actions » على الموقع !";
+        }
+        return "Notre action à la une actuellement est **« " + newsTitle + " »** : " + newsDesc + " Vous pouvez consulter tous les détails et photos dans la section **« Nos Actions »** de notre site !";
       }
 
       if (/\b(actions?|types\s+d\s*actions|projets|caritatif|social|ecologique|environnemental|culturel|chnowa\s+ta3mlou|chneya\s+les\s+actions|khedma|a3mel\s+5ayriya)\b/i.test(q) || /(شنوة\s+تعملو|شنوما\s+الاكسيونات|اعمال\s+خيرية)/.test(q)) {
