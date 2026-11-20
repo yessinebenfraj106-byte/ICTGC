@@ -6002,7 +6002,7 @@
         if (storedActions) actionsLog = JSON.parse(storedActions);
       } catch (e) {}
 
-      const perfVitals = {
+      window.perfVitals = {
         ttfb: 0,
         domReady: 0,
         loadTime: 0,
@@ -6010,6 +6010,7 @@
         cls: 0,
         inp: 0
       };
+      const perfVitals = window.perfVitals;
 
       window.addEventListener('load', () => {
         setTimeout(() => {
@@ -6257,7 +6258,7 @@
       const validLcpSessions = sessions.filter(s => s.performance && s.performance.lcp > 0 && s.performance.lcp <= 8000);
       const avgLcpMs = validLcpSessions.length > 0 
         ? Math.round(validLcpSessions.reduce((acc, s) => acc + s.performance.lcp, 0) / validLcpSessions.length)
-        : Math.round(perfVitals.domReady || 240);
+        : Math.round((window.perfVitals && window.perfVitals.domReady) ? window.perfVitals.domReady : 240);
       const kpiLcp = document.getElementById('kpi-avg-lcp');
       if (kpiLcp) kpiLcp.innerText = (avgLcpMs / 1000).toFixed(2) + 's';
 
@@ -13646,7 +13647,8 @@ const CATEGORY_I18N = {
 
     async function replicateToSupabase(endpoint, data, prefer = 'resolution=merge-duplicates') {
       try {
-        const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${endpoint}`, {
+        const conflictParam = endpoint === 'site_metrics' || endpoint === 'site_content' ? '?on_conflict=key' : '';
+        const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${endpoint}${conflictParam}`, {
           method: 'POST',
           headers: {
             'apikey': SUPABASE_CONFIG.anonKey,
@@ -13818,8 +13820,14 @@ const CATEGORY_I18N = {
       const fsList = Array.isArray(fsData) ? fsData : [];
       const sbMap = new Map();
       const fsMap = new Map();
-      sbList.forEach(item => { if (item && item.id) sbMap.set(String(item.id), item); });
-      fsList.forEach(item => { if (item && item.id) fsMap.set(String(item.id), item); });
+      sbList.forEach(item => {
+        const k = item ? (item.key || item.id) : null;
+        if (k) sbMap.set(String(k), item);
+      });
+      fsList.forEach(item => {
+        const k = item ? (item.key || item.id) : null;
+        if (k) fsMap.set(String(k), item);
+      });
 
       const toFs = [];
       const toSb = [];
@@ -13937,6 +13945,15 @@ const CATEGORY_I18N = {
             category: p.category || '',
             logo_url: p.logo_url || p.logo || '',
             order_index: p.order_index !== undefined ? p.order_index : idx
+          }));
+        } else if (endpoint === 'site_metrics') {
+          payload = toSb.map((m, idx) => ({
+            key: m.key || m.id || `metric-${idx}`,
+            label: m.label || '',
+            value_display: m.value_display || m.val || m.value || '',
+            subtext: m.subtext || '',
+            order_index: m.order_index !== undefined ? m.order_index : idx,
+            updated_at: new Date().toISOString()
           }));
         }
         await replicateToSupabase(endpoint, payload);
@@ -14327,7 +14344,7 @@ const CATEGORY_I18N = {
 
   
 
-  <div id="reglement-book-modal" class="hidden fixed inset-0 z-[60] flex flex-col bg-slate-950/90 backdrop-blur-xl transition-all">
+  <div id="reglement-book-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-slate-950/90 backdrop-blur-xl transition-all">
     <div class="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-800 bg-slate-900/80 text-white">
       <div class="flex items-center gap-3">
         <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-500 text-white flex items-center justify-center font-bold text-lg shadow-md">📖</span>
