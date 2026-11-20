@@ -10114,6 +10114,242 @@ const CATEGORY_I18N = {
     }
     window.syncAllDataToSupabase = syncAllDataToSupabase;
 
+    function cleanAssistantQuery(str) {
+      if (!str) return '';
+      return str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function formatAssistantMessage(text) {
+      if (!text) return '';
+      let formatted = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="underline font-semibold text-[#C41230] hover:text-[#8B0021]">$1</a>')
+        .replace(/\n/g, '<br>');
+      return formatted;
+    }
+
+    function resolveIctgcAssistantResponse(rawQuery) {
+      const raw = (rawQuery || '').trim();
+      const q = cleanAssistantQuery(raw);
+      if (!q) {
+        return "Bonjour ! N'hésitez pas à me poser une question sur l'Interact Club Tunis Golfe Carthagène, notre recrutement, nos commissions ou nos actions.";
+      }
+
+      const jailbreakMatches = [
+        /ignore\s+(previous|all|prior|instructions)/i,
+        /system\s+prompt/i,
+        /dan\s+mode/i,
+        /developer\s+mode/i,
+        /pretend\s+you/i,
+        /\bact\s+as\b/i,
+        /\bbypass\b/i,
+        /\bjailbreak\b/i,
+        /prompt\s+injection/i,
+        /override/i,
+        /\bhack\b/i,
+        /sql\s+injection/i
+      ];
+      for (const p of jailbreakMatches) {
+        if (p.test(raw)) {
+          return "Cette commande n'est pas autorisée. Cet assistant est strictement restreint aux informations publiques de l'Interact Club Tunis Golfe Carthagène.";
+        }
+      }
+
+      if (/\b(admin|mot de passe|password|master|ictgc2026|crm|cle master|token admin)\b/i.test(raw)) {
+        return "L'accès administratif et les données internes du CRM sont strictement protégés et confidentiels. Pour toute démarche officielle, veuillez contacter le secrétariat du club.";
+      }
+
+      const offTopicPatterns = [
+        /\b(python|javascript|typescript|c\+\+|java|php|sql|bash|powershell|script|coding|code|programme)\b/i,
+        /\b(homework|devoir|math|maths|equation|calcule|calculer|algebre|geometrie|physique|chimie)\b/i,
+        /\b(qui\s+est\s+(napoleon|le\s+president|macron|biden)|coupe\s+du\s+monde|meteo|weather|recette)\b/i,
+        /^[0-9\s\+\-\*/\=\?]+$/
+      ];
+      for (const p of offTopicPatterns) {
+        if (p.test(raw) || p.test(q)) {
+          return "Je suis l'assistant dédié exclusivement à l'Interact Club Tunis Golfe Carthagène. Je ne peux répondre qu'aux questions concernant le club, ses actions, son recrutement et ses commissions.";
+        }
+      }
+
+      if (/\b(non\s*membre|pas\s+membre|sans\s+etre\s+membre|externe|aider\s+sur\s+le\s+terrain|participer\s+a\s+vos\s+evenements|participer\s+aux\s+actions|mouch\s+membre)\b/i.test(q)) {
+        return "Pour toute question relative à la participation à un événement public ou pour apporter une aide bénévole ponctuelle, merci de contacter directement notre bureau sur Instagram (@ic.tunisgolfecarthagene) ou par email à contact@ictgc.org.";
+      }
+
+      if (/\b(quand|date|dates|periode|periodes|wa9tech|prochain|ouverture|ouvert\s+ou\s+ferme|when\s+is)\b/i.test(q) && /\b(recrutements?|rejoindre|postuler|adhesions?|inscriptions?)\b/i.test(q)) {
+        return "Les recrutements ont lieu lors de **périodes précises** au cours du mandat (non planifiées à l'avance). Suivez attentivement nos pages Instagram et Facebook pour être informé(e) du lancement officiel !";
+      }
+
+      if (/\b(age|tranche|12|13|14|15|16|17|18|ans|lyceen|collegien|etudiant|3omri|kadeh\s+3omri|eligible|qui\s+peut\s+postuler|how\s+old)\b/i.test(q)) {
+        return "La tranche d'âge requise pour devenir membre de l'Interact Club Tunis Golfe Carthagène est comprise **entre 12 et 18 ans** (collégiens et lycéens).";
+      }
+
+      if (/\b(recrutements?|rejoindre|postuler|adhesions?|formulaires?|candidatures?|entretiens?|inscrire|nodkhol|join)\b/i.test(q)) {
+        return "Dès que la campagne de recrutement est officiellement annoncée sur nos réseaux sociaux (Instagram et Facebook), il vous suffit de vous rendre sur ce site dans la rubrique **« Rejoindre l'ICTGC »**, de remplir le formulaire en ligne, puis d'attendre d'être contacté(e) par notre équipe des Ressources Humaines.";
+      }
+
+      if (/\b(ou\s+se\s+pass|ou\s+se\s+deroul|ou\s+se\s+tiennent|adresse|siege|local|reunions?|win\s+t9a3dou|win\s+les\s+reunions|where\s+do\s+you\s+meet)\b/i.test(q) || (/\blieux?\b/i.test(q) && !/\bont\s+lieu\b/i.test(q))) {
+        return "Les dates et lieux de nos réunions et activités sont communiqués directement aux membres du club et aux candidats retenus lors des convocations officielles.";
+      }
+
+      if (/\b(cotisations?|frais|payer|prix|cout|argent|flous|combien\s+coute|membership\s+fee)\b/i.test(q)) {
+        return "Toutes les modalités administratives et financières liées à l'adhésion sont transmises directement aux candidats retenus à l'issue de leur entretien de sélection.";
+      }
+
+      if (/\b(rotary|district|parrain|ariana|la\s+rose|9010)\b/i.test(q)) {
+        return "Notre club parrain est le **Rotary Club Ariana La Rose**, rattaché au **District 9010** (Tunisie, Algérie, Maroc, Mauritanie).";
+      }
+
+      if (/\b(temps|disponibilite|disponible|heures?|minutes?|par\s+jour|par\s+semaine|charge|scolaire|etude|wa9t|how\s+much\s+time)\b/i.test(q)) {
+        return "L'engagement demandé est d'environ **10 à 15 minutes par jour au maximum**. L'organisation est souple et parfaitement adaptée au calendrier scolaire des lycéens et collégiens.";
+      }
+
+      if (/\b(choisir|choix|obligatoire|optionnelle|optionnelles|electif)\b/i.test(q) && /\bcommissions?\b/i.test(q)) {
+        return "Au sein du club, il existe des commissions **obligatoires** qui constituent le socle d'engagement commun pour chaque membre, ainsi que des commissions **optionnelles** que chaque membre peut choisir selon ses intérêts et compétences.";
+      }
+
+      if (/\b(commissions?|poles?|cip|crie|crh|ljan)\b/i.test(q)) {
+        return "L'Interact Club Tunis Golfe Carthagène compte les commissions suivantes :\n• **Commission d'Intérêt Public (CIP)**\n• **Commission des Relations Internes & Externes (CRIE)**\n• **Commission des Ressources Humaines (CRH)**\n• **Commission des Finances (CF)**\n• **Commission de Médiatisation (CM)**\n• **Commission des Actions Internationales (CAI)**\n• **Commission Sponsoring**\n*(Les rôles et attributions internes de chaque commission sont présentés aux membres lors de leur intégration).*";
+      }
+
+      if (/\b(a\s+la\s+une|actu|actualite|projet\s+phare|derniere\s+action|recente|derniers\s+projets)\b/i.test(q)) {
+        let newsTitle = "Midnight Sun";
+        let newsDesc = "Pool party humanitaire dont les bénéfices financent nos actions.";
+        const actions = window.cachedActionsList || (typeof defaultActions !== 'undefined' ? defaultActions : []);
+        if (actions && actions.length) {
+          const featured = actions.find(a => a.is_news) || actions[0];
+          if (featured) {
+            newsTitle = featured.title || newsTitle;
+            newsDesc = featured.description || newsDesc;
+          }
+        }
+        return "Notre action à la une actuellement est « " + newsTitle + " » : " + newsDesc + " Vous pouvez consulter tous les détails et photos dans la section **« Nos Actions »** de notre site !";
+      }
+
+      if (/\b(actions?|types\s+d\s*actions|projets|caritatif|social|ecologique|environnemental|culturel)\b/i.test(q)) {
+        return "L'Interact Club Tunis Golfe Carthagène mène **tous types d'actions d'intérêt public** : caritatives, sociales, éducatives, environnementales, écologiques, culturelles et de solidarité internationale.";
+      }
+
+      if (/\b(sponsors?|sponsoring|partenaires?|partenariat|collaborer|collaboration|dons?|donner|financement|aider\s+financierement|tabarou3)\b/i.test(q)) {
+        return "Pour toute proposition de partenariat, sponsoring ou pour effectuer un don en soutien à nos actions, contactez directement notre bureau par message privé sur Instagram, par email ou via la section contact de notre site.";
+      }
+
+      if (/\b(contacts?|contacter|instagram|facebook|email|mail|reseaux|joindre|telephone|numero)\b/i.test(q)) {
+        return "Vous pouvez nous contacter directement via :\n• **Instagram** : [@ic.tunisgolfecarthagene](https://www.instagram.com/ic.tunisgolfecarthagene/)\n• **Facebook** : Interact Club Tunis Golfe Carthagène\n• **Email** : contact@ictgc.org (ou via le formulaire de contact du site)";
+      }
+
+      if (/\b(c\s*est\s+quoi|qui\s+etes|presentation|interact|ictgc|club|c\s+quoi|chnowa)\b/i.test(q)) {
+        return "L'Interact Club Tunis Golfe Carthagène (ICTGC) est un club service jeunesse placé sous l'égide du Rotary International (District 9010) et parrainé par le Rotary Club Ariana La Rose. Il réunit des jeunes de 12 à 18 ans engagés pour servir la communauté à travers des actions caritatives, éducatives et de leadership.";
+      }
+
+      return "Je n'ai pas d'information exacte sur ce point précis. Pour cette question, nous vous invitons à contacter directement notre bureau sur Instagram (@ic.tunisgolfecarthagene) ou par email à contact@ictgc.org.";
+    }
+
+    function toggleIctgcAssistant() {
+      const dialog = document.getElementById('ictgc-assistant-dialog');
+      if (!dialog) return;
+      const isHidden = dialog.classList.contains('hidden');
+      if (isHidden) {
+        dialog.classList.remove('hidden');
+        setTimeout(() => {
+          const input = document.getElementById('ictgc-assistant-input');
+          if (input) input.focus();
+        }, 100);
+      } else {
+        dialog.classList.add('hidden');
+      }
+    }
+    window.toggleIctgcAssistant = toggleIctgcAssistant;
+
+    function resetIctgcAssistantChat() {
+      const messagesContainer = document.getElementById('ictgc-assistant-messages');
+      if (!messagesContainer) return;
+      messagesContainer.innerHTML = `
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-[#C41230] text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-xs">
+            IC
+          </div>
+          <div class="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none p-3 shadow-xs max-w-[85%] text-slate-700 text-xs sm:text-sm leading-relaxed">
+            Bonjour ! Je suis l'assistant officiel de l'Interact Club Tunis Golfe Carthagène. Comment puis-je vous renseigner sur le club, notre recrutement, nos commissions ou nos actions ?
+          </div>
+        </div>
+      `;
+    }
+    window.resetIctgcAssistantChat = resetIctgcAssistantChat;
+
+    function askAssistantChip(chipText) {
+      const input = document.getElementById('ictgc-assistant-input');
+      if (input) {
+        input.value = chipText;
+        handleAssistantSend();
+      }
+    }
+    window.askAssistantChip = askAssistantChip;
+
+    function handleAssistantSend(event) {
+      if (event) event.preventDefault();
+      const input = document.getElementById('ictgc-assistant-input');
+      const messagesContainer = document.getElementById('ictgc-assistant-messages');
+      if (!input || !messagesContainer) return;
+      const query = input.value.trim();
+      if (!query) return;
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start justify-end gap-2.5';
+      userBubble.innerHTML = `
+        <div class="bg-gradient-to-r from-[#8B0021] to-[#C41230] text-white rounded-2xl rounded-tr-none p-3 shadow-xs max-w-[85%] text-xs sm:text-sm leading-relaxed">
+          ${query.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+        </div>
+      `;
+      messagesContainer.appendChild(userBubble);
+      input.value = '';
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      const typingId = 'typing-' + Date.now();
+      const typingBubble = document.createElement('div');
+      typingBubble.id = typingId;
+      typingBubble.className = 'flex items-start gap-2.5';
+      typingBubble.innerHTML = `
+        <div class="w-7 h-7 rounded-full bg-[#C41230] text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-xs">
+          IC
+        </div>
+        <div class="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none p-3 shadow-xs max-w-[85%] text-slate-500 text-xs sm:text-sm flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 bg-[#C41230] rounded-full animate-bounce"></span>
+          <span class="w-1.5 h-1.5 bg-[#C41230] rounded-full animate-bounce [animation-delay:0.2s]"></span>
+          <span class="w-1.5 h-1.5 bg-[#C41230] rounded-full animate-bounce [animation-delay:0.4s]"></span>
+        </div>
+      `;
+      messagesContainer.appendChild(typingBubble);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      setTimeout(() => {
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+
+        const rawResponse = resolveIctgcAssistantResponse(query);
+        const botBubble = document.createElement('div');
+        botBubble.className = 'flex items-start gap-2.5';
+        botBubble.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-[#C41230] text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-xs">
+            IC
+          </div>
+          <div class="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none p-3 shadow-xs max-w-[85%] text-slate-700 text-xs sm:text-sm leading-relaxed">
+            ${formatAssistantMessage(rawResponse)}
+          </div>
+        `;
+        messagesContainer.appendChild(botBubble);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 350);
+    }
+    window.handleAssistantSend = handleAssistantSend;
+
+
   </script>
 
   <div id="app-confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
@@ -10250,5 +10486,91 @@ const CATEGORY_I18N = {
 
   
   
+
+  <div id="ictgc-assistant-widget" class="print:hidden">
+    <div id="ictgc-assistant-bubble-container" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 flex flex-col items-end">
+      <button type="button" id="ictgc-assistant-toggle-btn" onclick="toggleIctgcAssistant()" aria-label="Ouvrir l'assistant ICTGC" class="group flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-[#8B0021] to-[#C41230] hover:from-[#6B0019] hover:to-[#A30F28] text-white rounded-full shadow-xl hover:shadow-2xl hover:shadow-red-900/40 transition-all duration-300 transform hover:scale-105 active:scale-95 border border-white/20">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+        </span>
+        <span class="text-xs sm:text-sm font-bold tracking-wide">Assistant ICTGC</span>
+        <span class="text-base sm:text-lg">💬</span>
+      </button>
+    </div>
+
+    <div id="ictgc-assistant-dialog" class="hidden fixed bottom-28 md:bottom-20 right-4 md:right-6 z-50 w-[92vw] sm:w-[380px] md:w-[420px] h-[540px] max-h-[80vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden transition-all duration-300">
+      <div class="bg-gradient-to-r from-[#8B0021] to-[#C41230] text-white p-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-white/15 border border-white/20 flex items-center justify-center font-black text-sm text-amber-300 shadow-inner">
+            IC
+          </div>
+          <div>
+            <div class="text-xs sm:text-sm font-bold leading-tight flex items-center gap-1.5">
+              <span>Assistant ICTGC</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white/20 text-white font-medium">Officiel</span>
+            </div>
+            <div class="text-[10px] text-white/80 flex items-center gap-1 mt-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+              <span>En ligne • District 9010</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button type="button" onclick="resetIctgcAssistantChat()" title="Effacer la discussion" class="w-7 h-7 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all text-xs">
+            🔄
+          </button>
+          <button type="button" onclick="toggleIctgcAssistant()" title="Fermer" class="w-7 h-7 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all text-sm font-bold">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div class="p-2.5 bg-slate-50 border-b border-slate-100 flex items-center gap-1.5 overflow-x-auto text-[11px] select-none">
+        <button type="button" onclick="askAssistantChip('C\'est quoi l\'ICTGC ?')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-full border border-slate-200 shadow-2xs whitespace-nowrap transition-all">
+          📌 C'est quoi ?
+        </button>
+        <button type="button" onclick="askAssistantChip('Comment se passe le recrutement ?')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-full border border-slate-200 shadow-2xs whitespace-nowrap transition-all">
+          📝 Recrutement
+        </button>
+        <button type="button" onclick="askAssistantChip('Quelles sont les commissions du club ?')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-full border border-slate-200 shadow-2xs whitespace-nowrap transition-all">
+          👥 Commissions
+        </button>
+        <button type="button" onclick="askAssistantChip('Combien de temps par jour ?')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-full border border-slate-200 shadow-2xs whitespace-nowrap transition-all">
+          ⏱️ Disponibilité
+        </button>
+        <button type="button" onclick="askAssistantChip('Quelle est votre action à la une ?')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-full border border-slate-200 shadow-2xs whitespace-nowrap transition-all">
+          🌟 Action à la Une
+        </button>
+        <button type="button" onclick="askAssistantChip('Comment vous contacter ?')" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-full border border-slate-200 shadow-2xs whitespace-nowrap transition-all">
+          📞 Contact
+        </button>
+      </div>
+
+      <div id="ictgc-assistant-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 bg-slate-50/60">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-[#C41230] text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-xs">
+            IC
+          </div>
+          <div class="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none p-3 shadow-xs max-w-[85%] text-slate-700 text-xs sm:text-sm leading-relaxed">
+            Bonjour ! Je suis l'assistant officiel de l'Interact Club Tunis Golfe Carthagène. Comment puis-je vous renseigner sur le club, notre recrutement, nos commissions ou nos actions ?
+          </div>
+        </div>
+      </div>
+
+      <form id="ictgc-assistant-form" onsubmit="handleAssistantSend(event)" class="p-3 bg-white border-t border-slate-100 flex flex-col gap-1.5">
+        <div class="flex items-center gap-2">
+          <input type="text" id="ictgc-assistant-input" placeholder="Posez une question sur le club..." maxlength="300" autocomplete="off" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#C41230] text-slate-800 placeholder:text-slate-400 transition-all">
+          <button type="submit" aria-label="Envoyer" class="w-10 h-10 rounded-xl bg-gradient-to-r from-[#8B0021] to-[#C41230] hover:from-[#6B0019] hover:to-[#A30F28] text-white flex items-center justify-center shadow-xs transition-all flex-shrink-0 active:scale-95">
+            ➤
+          </button>
+        </div>
+        <div class="text-[10px] text-center text-slate-400 select-none">
+          Assistant officiel ICTGC • Dédié exclusivement au club
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
