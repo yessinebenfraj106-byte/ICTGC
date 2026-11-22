@@ -471,7 +471,7 @@
 
       <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
         <button type="button" onclick="openA2hsModal()" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-all border border-blue-200/70 shadow-2xs" title="Ajouter l'application ICTGC à votre écran d'accueil">
-          <span>📲</span> <span class="hidden sm:inline">Installer l'App</span>
+          <span>📲</span> <span class="hidden sm:inline" data-i18n="installAppBtn">Installer l'App</span>
         </button>
         
         <a href="https://www.facebook.com/ICTGC" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition-all shadow-xs border border-blue-200/80 group flex-shrink-0" title="Page Facebook officielle (@ICTGC)">
@@ -3465,11 +3465,11 @@
         <div class="flex items-center gap-3">
           <span class="w-9 h-9 rounded-xl bg-purple-600/40 text-purple-200 border border-purple-400/40 flex items-center justify-center text-lg">👀</span>
           <div>
-            <span class="font-extrabold text-sm block">Aperçu en tant que Membre (Compte admin@ictgc.org)</span>
-            <span class="text-[11px] text-purple-200">Vous explorez l'espace interne tel que vos membres le voient (Règlement, Gamification, Commissions).</span>
+            <span class="font-extrabold text-sm block" data-i18n="adminPreviewBannerTitle">Aperçu en tant que Membre (Compte admin@ictgc.org)</span>
+            <span class="text-[11px] text-purple-200" data-i18n="adminPreviewBannerDesc">Vous explorez l'espace interne tel que vos membres le voient (Règlement, Gamification, Commissions).</span>
           </div>
         </div>
-        <button type="button" onclick="showView('admin-view')" class="px-3.5 py-2 rounded-xl bg-white text-indigo-900 hover:bg-purple-50 font-bold text-xs shadow-md transition-all whitespace-nowrap">
+        <button type="button" onclick="showView('admin-view')" class="px-3.5 py-2 rounded-xl bg-white text-indigo-900 hover:bg-purple-50 font-bold text-xs shadow-md transition-all whitespace-nowrap" data-i18n="adminPreviewReturnBtn">
           🔙 Retour Dashboard Admin
         </button>
       </div>
@@ -3510,8 +3510,8 @@
               <span class="px-2.5 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold">
                 🏆 Gamification
               </span>
-              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Interactien du Mois</h3>
-              <p class="text-xs text-slate-500">Podium des membres les plus engagés</p>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1" data-i18n="gamificationTitle">Interactien du Mois</h3>
+              <p class="text-xs text-slate-500" data-i18n="gamificationSubtitle">Podium des membres les plus engagés</p>
             </div>
           </div>
 
@@ -3540,12 +3540,12 @@
         <div class="space-y-6">
           <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-1">
-              <h3 class="text-sm font-bold text-slate-900">Groupes Messenger de Zone</h3>
+              <h3 class="text-sm font-bold text-slate-900" data-i18n="zoneLinksTitle">Groupes Messenger de Zone</h3>
               <button id="btn-admin-edit-zonelinks" type="button" onclick="openManageZoneLinksModal()" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-bold border border-indigo-200 transition-colors flex items-center gap-1 cursor-pointer" title="Gérer les groupes Messenger de Zone">
                 <span>✏️</span> Gérer
               </button>
             </div>
-            <p class="text-xs text-slate-500 mb-4">Liens opérationnels pour les convois et actions en cours</p>
+            <p class="text-xs text-slate-500 mb-4" data-i18n="zoneLinksDesc">Liens opérationnels pour les convois et actions en cours</p>
             <div id="zone-links-list" class="space-y-2">
         <a href="https://m.me/j/AbaC123..." target="_blank" class="block p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all">
           <span class="text-xs font-bold text-slate-900 block">Zone Tunis Nord (La Marsa - Carthage)</span>
@@ -3582,11 +3582,11 @@
             </div>
             <div>
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30">Édition Officielle du Club</span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/30">36 Pages • Format Livre Ouvert</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30" data-i18n="bookBadgeEdition">Édition Officielle du Club</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/30" data-i18n="bookBadgeFormat">36 Pages • Format Livre Ouvert</span>
               </div>
-              <h3 class="text-base sm:text-lg font-black text-white mt-1">Règlement Intérieur de l'Interact Club Tunis Golfe Carthagène</h3>
-              <p class="text-[11px] text-slate-400">Livre interactif directement consultable ci-dessous (tournez les pages au clic ou avec les flèches).</p>
+              <h3 class="text-base sm:text-lg font-black text-white mt-1" data-i18n="bookSectionTitle">Règlement Intérieur de l'Interact Club Tunis Golfe Carthagène</h3>
+              <p class="text-[11px] text-slate-400" data-i18n="bookSectionDesc">Livre interactif directement consultable ci-dessous (tournez les pages au clic ou avec les flèches).</p>
             </div>
           </div>
 
@@ -4240,11 +4240,11 @@
 
       <form id="portal-login-form" onsubmit="handleUnifiedLogin(event)" class="mt-6 space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Adresse Email</label>
-          <input type="text" id="portal-login-email" placeholder="Email ou Identifiant (ex: admin)" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="portalLoginEmailLabel">Adresse Email</label>
+          <input type="text" id="portal-login-email" placeholder="Email ou Identifiant (ex: admin)" data-i18n-ph="portalLoginEmailPh" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Mot de Passe</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="portalLoginPasswordLabel">Mot de Passe</label>
           <div class="relative">
             <input type="password" id="portal-login-password" placeholder="••••••••" required="" class="w-full pl-3.5 pr-10 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
             <button type="button" onclick="togglePasswordVisibility('portal-login-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1 rounded-lg transition-colors cursor-pointer" title="Afficher/Masquer le mot de passe" aria-label="Afficher/Masquer le mot de passe">
@@ -4252,9 +4252,7 @@
             </button>
           </div>
         </div>
-        <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
-          Se connecter
-        </button>
+        <button type="submit" data-i18n="portalLoginSubmit" class="w-full py-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">Se connecter</button>
       </form>
     </div>
   </div>
@@ -8898,13 +8896,25 @@
       const container = document.getElementById('resource-library-container');
       if (!container) return;
       window.currentAppResources = docs;
+      const lang = window.currentAppLanguage || 'fr';
+      const dict = (window.I18N_DICT && window.I18N_DICT[lang]) ? window.I18N_DICT[lang] : window.I18N_DICT.fr;
+
+      const categoryLabels = {
+        'all': { fr: "Tous", en: "All", ar: "الكل" },
+        'Règlements & Statuts': { fr: "Règlements & Statuts", en: "Regulations & Charters", ar: "اللوائح والنظام الداخلي" },
+        'Suivis & Gestion': { fr: "Suivis & Gestion", en: "Tracking & Sheets", ar: "المتابعة والتسيير" },
+        'Sponsoring & Partenariats': { fr: "Sponsoring & Partenariats", en: "Sponsorship & Partners", ar: "الرعاية والشراكات" },
+        'Ordres du Jour & PV': { fr: "Ordres du Jour & PV", en: "Agendas & Minutes", ar: "جداول الأعمال والمحاضر" },
+        'Logos & Identité': { fr: "Logos & Identité", en: "Logos & Branding", ar: "الشعارات والهوية البصرية" }
+      };
+
       const categories = [
-        { id: 'all', label: 'Tous' },
-        { id: 'Règlements & Statuts', label: 'Règlements & Statuts' },
-        { id: 'Suivis & Gestion', label: 'Suivis & Gestion' },
-        { id: 'Sponsoring & Partenariats', label: 'Sponsoring & Partenariats' },
-        { id: 'Ordres du Jour & PV', label: 'Ordres du Jour & PV' },
-        { id: 'Logos & Identité', label: 'Logos & Identité' }
+        { id: 'all', label: categoryLabels['all'][lang] || 'Tous' },
+        { id: 'Règlements & Statuts', label: categoryLabels['Règlements & Statuts'][lang] || 'Règlements & Statuts' },
+        { id: 'Suivis & Gestion', label: categoryLabels['Suivis & Gestion'][lang] || 'Suivis & Gestion' },
+        { id: 'Sponsoring & Partenariats', label: categoryLabels['Sponsoring & Partenariats'][lang] || 'Sponsoring & Partenariats' },
+        { id: 'Ordres du Jour & PV', label: categoryLabels['Ordres du Jour & PV'][lang] || 'Ordres du Jour & PV' },
+        { id: 'Logos & Identité', label: categoryLabels['Logos & Identité'][lang] || 'Logos & Identité' }
       ];
 
       const filtered = activeCat === 'all' 
@@ -8916,20 +8926,20 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800">📚 Bibliothèque Numérique Officielle</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800" data-i18n="libraryBadge">${dict.libraryBadge || '📚 Bibliothèque Numérique Officielle'}</span>
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Synchronisé Drive
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> <span data-i18n="librarySyncBadge">${dict.librarySyncBadge || 'Synchronisé Drive'}</span>
                 </span>
               </div>
-              <h3 class="text-xl font-extrabold text-slate-900">Espace Documentaire &amp; Ressources du Club</h3>
-              <p class="text-xs text-slate-500">Documents officiels, feuilles de calcul de suivi, dossiers de sponsoring et chartes synchronisés depuis Google Drive.</p>
+              <h3 class="text-xl font-extrabold text-slate-900" data-i18n="libraryTitle">${dict.libraryTitle || 'Espace Documentaire & Ressources du Club'}</h3>
+              <p class="text-xs text-slate-500" data-i18n="libraryDesc">${dict.libraryDesc || 'Documents officiels, feuilles de calcul de suivi, dossiers de sponsoring et chartes synchronisés depuis Google Drive.'}</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-              <button type="button" onclick="syncGoogleDriveClub()" class="px-3.5 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer" title="Synchroniser avec le Drive Google du club">
-                <span>⚡</span> <span>Sync Drive</span>
+              <button type="button" onclick="syncGoogleDriveClub()" class="px-3.5 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer" title="${dict.librarySyncBtn || 'Sync Drive'}">
+                <span>⚡</span> <span data-i18n="librarySyncBtn">${dict.librarySyncBtn || 'Sync Drive'}</span>
               </button>
               <a href="https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-2 cursor-pointer">
-                <span>📁</span> <span>Google Drive du Club ↗</span>
+                <span>📁</span> <span data-i18n="libraryDriveLink">${dict.libraryDriveLink || 'Google Drive du Club ↗'}</span>
               </a>
             </div>
           </div>
@@ -8967,8 +8977,8 @@
                   <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
                     <span class="text-slate-400 text-[10px]">${d.updated_at || ''}</span>
                     ${isBook 
-                      ? `<button type="button" onclick="document.getElementById('reglement-inline-section').scrollIntoView({behavior:'smooth',block:'center'})" class="font-extrabold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer">Lire le Livre 📖</button>`
-                      : `<a href="${d.preview_url}" target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer">Aperçu ↗</a>`
+                      ? `<button type="button" onclick="document.getElementById('reglement-inline-section').scrollIntoView({behavior:'smooth',block:'center'})" class="font-extrabold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer" data-i18n="libraryReadBookBtn">${dict.libraryReadBookBtn || 'Lire le Livre 📖'}</button>`
+                      : `<a href="${d.preview_url}" target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer" data-i18n="libraryPreviewBtn">${dict.libraryPreviewBtn || 'Aperçu ↗'}</a>`
                     }
                   </div>
                 </div>
@@ -9456,411 +9466,533 @@
     window.currentAppLanguage = localStorage.getItem('ictgc_lang') || 'fr';
 
     window.I18N_DICT = {
-      fr: {
-        navHome: "Accueil",
-        navActions: "Actions Phares",
-        navBureau: "Mandat 2026-2027",
-        navSponsors: "Sponsors",
-        navStats: "Key Stats",
-        navStats: "Chiffres Clés",
-        navJoinUs: "Nous Rejoindre",
-        'actionsSection.financialLabel': "FINANCIÈRES",
-        'actionsSection.humanitarianLabel': "HUMANITAIRES",
-        recruitHobbies: "Quels sont vos loisirs (*)",
-        recruitHobbiesPh: "Ex: Débat, lecture, photographie, basketball, piano...",
-        recruitExtraCurr: "Participez-vous à des activités extrascolaires ? Si oui, lesquelles ? (*)",
-        recruitExtraCurrPh: "Ex: Club de débat, scoutisme, club robotique, MUN...",
-        recruitPersonality: "Décrivez votre personnalité en 3 mots (*)",
-        recruitPersonalityPh: "Ex: Dynamique, empathique, organisée",
-        recruitIntroExtro: "Introverti / Extraverti (*)",
-        recruitOtherClubs: "Avez-vous de l'expérience dans d'autres clubs ? (*)",
-        recruitOtherClubsPh: "Ex: Membre actif au club Interact / Interacteur novice / Club Unesco...",
-        recruitTalents: "Talents utiles au club (design, montage, etc.) (*)",
-        recruitTalentsPh: "Ex: Montage vidéo, design Canva/Photoshop, prise de parole...",
-        recruitFieldAvail: "Disponibilité sur le terrain (1 à 5) (*)",
-        recruitOnlineAvail: "Disponibilité en ligne (1 à 5) (*)",
-        recruitConstraints: "Contraintes influençant la disponibilité (*)",
-        recruitConstraintsPh: "Ex: Examens trimestriels, cours de soutien le samedi matin...",
-        recruitInteractMeans: "Que représente Interact pour vous ? (*)",
-        recruitInteractMeansPh: "Ex: Une opportunité unique de servir la communauté et développer mon leadership...",
-        recruitWhyJoin: "Pourquoi souhaitez-vous nous rejoindre ? (*)",
-        recruitWhyJoinPh: "Ex: Pour participer activement aux caravanes humanitaires et faire rayonner le club...",
-        recruitSkillsOffered: "Compétences à offrir (*)",
-        recruitSkillsOfferedPh: "Ex: Organisation d'événements, communication digitale, gestion d'équipe...",
-        recruitDesiredContrib: "Ce que vous voulez apporter au club (*)",
-        recruitDesiredContribPh: "Ex: Aider à la réussite des actions caritatives et apporter de la créativité...",
-        recruitSchoolPh: "Ex: Lycée Pilote Hammam Lif",
-        recruitAddressPh: "Ex: Hammam Lif, Ben Arous (ou Tunis, Carthage...)",
-        portalLoginTitle: "Portail Interne ICTGC",
-        portalLoginSub: "Accès sécurisé réservé aux membres et au bureau",
-        portalEmailLabel: "Identifiant (Email / Pseudonyme)",
-        portalPassLabel: "Mot de passe",
-        portalSubmitBtn: "Se connecter",
-        memberDuesRemainingLabel: "Cotisation restante",
-        logoutLabel: "Déconnexion",
-        headerClubSub: "Tunis Golfe Carthagène",
-        headerClubMeta: "Club #219646 • District 9010",
-
-        heroTagline: "Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose",
-        heroTitle: "La Jeunesse au Service de la Communauté",
-        heroDescription: "L'Interact Club Tunis Golfe Carthagène réunit les jeunes leaders lycéens (12-18 ans) engagés dans des actions citoyennes, humanitaires et d'intérêt public, parrainé par le Rotary Club Ariana La Rose (District 9010).",
-        heroCtaRecruit: "Postuler pour le Mandat 2026-2027",
-        heroCtaActions: "Découvrir nos Actions Réalisées",
-
-        filiationBadge: "🏛️ Institution & Filiation Rotarienne",
-        filiationTitle: "Frise de Filiation Officielle",
-        filiationSubtitle: "Comprendre les origines statutaires et le parrainage historique d'ICTGC : du réseau mondial de Rotary International jusqu'à notre action locale sur le Golfe de Carthage.",
-
-        card1Tag: "01 • Organisation Mère",
-        card1Title: "Rotary International",
-        card1Sub: "Fondé en 1905 • 1.4M+ Membres",
-        card1Desc: "Le premier réseau mondial de service humanitaire. Rassemble des leaders de tous horizons pour promouvoir la paix, éradiquer la polio, apporter l'eau potable et soutenir l'éducation mondiale.",
-        card1Foot: "« Servir d'abord »",
-        card1Clubs: "46 000+ Clubs",
-
-        card2Tag: "02 • Club Parrain",
-        card2Title: "RC Ariana La Rose",
-        card2Sub: "Fondé le 21 juin 1996 • District 9010",
-        card2Desc: "Organisation humanitaire et civique d'Ariana et du Grand Tunis affiliée au Rotary International (District 9010). Porteur de projets éducatifs, sanitaires, sociaux et environnementaux majeurs à travers la Tunisie, il est notre mentor statutaire officiel.",
-        card2Foot: "Mentorat Actif",
-        card2Charte: "Charte ICTGC 07/01/2019",
-
-        card3Tag: "03 • Interact en Tunisie",
-        card3Title: "Interact en Tunisie",
-        card3Sub: "60 Clubs • 2 500+ Interactiens en Tunisie",
-        card3Desc: "Mouvement d'élite de la jeunesse lycéenne (12–18 ans) fédéré sous l'égide du Rotary District 9010. Les clubs Interact de Tunisie s'unissent lors des conférences nationales et mènent des caravanes solidaires conjointes pour transformer des vies du Nord au Sud.",
-        card3Foot: "60 Clubs Interact",
-        card3Dist: "2 500+ Interactiens en Tunisie",
-
-        card4Tag: "04 • Notre Club",
-        card4Title: "ICTGC Tunis Golfe",
-        card4Sub: "Club #219646 • Mandat 2026-2027",
-        card4Desc: "Ancré sur l'axe historique Tunis – Carthage, notre club allie rigueur rotarienne, caravanes humanitaires directes (caravane d'hiver, rentrée scolaire, Ramadan) et amitié solidaire.",
-        card4Passation: "Passation 2026",
-        card4Foot: "Découvrir le Bureau →",
-
-        actionsBadge: "Impact de Terrain",
-        actionsSectionTitle: "Nos Actions Phares",
-        actionsSectionSubtitle: "Caravanes humanitaires, rentrées scolaires et initiatives solidaires vérifiées",
-        viewAlbum: "Voir l'album",
-        enlargePhoto: "Agrandir la photo",
-        photoCountSingular: "photo",
-        photoCountPlural: "photos",
-        impactLabel: "Impact :",
-        collabWith: "🤝 En collaboration avec :",
-        noCollab: "Aucune collaboration renseignée",
-        noActionsYet: "Aucune action affichée pour le moment.",
-        addActionBtn: "+ Ajouter la première action",
-
-        bureauBadge: "Gouvernance Officielle",
-        bureauSectionTitle: "Bureau du Mandat 2026–2027",
-        bureauSectionSubtitle: "Bureau Officiel du Mandat 2026–2027",
-        bureauExecHeading: "Bureau Exécutif",
-        bureauChefsHeading: "Chefs des Commissions",
-        bureauCommsHeading: "Chefs des Commissions",
-        bureauAdjointsHeading: "Les Adjoints",
-        bureauElargiHeading: "Les Adjoints",
-        horizontalScroll: "↔ Défilement horizontal",
-
-        partnersBadge: "Soutiens & Mécénat",
-        partnersSectionTitle: "Nos Sponsors",
-        partnersSectionSubtitle: "Entreprises, partenaires et mécènes qui soutiennent nos caravanes et actions solidaires à travers la Tunisie.",
-
-        recruitBadge: "Tunnel d'Acquisition Officiel",
-        recruitTitle: "Rejoindre l'Interact Club",
-        recruitSubtitle: "Formulaire de candidature officiel pour le Mandat 2026–2027",
-        recruitSec1: "1. Informations Personnelles",
-        recruitFirstName: "Prénom (*)",
-        recruitLastName: "Nom (*)",
-        recruitBirthDate: "Date de naissance (*)",
-        recruitSchool: "Votre lycée (*)",
-        recruitAddress: "Votre adresse (*)",
-        recruitPhone: "Numéro de téléphone (*)",
-        recruitEmail: "Adresse mail (*)",
-        recruitFb: "Lien Facebook (*)",
-        recruitInsta: "Lien Instagram (*)",
-        recruitSec2: "2. Centre d'intérêt et loisirs",
-        recruitSec3: "3. Disponibilité & Engagement",
-        recruitSec4: "4. Lettre de motivation",
-        recruitSec5: "5. Choix des Commissions",
-        recruitCancel: "Annuler",
-        recruitSubmit: "Soumettre ma Candidature",
-
-        footerClubTitle: "Interact Club Tunis Golfe Carthagène",
-        footerClubSubtitle: "Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose",
-        footerDesc: "Pôle d'excellence lycéen pour la jeunesse de Tunis et de la banlieue Nord. Membre actif du District 9010.",
-        footerContact: "Contact Mail"
-      },
-      en: {
-        navHome: "Home",
-        navActions: "Flagship Actions",
-        navBureau: "Board 2026-2027",
-        navSponsors: "Sponsors",
-        navStats: "Key Figures",
-        navJoinUs: "Join Us",
-        'actionsSection.financialLabel': "FINANCIAL",
-        'actionsSection.humanitarianLabel': "HUMANITARIAN",
-        recruitHobbies: "What are your hobbies (*)",
-        recruitHobbiesPh: "Ex: Debate, reading, photography, basketball, music...",
-        recruitExtraCurr: "Do you take part in extracurricular activities? If yes, which ones? (*)",
-        recruitExtraCurrPh: "Ex: Debate club, scouting, robotics club, MUN...",
-        recruitPersonality: "Describe your personality in 3 words (*)",
-        recruitPersonalityPh: "Ex: Dynamic, empathetic, organized",
-        recruitIntroExtro: "Introvert / Extravert (*)",
-        recruitOtherClubs: "Do you have experience in other clubs? (*)",
-        recruitOtherClubsPh: "Ex: Active Interact member / Novice / Unesco club...",
-        recruitTalents: "Useful talents for the club (design, video editing, etc.) (*)",
-        recruitTalentsPh: "Ex: Video editing, Canva/Photoshop design, public speaking...",
-        recruitFieldAvail: "Field availability (1 to 5) (*)",
-        recruitOnlineAvail: "Online availability (1 to 5) (*)",
-        recruitConstraints: "Constraints affecting availability (*)",
-        recruitConstraintsPh: "Ex: Quarterly exams, Saturday morning tutoring...",
-        recruitInteractMeans: "What does Interact mean to you? (*)",
-        recruitInteractMeansPh: "Ex: A unique opportunity to serve the community and develop leadership...",
-        recruitWhyJoin: "Why do you want to join us? (*)",
-        recruitWhyJoinPh: "Ex: To actively take part in humanitarian relief caravans and club outreach...",
-        recruitSkillsOffered: "Skills you can offer (*)",
-        recruitSkillsOfferedPh: "Ex: Event management, digital communication, logistics...",
-        recruitDesiredContrib: "What do you want to bring to the club? (*)",
-        recruitDesiredContribPh: "Ex: Help ensure the success of charitable actions and bring creativity...",
-        recruitSchoolPh: "Ex: Pilot High School Hammam Lif",
-        recruitAddressPh: "Ex: Hammam Lif, Ben Arous (or Tunis, Carthage...)",
-        portalLoginTitle: "ICTGC Internal Portal",
-        portalLoginSub: "Secure access reserved for members and board",
-        portalEmailLabel: "Identifier (Email / Username)",
-        portalPassLabel: "Password",
-        portalSubmitBtn: "Sign In",
-        memberDuesRemainingLabel: "Remaining dues",
-        logoutLabel: "Log Out",
-        headerClubSub: "Tunis Carthage Gulf",
-        headerClubMeta: "Club #219646 • District 9010",
-
-        heroTagline: "Mandate 2026–2027 • Sponsored by Rotary Club Ariana La Rose",
-        heroTitle: "Youth in Service of the Community",
-        heroDescription: "Interact Club Tunis Carthage Gulf unites high school student leaders (ages 12-18) committed to civic, humanitarian, and public interest initiatives, sponsored by Rotary Club Ariana La Rose (District 9010).",
-        heroCtaRecruit: "Apply for 2026–2027 Mandate",
-        heroCtaActions: "Explore Our Completed Actions",
-
-        filiationBadge: "🏛️ Rotary Heritage & Lineage",
-        filiationTitle: "Official Rotary Lineage Timeline",
-        filiationSubtitle: "Understand ICTGC's statutory origins and historic Rotary sponsorship: from Rotary International's worldwide network to our local civic impact across Carthage Gulf.",
-
-        card1Tag: "01 • Parent Organization",
-        card1Title: "Rotary International",
-        card1Sub: "Founded in 1905 • 1.4M+ Members",
-        card1Desc: "The world's leading service organization. Brings together leaders from all backgrounds to promote peace, fight polio, provide clean water, and advance global education.",
-        card1Foot: "« Service Above Self »",
-        card1Clubs: "46,000+ Clubs",
-
-        card2Tag: "02 • Sponsor Club",
-        card2Title: "RC Ariana La Rose",
-        card2Sub: "Founded June 21, 1996 • District 9010",
-        card2Desc: "A prominent civic and humanitarian organization in Ariana and Greater Tunis affiliated with Rotary International (District 9010). Leading major educational, health, social, and environmental projects across Tunisia, it serves as our official statutory mentor.",
-        card2Foot: "Active Mentorship",
-        card2Charte: "ICTGC Charter Jan 7, 2019",
-
-        card3Tag: "03 • Interact in Tunisia",
-        card3Title: "Interact in Tunisia",
-        card3Sub: "60 Clubs • 2,500+ Interactors in Tunisia",
-        card3Desc: "An elite youth leadership movement for high schoolers (ages 12–18) federated under Rotary District 9010. Tunisian Interact clubs join forces at national conferences and conduct joint humanitarian caravans that transform communities from North to South.",
-        card3Foot: "60 Interact Clubs",
-        card3Dist: "2,500+ Interactors in Tunisia",
-
-        card4Tag: "04 • Our Club",
-        card4Title: "ICTGC Tunis Carthage Gulf",
-        card4Sub: "Club #219646 • Mandate 2026-2027",
-        card4Desc: "Rooted along the historic Tunis–Carthage axis, our club combines Rotary ethics, direct humanitarian caravans (winter relief, back-to-school, Ramadan baskets), and steadfast fellowship.",
-        card4Passation: "Handover 2026",
-        card4Foot: "Discover the Board →",
-
-        actionsBadge: "Field Impact",
-        actionsSectionTitle: "Our Flagship Actions",
-        actionsSectionSubtitle: "Verified humanitarian caravans, educational drives, and solidarity initiatives",
-        viewAlbum: "View Album",
-        enlargePhoto: "Enlarge photo",
-        photoCountSingular: "photo",
-        photoCountPlural: "photos",
-        impactLabel: "Impact:",
-        collabWith: "🤝 In collaboration with:",
-        noCollab: "No collaboration specified",
-        noActionsYet: "No actions displayed at the moment.",
-        addActionBtn: "+ Add First Action",
-
-        bureauBadge: "Official Governance",
-        bureauSectionTitle: "Board of Mandate 2026–2027",
-        bureauSectionSubtitle: "Official Board of the 2026–2027 Mandate",
-        bureauExecHeading: "Executive Board",
-        bureauChefsHeading: "Commission Heads",
-        bureauCommsHeading: "Commission Heads",
-        bureauAdjointsHeading: "Deputies",
-        bureauElargiHeading: "Deputies",
-        horizontalScroll: "↔ Horizontal scroll",
-
-        partnersBadge: "Sponsors & Patrons",
-        partnersSectionTitle: "Our Sponsors",
-        partnersSectionSubtitle: "Enterprises, partners, and patrons supporting our humanitarian caravans across Tunisia.",
-
-        recruitBadge: "Official Recruitment Channel",
-        recruitTitle: "Join the Interact Club",
-        recruitSubtitle: "Official application form for the 2026–2027 Mandate",
-        recruitSec1: "1. Personal Information",
-        recruitFirstName: "First Name (*)",
-        recruitLastName: "Last Name (*)",
-        recruitBirthDate: "Date of Birth (*)",
-        recruitSchool: "Your High School (*)",
-        recruitAddress: "Your Address (*)",
-        recruitPhone: "Phone Number (*)",
-        recruitEmail: "Email Address (*)",
-        recruitFb: "Facebook Profile Link (*)",
-        recruitInsta: "Instagram Handle/Link (*)",
-        recruitSec2: "2. Interests & Hobbies",
-        recruitSec3: "3. Availability & Commitment",
-        recruitSec4: "4. Statement of Motivation",
-        recruitSec5: "5. Commission Preferences",
-        recruitCancel: "Cancel",
-        recruitSubmit: "Submit My Application",
-
-        footerClubTitle: "Interact Club Tunis Carthage Gulf",
-        footerClubSubtitle: "Club #219646 • District 9010 • Sponsored by Rotary Club Ariana La Rose",
-        footerDesc: "Hub of high school excellence for youth across Tunis and the Northern Suburbs. Active member of District 9010.",
-        footerContact: "Contact Email"
-      },
-      ar: {
-        navHome: "الرئيسية",
-        navActions: "أبرز الأنشطة",
-        navBureau: "الهيئة 2026-2027",
-        navSponsors: "الرعاة",
-        navStats: "الأرقام الرئيسية",
-        navJoinUs: "انضم إلينا",
-        'actionsSection.financialLabel': "مالية",
-        'actionsSection.humanitarianLabel': "إنسانية",
-        recruitHobbies: "ما هي هواياتك (*)",
-        recruitHobbiesPh: "مثال: المناظرة، القراءة، التصوير، كرة السلة، الموسيقى...",
-        recruitExtraCurr: "هل تشارك في أنشطة لاصفية؟ إذا نعم، ما هي؟ (*)",
-        recruitExtraCurrPh: "مثال: نادي المناظرات، الكشافة، الروبوتات، نموذج الأمم المتحدة...",
-        recruitPersonality: "صف شخصيتك في 3 كلمات (*)",
-        recruitPersonalityPh: "مثال: ديناميكي، متعاطف، منظم",
-        recruitIntroExtro: "انطوائي / اجتماعي (*)",
-        recruitOtherClubs: "هل لديك خبرة في نوادٍ أخرى؟ (*)",
-        recruitOtherClubsPh: "مثال: عضو ناشط في نادي إنتركت / مبتدئ / نادي يونسكو...",
-        recruitTalents: "مواهب مفيدة للنادي (تصميم، مونتاج، إلخ) (*)",
-        recruitTalentsPh: "مثال: مونتاج الفيديو، التصميم عبر Canva/Photoshop، الخطابة...",
-        recruitFieldAvail: "التواجد الميداني (1 إلى 5) (*)",
-        recruitOnlineAvail: "التواجد عبر الإنترنت (1 إلى 5) (*)",
-        recruitConstraints: "معوقات قد تؤثر على التفرغ (*)",
-        recruitConstraintsPh: "مثال: الامتحانات الثلاثية، دروس الدعم صباح السبت...",
-        recruitInteractMeans: "ماذا يعني لك الإنتركت؟ (*)",
-        recruitInteractMeansPh: "مثال: فرصة فريدة لخدمة المجتمع وتطوير مهاراتي القيادية...",
-        recruitWhyJoin: "لماذا ترغب في الانضمام إلينا؟ (*)",
-        recruitWhyJoinPh: "مثال: للمشاركة الفعالة في القوافل الإنسانية وإشعاع النادي...",
-        recruitSkillsOffered: "المهارات التي يمكنك تقديمها (*)",
-        recruitSkillsOfferedPh: "مثال: تنظيم الفعاليات، التواصل الرقمي، الإدارة اللوجستية...",
-        recruitDesiredContrib: "ما الذي تريد تقديمه للنادي؟ (*)",
-        recruitDesiredContribPh: "مثال: المساهمة في إنجاح المبادرات الخيرية وتقديم أفكار إبداعية...",
-        recruitSchoolPh: "مثال: المعهد النموذجي بحمام الأنف",
-        recruitAddressPh: "مثال: حمام الأنف، بن عروس (أو تونس، قرطاج...)",
-        portalLoginTitle: "بوابة نادي ICTGC الداخلية",
-        portalLoginSub: "دخول آمن مخصص للأعضاء وأعضاء الهيئة الإدارية",
-        portalEmailLabel: "المعرف (البريد الإلكتروني)",
-        portalPassLabel: "كلمة المرور",
-        portalSubmitBtn: "تسجيل الدخول",
-        memberDuesRemainingLabel: "المبلغ المتبقي للاشتراك",
-        logoutLabel: "تسجيل الخروج",
-        headerClubSub: "تونس خليج قرطاجنة",
-        headerClubMeta: "نادي رقم 219646 • المنطقة 9010",
-
-        heroTagline: "العهدة 2026-2027 • برعاية نادي روتاري أريانة الورد",
-        heroTitle: "الشباب في خدمة المجتمع",
-        heroDescription: "يجمع نادي إنتراكت تونس خليج قرطاجنة نخبة من قادة المستقبل من تلاميذ المعاهد (12-18 سنة) الملتزمين بالعمل الإنساني والمصلحة العامة، برعاية نادي روتاري أريانة الورد (المنطقة 9010).",
-        heroCtaRecruit: "الترشح لعهدة 2026-2027",
-        heroCtaActions: "اكتشف مبادراتنا المنجزة",
-
-        filiationBadge: "🏛️ الأصالة والانتماء الروتاري",
-        filiationTitle: "شجرة الانتماء الروتاري الرسمي",
-        filiationSubtitle: "التعرف على الجذور القانونية والرعاية التاريخية لنادينا: من الشبكة العالمية لروتاري إنترناشونال وصولاً إلى أثرنا الميداني في خليج قرطاج.",
-
-        card1Tag: "01 • المنظمة الأم",
-        card1Title: "روتاري إنترناشونال",
-        card1Sub: "تأسس سنة 1905 • 1.4+ مليون عضو",
-        card1Desc: "الشبكة الإنسانية الأولى في العالم. تجمع القادة وصناع الأثر لنشر السلام، محاربة شلل الأطفال، توفير المياه النقية، ودعم التعليم في كافة أنحاء العالم.",
-        card1Foot: "« الخدمة فوق الذات »",
-        card1Clubs: "46,000+ نادٍ",
-
-        card2Tag: "02 • النادي الراعي",
-        card2Title: "روتاري أريانة الورد",
-        card2Sub: "تأسس في 21 جوان 1996 • المنطقة 9010",
-        card2Desc: "منظمة إنسانية ومدنية بأريانة وتونس الكبرى تابعة لروتاري إنترناشونال (المنطقة 9010). تقود مشاريع تعليمية وصحية واجتماعية وبيئية رائدة في تونس، وهي نادينا الراعي والمرشد القانوني الرسمي.",
-        card2Foot: "تأطير ومرافقة مستمرة",
-        card2Charte: "ميثاق ICTGC 07/01/2019",
-
-        card3Tag: "03 • إنتراكت في تونس",
-        card3Title: "إنتراكت في تونس",
-        card3Sub: "60 نادياً • أكثر من 2500 شاب وشابة في تونس",
-        card3Desc: "حركة نخبوية لشباب المعاهد (12-18 سنة) تحت مظلة روتاري المنطقة 9010. تتحد أندية إنتراكت بتونس في المؤتمرات الوطنية وتنفذ قوافل إنسانية مشتركة لصناعة الفارق من الشمال إلى الجنوب.",
-        card3Foot: "60 نادي إنترأكت",
-        card3Dist: "2500+ من شباب إنترأكت في تونس",
-
-        card4Tag: "04 • نادينا",
-        card4Title: "إنتراكت تونس خليج قرطاجنة",
-        card4Sub: "نادي رقم 219646 • العهدة 2026-2027",
-        card4Desc: "متجذر في عبق التاريخ بين تونس وقرطاج، يجمع نادينا بين الانضباط الروتاري، والقوافل الإنسانية الميدانية المباشرة (شتاء دافئ، العودة المدرسية، قفة رمضان) وروح الزمالة الصادقة.",
-        card4Passation: "موكب التسليم 2026",
-        card4Foot: "اكتشف الهيئة المديرة ←",
-
-        actionsBadge: "أثر التضامن الميداني",
-        actionsSectionTitle: "أبرز مبادراتنا وأنشطتنا",
-        actionsSectionSubtitle: "قوافل إنسانية، عودة مدرسية، وحملات تضامنية موثقة وشفافة",
-        viewAlbum: "عرض الألبوم",
-        enlargePhoto: "تكبير الصورة",
-        photoCountSingular: "صورة",
-        photoCountPlural: "صور",
-        impactLabel: "الأثر:",
-        collabWith: "🤝 بالتعاون مع:",
-        noCollab: "لم يتم تحديد أندية شريكة",
-        noActionsYet: "لا توجد مبادرات معروضة حالياً.",
-        addActionBtn: "+ إضافة أول نشاط",
-
-        bureauBadge: "الحوكمة والقيادة",
-        bureauSectionTitle: "الهيئة المديرة 2026–2027",
-        bureauSectionSubtitle: "الهيئة المديرة الرسمية لعهدة 2026–2027",
-        bureauExecHeading: "المكتب التنفيذي",
-        bureauChefsHeading: "رؤساء اللجان",
-        bureauCommsHeading: "رؤساء اللجان",
-        bureauAdjointsHeading: "المساعدون",
-        bureauElargiHeading: "المساعدون",
-        horizontalScroll: "تمرير أفقي ↔",
-
-        partnersBadge: "الدعم والرعاية",
-        partnersSectionTitle: "رعاة النادي",
-        partnersSectionSubtitle: "الشركات والشركاء والداعمون الذين يساندون قوافلنا ومبادراتنا التضامنية عبر تونس.",
-
-        recruitBadge: "بوابة الانخراط الرسمية",
-        recruitTitle: "الانضمام إلى نادي إنتراكت",
-        recruitSubtitle: "استمارة الترشح الرسمية لعهدة 2026–2027",
-        recruitSec1: "1. البيانات الشخصية",
-        recruitFirstName: "الاسم (*)",
-        recruitLastName: "اللقب (*)",
-        recruitBirthDate: "تاريخ الولادة (*)",
-        recruitSchool: "المعهد (*)",
-        recruitAddress: "العنوان ومقر السكن (*)",
-        recruitPhone: "رقم الهاتف (*)",
-        recruitEmail: "البريد الإلكتروني (*)",
-        recruitFb: "رابط حساب فيسبوك (*)",
-        recruitInsta: "حساب إنستغرام (*)",
-        recruitSec2: "2. الهوايات والاهتمامات",
-        recruitSec3: "3. الحضور والالتزام",
-        recruitSec4: "4. رسالة التحفيز والدافع",
-        recruitSec5: "5. اختيار اللجان",
-        recruitCancel: "إلغاء",
-        recruitSubmit: "إرسال ملف الترشح",
-
-        footerClubTitle: "نادي إنتراكت تونس خليج قرطاجنة",
-        footerClubSubtitle: "نادي رقم 219646 • المنطقة 9010 • برعاية نادي روتاري أريانة الورد",
-        footerDesc: "قطب شبابي متميز لتلاميذ تونس والضاحية الشمالية. عضو فاعل في المنطقة الروتارية 9010.",
-        footerContact: "راسلنا عبر البريد الإلكتروني"
-      }
-    };
-    const I18N_DICT = window.I18N_DICT;
+  "fr": {
+    "navHome": "Accueil",
+    "navActions": "Actions Phares",
+    "navBureau": "Mandat 2026-2027",
+    "navSponsors": "Sponsors",
+    "navStats": "Chiffres Clés",
+    "navJoinUs": "Nous Rejoindre",
+    "actionsSection.financialLabel": "FINANCIÈRES",
+    "actionsSection.humanitarianLabel": "HUMANITAIRES",
+    "recruitHobbies": "Quels sont vos loisirs (*)",
+    "recruitHobbiesPh": "Ex: Débat, lecture, photographie, basketball, piano...",
+    "recruitExtraCurr": "Participez-vous à des activités extrascolaires ? Si oui, lesquelles ? (*)",
+    "recruitExtraCurrPh": "Ex: Club de débat, scoutisme, club robotique, MUN...",
+    "recruitPersonality": "Décrivez votre personnalité en 3 mots (*)",
+    "recruitPersonalityPh": "Ex: Dynamique, empathique, organisée",
+    "recruitIntroExtro": "Introverti / Extraverti (*)",
+    "recruitOtherClubs": "Avez-vous de l'expérience dans d'autres clubs ? (*)",
+    "recruitOtherClubsPh": "Ex: Membre actif au club Interact / Interacteur novice / Club Unesco...",
+    "recruitTalents": "Talents utiles au club (design, montage, etc.) (*)",
+    "recruitTalentsPh": "Ex: Montage vidéo, design Canva/Photoshop, prise de parole...",
+    "recruitFieldAvail": "Disponibilité sur le terrain (1 à 5) (*)",
+    "recruitOnlineAvail": "Disponibilité en ligne (1 à 5) (*)",
+    "recruitConstraints": "Contraintes influençant la disponibilité (*)",
+    "recruitConstraintsPh": "Ex: Examens trimestriels, cours de soutien le samedi matin...",
+    "recruitInteractMeans": "Que représente Interact pour vous ? (*)",
+    "recruitInteractMeansPh": "Ex: Une opportunité unique de servir la communauté et développer mon leadership...",
+    "recruitWhyJoin": "Pourquoi souhaitez-vous nous rejoindre ? (*)",
+    "recruitWhyJoinPh": "Ex: Pour participer activement aux caravanes humanitaires et faire rayonner le club...",
+    "recruitSkillsOffered": "Compétences à offrir (*)",
+    "recruitSkillsOfferedPh": "Ex: Organisation d'événements, communication digitale, gestion d'équipe...",
+    "recruitDesiredContrib": "Ce que vous voulez apporter au club (*)",
+    "recruitDesiredContribPh": "Ex: Aider à la réussite des actions caritatives et apporter de la créativité...",
+    "recruitSchoolPh": "Ex: Lycée Pilote Hammam Lif",
+    "recruitAddressPh": "Ex: Hammam Lif, Ben Arous (ou Tunis, Carthage...)",
+    "portalLoginTitle": "Portail Interne ICTGC",
+    "portalLoginSub": "Accès sécurisé réservé aux membres et au bureau",
+    "portalEmailLabel": "Identifiant (Email / Pseudonyme)",
+    "portalPassLabel": "Mot de passe",
+    "portalSubmitBtn": "Se connecter",
+    "memberDuesRemainingLabel": "Cotisation restante",
+    "logoutLabel": "Déconnexion",
+    "headerClubSub": "Tunis Golfe Carthagène",
+    "headerClubMeta": "Club #219646 • District 9010",
+    "heroTagline": "Mandat 2026–2027 • Parrainé par le Rotary Club Ariana La Rose",
+    "heroTitle": "La Jeunesse au Service de la Communauté",
+    "heroDescription": "L'Interact Club Tunis Golfe Carthagène réunit les jeunes leaders lycéens (12-18 ans) engagés dans des actions citoyennes, humanitaires et d'intérêt public, parrainé par le Rotary Club Ariana La Rose (District 9010).",
+    "heroCtaRecruit": "Postuler pour le Mandat 2026-2027",
+    "heroCtaActions": "Découvrir nos Actions Réalisées",
+    "filiationBadge": "🏛️ Institution & Filiation Rotarienne",
+    "filiationTitle": "Frise de Filiation Officielle",
+    "filiationSubtitle": "Comprendre les origines statutaires et le parrainage historique d'ICTGC : du réseau mondial de Rotary International jusqu'à notre action locale sur le Golfe de Carthage.",
+    "card1Tag": "01 • Organisation Mère",
+    "card1Title": "Rotary International",
+    "card1Sub": "Fondé en 1905 • 1.4M+ Membres",
+    "card1Desc": "Le premier réseau mondial de service humanitaire. Rassemble des leaders de tous horizons pour promouvoir la paix, éradiquer la polio, apporter l'eau potable et soutenir l'éducation mondiale.",
+    "card1Foot": "« Servir d'abord »",
+    "card1Clubs": "46 000+ Clubs",
+    "card2Tag": "02 • Club Parrain",
+    "card2Title": "RC Ariana La Rose",
+    "card2Sub": "Fondé le 21 juin 1996 • District 9010",
+    "card2Desc": "Organisation humanitaire et civique d'Ariana et du Grand Tunis affiliée au Rotary International (District 9010). Porteur de projets éducatifs, sanitaires, sociaux et environnementaux majeurs à travers la Tunisie, il est notre mentor statutaire officiel.",
+    "card2Foot": "Mentorat Actif",
+    "card2Charte": "Charte ICTGC 07/01/2019",
+    "card3Tag": "03 • Interact en Tunisie",
+    "card3Title": "Interact en Tunisie",
+    "card3Sub": "60 Clubs • 2 500+ Interactiens en Tunisie",
+    "card3Desc": "Mouvement d'élite de la jeunesse lycéenne (12–18 ans) fédéré sous l'égide du Rotary District 9010. Les clubs Interact de Tunisie s'unissent lors des conférences nationales et mènent des caravanes solidaires conjointes pour transformer des vies du Nord au Sud.",
+    "card3Foot": "60 Clubs Interact",
+    "card3Dist": "2 500+ Interactiens en Tunisie",
+    "card4Tag": "04 • Notre Club",
+    "card4Title": "ICTGC Tunis Golfe",
+    "card4Sub": "Club #219646 • Mandat 2026-2027",
+    "card4Desc": "Ancré sur l'axe historique Tunis – Carthage, notre club allie rigueur rotarienne, caravanes humanitaires directes (caravane d'hiver, rentrée scolaire, Ramadan) et amitié solidaire.",
+    "card4Passation": "Passation 2026",
+    "card4Foot": "Découvrir le Bureau →",
+    "actionsBadge": "Impact de Terrain",
+    "actionsSectionTitle": "Nos Actions Phares",
+    "actionsSectionSubtitle": "Caravanes humanitaires, rentrées scolaires et initiatives solidaires vérifiées",
+    "viewAlbum": "Voir l'album",
+    "enlargePhoto": "Agrandir la photo",
+    "photoCountSingular": "photo",
+    "photoCountPlural": "photos",
+    "impactLabel": "Impact :",
+    "collabWith": "🤝 En collaboration avec :",
+    "noCollab": "Aucune collaboration renseignée",
+    "noActionsYet": "Aucune action affichée pour le moment.",
+    "addActionBtn": "+ Ajouter la première action",
+    "bureauBadge": "Gouvernance Officielle",
+    "bureauSectionTitle": "Bureau du Mandat 2026–2027",
+    "bureauSectionSubtitle": "Bureau Officiel du Mandat 2026–2027",
+    "bureauExecHeading": "Bureau Exécutif",
+    "bureauChefsHeading": "Chefs des Commissions",
+    "bureauCommsHeading": "Chefs des Commissions",
+    "bureauAdjointsHeading": "Les Adjoints",
+    "bureauElargiHeading": "Les Adjoints",
+    "horizontalScroll": "↔ Défilement horizontal",
+    "partnersBadge": "Soutiens & Mécénat",
+    "partnersSectionTitle": "Nos Sponsors",
+    "partnersSectionSubtitle": "Entreprises, partenaires et mécènes qui soutiennent nos caravanes et actions solidaires à travers la Tunisie.",
+    "recruitBadge": "Tunnel d'Acquisition Officiel",
+    "recruitTitle": "Rejoindre l'Interact Club",
+    "recruitSubtitle": "Formulaire de candidature officiel pour le Mandat 2026–2027",
+    "recruitSec1": "1. Informations Personnelles",
+    "recruitFirstName": "Prénom (*)",
+    "recruitLastName": "Nom (*)",
+    "recruitBirthDate": "Date de naissance (*)",
+    "recruitSchool": "Votre lycée (*)",
+    "recruitAddress": "Votre adresse (*)",
+    "recruitPhone": "Numéro de téléphone (*)",
+    "recruitEmail": "Adresse mail (*)",
+    "recruitFb": "Lien Facebook (*)",
+    "recruitInsta": "Lien Instagram (*)",
+    "recruitSec2": "2. Centre d'intérêt et loisirs",
+    "recruitSec3": "3. Disponibilité & Engagement",
+    "recruitSec4": "4. Lettre de motivation",
+    "recruitSec5": "5. Choix des Commissions",
+    "recruitCancel": "Annuler",
+    "recruitSubmit": "Soumettre ma Candidature",
+    "footerClubTitle": "Interact Club Tunis Golfe Carthagène",
+    "footerClubSubtitle": "Club #219646 • District 9010 • Parrainé par le Rotary Club Ariana La Rose",
+    "footerDesc": "Pôle d'excellence lycéen pour la jeunesse de Tunis et de la banlieue Nord. Membre actif du District 9010.",
+    "footerContact": "Contact Mail",
+    "installAppBtn": "Installer l'App",
+    "portalBtn": "Portail Membre",
+    "portalLoginEmailLabel": "Adresse Email",
+    "portalLoginEmailPh": "Email ou Identifiant (ex: admin)",
+    "portalLoginPasswordLabel": "Mot de Passe",
+    "portalLoginSubmit": "Se connecter",
+    "adminPreviewBannerTitle": "Aperçu en tant que Membre (Compte admin@ictgc.org)",
+    "adminPreviewBannerDesc": "Vous explorez l'espace interne tel que vos membres le voient (Règlement, Gamification, Commissions).",
+    "adminPreviewReturnBtn": "🔙 Retour Dashboard Admin",
+    "gamificationBadge": "🏆 Gamification",
+    "gamificationTitle": "Interactien du Mois",
+    "gamificationSubtitle": "Podium des membres les plus engagés",
+    "duesRemainingLabel": "Cotisation restante",
+    "duesStatusPaid": "100 TND / 100 TND réglé",
+    "bookBadgeEdition": "Édition Officielle du Club",
+    "bookBadgeFormat": "36 Pages • Format Livre Ouvert",
+    "bookSectionTitle": "Règlement Intérieur de l'Interact Club Tunis Golfe Carthagène",
+    "bookSectionDesc": "Livre interactif directement consultable ci-dessous (tournez les pages au clic ou avec les flèches).",
+    "bookTocPrompt": "📑 Sommaire Rapide",
+    "bookPrevBtn": "◀ Précédent",
+    "bookNextBtn": "Suivant ▶",
+    "bookTwoPages": "📖 2 Pages",
+    "bookOnePage": "📄 1 Page",
+    "bookFullscreen": "Plein Écran",
+    "bookDownloadPdf": "Télécharger PDF",
+    "bookNavTip": "Navigation : ◀ / ▶ • Clic direct sur la page",
+    "libraryBadge": "📚 Bibliothèque Numérique Officielle",
+    "librarySyncBadge": "Synchronisé Drive",
+    "libraryTitle": "Espace Documentaire & Ressources du Club",
+    "libraryDesc": "Documents officiels, feuilles de calcul de suivi, dossiers de sponsoring et chartes synchronisés depuis Google Drive.",
+    "librarySyncBtn": "Sync Drive",
+    "libraryDriveLink": "Google Drive du Club ↗",
+    "libraryReadBookBtn": "Lire le Livre 📖",
+    "libraryPreviewBtn": "Aperçu ↗",
+    "catAll": "Tous",
+    "catRegulations": "Règlements & Statuts",
+    "catTracking": "Suivis & Gestion",
+    "catSponsoring": "Sponsoring & Partenariats",
+    "catPvOdj": "Ordres du Jour & PV",
+    "catBranding": "Logos & Identité",
+    "zoneLinksTitle": "Groupes Messenger de Zone",
+    "zoneLinksDesc": "Liens opérationnels pour les convois et actions en cours",
+    "zoneLinksManageBtn": "Gérer",
+    "zoneLinksOpenBtn": "Ouvrir ↗",
+    "zoneLinksModalTitle": "Gestion des Groupes Messenger de Zone",
+    "zoneLinksModalDesc": "Ajoutez, modifiez ou supprimez les liens opérationnels des convois et zones.",
+    "zoneLinksLabelZone": "Nom de la Zone",
+    "zoneLinksLabelAction": "Action Associée",
+    "zoneLinksLabelUrl": "Lien Messenger (m.me/...)",
+    "zoneLinksAddBtn": "+ Ajouter un Groupe de Zone",
+    "zoneLinksSaveBtn": "Enregistrer & Synchroniser",
+    "passToggleTitle": "Afficher/Masquer le mot de passe"
+  },
+  "en": {
+    "navHome": "Home",
+    "navActions": "Flagship Actions",
+    "navBureau": "Board 2026-2027",
+    "navSponsors": "Sponsors",
+    "navStats": "Key Figures",
+    "navJoinUs": "Join Us",
+    "actionsSection.financialLabel": "FINANCIAL",
+    "actionsSection.humanitarianLabel": "HUMANITARIAN",
+    "recruitHobbies": "What are your hobbies (*)",
+    "recruitHobbiesPh": "Ex: Debate, reading, photography, basketball, music...",
+    "recruitExtraCurr": "Do you take part in extracurricular activities? If yes, which ones? (*)",
+    "recruitExtraCurrPh": "Ex: Debate club, scouting, robotics club, MUN...",
+    "recruitPersonality": "Describe your personality in 3 words (*)",
+    "recruitPersonalityPh": "Ex: Dynamic, empathetic, organized",
+    "recruitIntroExtro": "Introvert / Extravert (*)",
+    "recruitOtherClubs": "Do you have experience in other clubs? (*)",
+    "recruitOtherClubsPh": "Ex: Active Interact member / Novice / Unesco club...",
+    "recruitTalents": "Useful talents for the club (design, video editing, etc.) (*)",
+    "recruitTalentsPh": "Ex: Video editing, Canva/Photoshop design, public speaking...",
+    "recruitFieldAvail": "Field availability (1 to 5) (*)",
+    "recruitOnlineAvail": "Online availability (1 to 5) (*)",
+    "recruitConstraints": "Constraints affecting availability (*)",
+    "recruitConstraintsPh": "Ex: Quarterly exams, Saturday morning tutoring...",
+    "recruitInteractMeans": "What does Interact mean to you? (*)",
+    "recruitInteractMeansPh": "Ex: A unique opportunity to serve the community and develop leadership...",
+    "recruitWhyJoin": "Why do you want to join us? (*)",
+    "recruitWhyJoinPh": "Ex: To actively take part in humanitarian relief caravans and club outreach...",
+    "recruitSkillsOffered": "Skills you can offer (*)",
+    "recruitSkillsOfferedPh": "Ex: Event management, digital communication, logistics...",
+    "recruitDesiredContrib": "What do you want to bring to the club? (*)",
+    "recruitDesiredContribPh": "Ex: Help ensure the success of charitable actions and bring creativity...",
+    "recruitSchoolPh": "Ex: Pilot High School Hammam Lif",
+    "recruitAddressPh": "Ex: Hammam Lif, Ben Arous (or Tunis, Carthage...)",
+    "portalLoginTitle": "ICTGC Internal Portal",
+    "portalLoginSub": "Secure access reserved for members and board",
+    "portalEmailLabel": "Identifier (Email / Username)",
+    "portalPassLabel": "Password",
+    "portalSubmitBtn": "Sign In",
+    "memberDuesRemainingLabel": "Remaining dues",
+    "logoutLabel": "Log Out",
+    "headerClubSub": "Tunis Carthage Gulf",
+    "headerClubMeta": "Club #219646 • District 9010",
+    "heroTagline": "Mandate 2026–2027 • Sponsored by Rotary Club Ariana La Rose",
+    "heroTitle": "Youth in Service of the Community",
+    "heroDescription": "Interact Club Tunis Carthage Gulf unites high school student leaders (ages 12-18) committed to civic, humanitarian, and public interest initiatives, sponsored by Rotary Club Ariana La Rose (District 9010).",
+    "heroCtaRecruit": "Apply for 2026–2027 Mandate",
+    "heroCtaActions": "Explore Our Completed Actions",
+    "filiationBadge": "🏛️ Rotary Heritage & Lineage",
+    "filiationTitle": "Official Rotary Lineage Timeline",
+    "filiationSubtitle": "Understand ICTGC's statutory origins and historic Rotary sponsorship: from Rotary International's worldwide network to our local civic impact across Carthage Gulf.",
+    "card1Tag": "01 • Parent Organization",
+    "card1Title": "Rotary International",
+    "card1Sub": "Founded in 1905 • 1.4M+ Members",
+    "card1Desc": "The world's leading service organization. Brings together leaders from all backgrounds to promote peace, fight polio, provide clean water, and advance global education.",
+    "card1Foot": "« Service Above Self »",
+    "card1Clubs": "46,000+ Clubs",
+    "card2Tag": "02 • Sponsor Club",
+    "card2Title": "RC Ariana La Rose",
+    "card2Sub": "Founded June 21, 1996 • District 9010",
+    "card2Desc": "A prominent civic and humanitarian organization in Ariana and Greater Tunis affiliated with Rotary International (District 9010). Leading major educational, health, social, and environmental projects across Tunisia, it serves as our official statutory mentor.",
+    "card2Foot": "Active Mentorship",
+    "card2Charte": "ICTGC Charter Jan 7, 2019",
+    "card3Tag": "03 • Interact in Tunisia",
+    "card3Title": "Interact in Tunisia",
+    "card3Sub": "60 Clubs • 2,500+ Interactors in Tunisia",
+    "card3Desc": "An elite youth leadership movement for high schoolers (ages 12–18) federated under Rotary District 9010. Tunisian Interact clubs join forces at national conferences and conduct joint humanitarian caravans that transform communities from North to South.",
+    "card3Foot": "60 Interact Clubs",
+    "card3Dist": "2,500+ Interactors in Tunisia",
+    "card4Tag": "04 • Our Club",
+    "card4Title": "ICTGC Tunis Carthage Gulf",
+    "card4Sub": "Club #219646 • Mandate 2026-2027",
+    "card4Desc": "Rooted along the historic Tunis–Carthage axis, our club combines Rotary ethics, direct humanitarian caravans (winter relief, back-to-school, Ramadan baskets), and steadfast fellowship.",
+    "card4Passation": "Handover 2026",
+    "card4Foot": "Discover the Board →",
+    "actionsBadge": "Field Impact",
+    "actionsSectionTitle": "Our Flagship Actions",
+    "actionsSectionSubtitle": "Verified humanitarian caravans, educational drives, and solidarity initiatives",
+    "viewAlbum": "View Album",
+    "enlargePhoto": "Enlarge photo",
+    "photoCountSingular": "photo",
+    "photoCountPlural": "photos",
+    "impactLabel": "Impact:",
+    "collabWith": "🤝 In collaboration with:",
+    "noCollab": "No collaboration specified",
+    "noActionsYet": "No actions displayed at the moment.",
+    "addActionBtn": "+ Add First Action",
+    "bureauBadge": "Official Governance",
+    "bureauSectionTitle": "Board of Mandate 2026–2027",
+    "bureauSectionSubtitle": "Official Board of the 2026–2027 Mandate",
+    "bureauExecHeading": "Executive Board",
+    "bureauChefsHeading": "Commission Heads",
+    "bureauCommsHeading": "Commission Heads",
+    "bureauAdjointsHeading": "Deputies",
+    "bureauElargiHeading": "Deputies",
+    "horizontalScroll": "↔ Horizontal scroll",
+    "partnersBadge": "Sponsors & Patrons",
+    "partnersSectionTitle": "Our Sponsors",
+    "partnersSectionSubtitle": "Enterprises, partners, and patrons supporting our humanitarian caravans across Tunisia.",
+    "recruitBadge": "Official Recruitment Channel",
+    "recruitTitle": "Join the Interact Club",
+    "recruitSubtitle": "Official application form for the 2026–2027 Mandate",
+    "recruitSec1": "1. Personal Information",
+    "recruitFirstName": "First Name (*)",
+    "recruitLastName": "Last Name (*)",
+    "recruitBirthDate": "Date of Birth (*)",
+    "recruitSchool": "Your High School (*)",
+    "recruitAddress": "Your Address (*)",
+    "recruitPhone": "Phone Number (*)",
+    "recruitEmail": "Email Address (*)",
+    "recruitFb": "Facebook Profile Link (*)",
+    "recruitInsta": "Instagram Handle/Link (*)",
+    "recruitSec2": "2. Interests & Hobbies",
+    "recruitSec3": "3. Availability & Commitment",
+    "recruitSec4": "4. Statement of Motivation",
+    "recruitSec5": "5. Commission Preferences",
+    "recruitCancel": "Cancel",
+    "recruitSubmit": "Submit My Application",
+    "footerClubTitle": "Interact Club Tunis Carthage Gulf",
+    "footerClubSubtitle": "Club #219646 • District 9010 • Sponsored by Rotary Club Ariana La Rose",
+    "footerDesc": "Hub of high school excellence for youth across Tunis and the Northern Suburbs. Active member of District 9010.",
+    "footerContact": "Contact Email",
+    "installAppBtn": "Install App",
+    "portalBtn": "Member Portal",
+    "portalLoginEmailLabel": "Email Address",
+    "portalLoginEmailPh": "Email or Username (e.g. admin)",
+    "portalLoginPasswordLabel": "Password",
+    "portalLoginSubmit": "Sign In",
+    "adminPreviewBannerTitle": "Member Preview Mode (Account admin@ictgc.org)",
+    "adminPreviewBannerDesc": "You are exploring the internal portal as members see it (Regulations, Gamification, Committees).",
+    "adminPreviewReturnBtn": "🔙 Back to Admin Dashboard",
+    "gamificationBadge": "🏆 Gamification",
+    "gamificationTitle": "Interactian of the Month",
+    "gamificationSubtitle": "Leaderboard of the most committed members",
+    "duesRemainingLabel": "Remaining dues",
+    "duesStatusPaid": "100 TND / 100 TND paid",
+    "bookBadgeEdition": "Official Club Edition",
+    "bookBadgeFormat": "36 Pages • Open Book Format",
+    "bookSectionTitle": "Internal Regulations of Interact Club Tunis Golfe Carthagène",
+    "bookSectionDesc": "Interactive book readable directly below (turn pages by clicking or using arrow keys).",
+    "bookTocPrompt": "📑 Quick Table of Contents",
+    "bookPrevBtn": "◀ Previous",
+    "bookNextBtn": "Next ▶",
+    "bookTwoPages": "📖 2 Pages",
+    "bookOnePage": "📄 1 Page",
+    "bookFullscreen": "Fullscreen",
+    "bookDownloadPdf": "Download PDF",
+    "bookNavTip": "Navigation: ◀ / ▶ • Click page to turn",
+    "libraryBadge": "📚 Official Digital Library",
+    "librarySyncBadge": "Drive Synced",
+    "libraryTitle": "Official Digital Library & Club Resources",
+    "libraryDesc": "Official documents, tracking spreadsheets, sponsorship decks, and charters synced from Google Drive.",
+    "librarySyncBtn": "Sync Drive",
+    "libraryDriveLink": "Club Google Drive ↗",
+    "libraryReadBookBtn": "Read Book 📖",
+    "libraryPreviewBtn": "Preview ↗",
+    "catAll": "All",
+    "catRegulations": "Regulations & Charters",
+    "catTracking": "Tracking & Sheets",
+    "catSponsoring": "Sponsorship & Partners",
+    "catPvOdj": "Agendas & Minutes",
+    "catBranding": "Logos & Branding",
+    "zoneLinksTitle": "Zone Messenger Groups",
+    "zoneLinksDesc": "Operational links for convoys and active projects",
+    "zoneLinksManageBtn": "Manage",
+    "zoneLinksOpenBtn": "Open ↗",
+    "zoneLinksModalTitle": "Manage Zone Messenger Groups",
+    "zoneLinksModalDesc": "Add, edit, or delete operational links for convoys and regional zones.",
+    "zoneLinksLabelZone": "Zone Name",
+    "zoneLinksLabelAction": "Associated Project",
+    "zoneLinksLabelUrl": "Messenger Link (m.me/...)",
+    "zoneLinksAddBtn": "+ Add Zone Group",
+    "zoneLinksSaveBtn": "Save & Sync",
+    "passToggleTitle": "Show/Hide password"
+  },
+  "ar": {
+    "navHome": "الرئيسية",
+    "navActions": "أبرز الأنشطة",
+    "navBureau": "الهيئة 2026-2027",
+    "navSponsors": "الرعاة",
+    "navStats": "الأرقام الرئيسية",
+    "navJoinUs": "انضم إلينا",
+    "actionsSection.financialLabel": "مالية",
+    "actionsSection.humanitarianLabel": "إنسانية",
+    "recruitHobbies": "ما هي هواياتك (*)",
+    "recruitHobbiesPh": "مثال: المناظرة، القراءة، التصوير، كرة السلة، الموسيقى...",
+    "recruitExtraCurr": "هل تشارك في أنشطة لاصفية؟ إذا نعم، ما هي؟ (*)",
+    "recruitExtraCurrPh": "مثال: نادي المناظرات، الكشافة، الروبوتات، نموذج الأمم المتحدة...",
+    "recruitPersonality": "صف شخصيتك في 3 كلمات (*)",
+    "recruitPersonalityPh": "مثال: ديناميكي، متعاطف، منظم",
+    "recruitIntroExtro": "انطوائي / اجتماعي (*)",
+    "recruitOtherClubs": "هل لديك خبرة في نوادٍ أخرى؟ (*)",
+    "recruitOtherClubsPh": "مثال: عضو ناشط في نادي إنتركت / مبتدئ / نادي يونسكو...",
+    "recruitTalents": "مواهب مفيدة للنادي (تصميم، مونتاج، إلخ) (*)",
+    "recruitTalentsPh": "مثال: مونتاج الفيديو، التصميم عبر Canva/Photoshop، الخطابة...",
+    "recruitFieldAvail": "التواجد الميداني (1 إلى 5) (*)",
+    "recruitOnlineAvail": "التواجد عبر الإنترنت (1 إلى 5) (*)",
+    "recruitConstraints": "معوقات قد تؤثر على التفرغ (*)",
+    "recruitConstraintsPh": "مثال: الامتحانات الثلاثية، دروس الدعم صباح السبت...",
+    "recruitInteractMeans": "ماذا يعني لك الإنتركت؟ (*)",
+    "recruitInteractMeansPh": "مثال: فرصة فريدة لخدمة المجتمع وتطوير مهاراتي القيادية...",
+    "recruitWhyJoin": "لماذا ترغب في الانضمام إلينا؟ (*)",
+    "recruitWhyJoinPh": "مثال: للمشاركة الفعالة في القوافل الإنسانية وإشعاع النادي...",
+    "recruitSkillsOffered": "المهارات التي يمكنك تقديمها (*)",
+    "recruitSkillsOfferedPh": "مثال: تنظيم الفعاليات، التواصل الرقمي، الإدارة اللوجستية...",
+    "recruitDesiredContrib": "ما الذي تريد تقديمه للنادي؟ (*)",
+    "recruitDesiredContribPh": "مثال: المساهمة في إنجاح المبادرات الخيرية وتقديم أفكار إبداعية...",
+    "recruitSchoolPh": "مثال: المعهد النموذجي بحمام الأنف",
+    "recruitAddressPh": "مثال: حمام الأنف، بن عروس (أو تونس، قرطاج...)",
+    "portalLoginTitle": "بوابة نادي ICTGC الداخلية",
+    "portalLoginSub": "دخول آمن مخصص للأعضاء وأعضاء الهيئة الإدارية",
+    "portalEmailLabel": "المعرف (البريد الإلكتروني)",
+    "portalPassLabel": "كلمة المرور",
+    "portalSubmitBtn": "تسجيل الدخول",
+    "memberDuesRemainingLabel": "المبلغ المتبقي للاشتراك",
+    "logoutLabel": "تسجيل الخروج",
+    "headerClubSub": "تونس خليج قرطاجنة",
+    "headerClubMeta": "نادي رقم 219646 • المنطقة 9010",
+    "heroTagline": "العهدة 2026-2027 • برعاية نادي روتاري أريانة الورد",
+    "heroTitle": "الشباب في خدمة المجتمع",
+    "heroDescription": "يجمع نادي إنتراكت تونس خليج قرطاجنة نخبة من قادة المستقبل من تلاميذ المعاهد (12-18 سنة) الملتزمين بالعمل الإنساني والمصلحة العامة، برعاية نادي روتاري أريانة الورد (المنطقة 9010).",
+    "heroCtaRecruit": "الترشح لعهدة 2026-2027",
+    "heroCtaActions": "اكتشف مبادراتنا المنجزة",
+    "filiationBadge": "🏛️ الأصالة والانتماء الروتاري",
+    "filiationTitle": "شجرة الانتماء الروتاري الرسمي",
+    "filiationSubtitle": "التعرف على الجذور القانونية والرعاية التاريخية لنادينا: من الشبكة العالمية لروتاري إنترناشونال وصولاً إلى أثرنا الميداني في خليج قرطاج.",
+    "card1Tag": "01 • المنظمة الأم",
+    "card1Title": "روتاري إنترناشونال",
+    "card1Sub": "تأسس سنة 1905 • 1.4+ مليون عضو",
+    "card1Desc": "الشبكة الإنسانية الأولى في العالم. تجمع القادة وصناع الأثر لنشر السلام، محاربة شلل الأطفال، توفير المياه النقية، ودعم التعليم في كافة أنحاء العالم.",
+    "card1Foot": "« الخدمة فوق الذات »",
+    "card1Clubs": "46,000+ نادٍ",
+    "card2Tag": "02 • النادي الراعي",
+    "card2Title": "روتاري أريانة الورد",
+    "card2Sub": "تأسس في 21 جوان 1996 • المنطقة 9010",
+    "card2Desc": "منظمة إنسانية ومدنية بأريانة وتونس الكبرى تابعة لروتاري إنترناشونال (المنطقة 9010). تقود مشاريع تعليمية وصحية واجتماعية وبيئية رائدة في تونس، وهي نادينا الراعي والمرشد القانوني الرسمي.",
+    "card2Foot": "تأطير ومرافقة مستمرة",
+    "card2Charte": "ميثاق ICTGC 07/01/2019",
+    "card3Tag": "03 • إنتراكت في تونس",
+    "card3Title": "إنتراكت في تونس",
+    "card3Sub": "60 نادياً • أكثر من 2500 شاب وشابة في تونس",
+    "card3Desc": "حركة نخبوية لشباب المعاهد (12-18 سنة) تحت مظلة روتاري المنطقة 9010. تتحد أندية إنتراكت بتونس في المؤتمرات الوطنية وتنفذ قوافل إنسانية مشتركة لصناعة الفارق من الشمال إلى الجنوب.",
+    "card3Foot": "60 نادي إنترأكت",
+    "card3Dist": "2500+ من شباب إنترأكت في تونس",
+    "card4Tag": "04 • نادينا",
+    "card4Title": "إنتراكت تونس خليج قرطاجنة",
+    "card4Sub": "نادي رقم 219646 • العهدة 2026-2027",
+    "card4Desc": "متجذر في عبق التاريخ بين تونس وقرطاج، يجمع نادينا بين الانضباط الروتاري، والقوافل الإنسانية الميدانية المباشرة (شتاء دافئ، العودة المدرسية، قفة رمضان) وروح الزمالة الصادقة.",
+    "card4Passation": "موكب التسليم 2026",
+    "card4Foot": "اكتشف الهيئة المديرة ←",
+    "actionsBadge": "أثر التضامن الميداني",
+    "actionsSectionTitle": "أبرز مبادراتنا وأنشطتنا",
+    "actionsSectionSubtitle": "قوافل إنسانية، عودة مدرسية، وحملات تضامنية موثقة وشفافة",
+    "viewAlbum": "عرض الألبوم",
+    "enlargePhoto": "تكبير الصورة",
+    "photoCountSingular": "صورة",
+    "photoCountPlural": "صور",
+    "impactLabel": "الأثر:",
+    "collabWith": "🤝 بالتعاون مع:",
+    "noCollab": "لم يتم تحديد أندية شريكة",
+    "noActionsYet": "لا توجد مبادرات معروضة حالياً.",
+    "addActionBtn": "+ إضافة أول نشاط",
+    "bureauBadge": "الحوكمة والقيادة",
+    "bureauSectionTitle": "الهيئة المديرة 2026–2027",
+    "bureauSectionSubtitle": "الهيئة المديرة الرسمية لعهدة 2026–2027",
+    "bureauExecHeading": "المكتب التنفيذي",
+    "bureauChefsHeading": "رؤساء اللجان",
+    "bureauCommsHeading": "رؤساء اللجان",
+    "bureauAdjointsHeading": "المساعدون",
+    "bureauElargiHeading": "المساعدون",
+    "horizontalScroll": "تمرير أفقي ↔",
+    "partnersBadge": "الدعم والرعاية",
+    "partnersSectionTitle": "رعاة النادي",
+    "partnersSectionSubtitle": "الشركات والشركاء والداعمون الذين يساندون قوافلنا ومبادراتنا التضامنية عبر تونس.",
+    "recruitBadge": "بوابة الانخراط الرسمية",
+    "recruitTitle": "الانضمام إلى نادي إنتراكت",
+    "recruitSubtitle": "استمارة الترشح الرسمية لعهدة 2026–2027",
+    "recruitSec1": "1. البيانات الشخصية",
+    "recruitFirstName": "الاسم (*)",
+    "recruitLastName": "اللقب (*)",
+    "recruitBirthDate": "تاريخ الولادة (*)",
+    "recruitSchool": "المعهد (*)",
+    "recruitAddress": "العنوان ومقر السكن (*)",
+    "recruitPhone": "رقم الهاتف (*)",
+    "recruitEmail": "البريد الإلكتروني (*)",
+    "recruitFb": "رابط حساب فيسبوك (*)",
+    "recruitInsta": "حساب إنستغرام (*)",
+    "recruitSec2": "2. الهوايات والاهتمامات",
+    "recruitSec3": "3. الحضور والالتزام",
+    "recruitSec4": "4. رسالة التحفيز والدافع",
+    "recruitSec5": "5. اختيار اللجان",
+    "recruitCancel": "إلغاء",
+    "recruitSubmit": "إرسال ملف الترشح",
+    "footerClubTitle": "نادي إنتراكت تونس خليج قرطاجنة",
+    "footerClubSubtitle": "نادي رقم 219646 • المنطقة 9010 • برعاية نادي روتاري أريانة الورد",
+    "footerDesc": "قطب شبابي متميز لتلاميذ تونس والضاحية الشمالية. عضو فاعل في المنطقة الروتارية 9010.",
+    "footerContact": "راسلنا عبر البريد الإلكتروني",
+    "installAppBtn": "تثبيت التطبيق",
+    "portalBtn": "بوابة الأعضاء",
+    "portalLoginEmailLabel": "البريد الإلكتروني",
+    "portalLoginEmailPh": "البريد أو اسم المستخدم (مثال: admin)",
+    "portalLoginPasswordLabel": "كلمة المرور",
+    "portalLoginSubmit": "تسجيل الدخول",
+    "adminPreviewBannerTitle": "وضع معاينة العضوية (حساب admin@ictgc.org)",
+    "adminPreviewBannerDesc": "أنت تتصفح البوابة الداخلية كما يراها الأعضاء (النظام الداخلي، المسابقة الشهرية، اللجان).",
+    "adminPreviewReturnBtn": "🔙 العودة للوحة الإدارة",
+    "gamificationBadge": "🏆 التميز والتحفيز",
+    "gamificationTitle": "إنترأكتي الشهر",
+    "gamificationSubtitle": "ترتيب الأعضاء الأكثر نشاطاً والتزاماً",
+    "duesRemainingLabel": "الاشتراك المتبقي",
+    "duesStatusPaid": "100 د.ت / 100 د.ت مدفوع",
+    "bookBadgeEdition": "النسخة الرسمية للنادي",
+    "bookBadgeFormat": "36 صفحة • تصميم كتاب مفتوح",
+    "bookSectionTitle": "النظام الداخلي لنادي إنترأكت تونس خليج قرطاجنة",
+    "bookSectionDesc": "كتاب تفاعلي قابل للتصفح مباشرة أدناه (اقلب الصفحات بالنقر أو بمفاتيح الأسهم).",
+    "bookTocPrompt": "📑 فهرس المحتويات",
+    "bookPrevBtn": "◀ السابق",
+    "bookNextBtn": "التالي ▶",
+    "bookTwoPages": "📖 صفحتان",
+    "bookOnePage": "📄 صفحة واحدة",
+    "bookFullscreen": "ملء الشاشة",
+    "bookDownloadPdf": "تحميل PDF",
+    "bookNavTip": "التنقل: ◀ / ▶ • انقر على الصفحة للقلب",
+    "libraryBadge": "📚 المكتبة الرقمية الرسمية",
+    "librarySyncBadge": "متزامن مع درايف",
+    "libraryTitle": "المكتبة الرقمية الرسمية وموارد النادي",
+    "libraryDesc": "الوثائق الرسمية، جداول المتابعة، ملفات الرعاية ومواثيق النادي المتزامنة من Google Drive.",
+    "librarySyncBtn": "مزامنة درايف",
+    "libraryDriveLink": "مساحة درايف للنادي ↗",
+    "libraryReadBookBtn": "قراءة الكتاب 📖",
+    "libraryPreviewBtn": "معاينة ↗",
+    "catAll": "الكل",
+    "catRegulations": "اللوائح والنظام الداخلي",
+    "catTracking": "المتابعة والتسيير",
+    "catSponsoring": "الرعاية والشراكات",
+    "catPvOdj": "جداول الأعمال والمحاضر",
+    "catBranding": "الشعارات والهوية البصرية",
+    "zoneLinksTitle": "مجموعات ماسنجر الميدانية",
+    "zoneLinksDesc": "روابط التنسيق الميداني للقوافل والأنشطة الجارية",
+    "zoneLinksManageBtn": "إدارة",
+    "zoneLinksOpenBtn": "فتح ↗",
+    "zoneLinksModalTitle": "إدارة مجموعات ماسنجر الميدانية",
+    "zoneLinksModalDesc": "أضف أو عدّل أو احذف روابط التنسيق الميداني للقوافل والمناطق.",
+    "zoneLinksLabelZone": "اسم المنطقة",
+    "zoneLinksLabelAction": "النشاط المرتبط",
+    "zoneLinksLabelUrl": "رابط ماسنجر (m.me/...)",
+    "zoneLinksAddBtn": "+ إضافة مجموعة منطقة",
+    "zoneLinksSaveBtn": "حفظ ومزامنة",
+    "passToggleTitle": "إظهار/إخفاء كلمة المرور"
+  }
+};
+const I18N_DICT = window.I18N_DICT;
     const ROLE_I18N = {
       "Présidente": { en: "President", ar: "الرئيسة" },
       "Vice-présidente": { en: "Vice-President", ar: "نائبة الرئيسة" },
@@ -10226,9 +10358,66 @@ const CATEGORY_I18N = {
         }
       });
 
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const key = el.getAttribute('data-i18n-ph');
+        if (key && dict[key]) {
+          el.placeholder = dict[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (key && dict[key]) {
+          el.title = dict[key];
+          el.setAttribute('aria-label', dict[key]);
+        }
+      });
+
       for (const [key, val] of Object.entries(dict)) {
         const el = document.querySelector(`[data-edit-key="${key}"]`);
         if (el) el.textContent = val;
+      }
+
+      const tocSelect = document.getElementById('book-toc-select');
+      if (tocSelect) {
+        const tocOptions = {
+          fr: [
+            { val: "1", text: "📑 Sommaire Rapide" },
+            { val: "1", text: "Page 1 : Couverture & Titre" },
+            { val: "3", text: "Page 3 : Titre I - Dispositions Générales" },
+            { val: "7", text: "Page 7 : Titre II - Membres & Adhésion" },
+            { val: "14", text: "Page 14 : Titre III - Assemblée Générale" },
+            { val: "20", text: "Page 20 : Titre IV - Bureau & Commissions" },
+            { val: "28", text: "Page 28 : Titre V - Cotisations & Finances" },
+            { val: "32", text: "Page 32 : Titre VI - Discipline & Radiation" },
+            { val: "36", text: "Page 36 : Dispositions Finales" }
+          ],
+          en: [
+            { val: "1", text: "📑 Quick Table of Contents" },
+            { val: "1", text: "Page 1: Cover & Title" },
+            { val: "3", text: "Page 3: Title I - General Provisions" },
+            { val: "7", text: "Page 7: Title II - Members & Membership" },
+            { val: "14", text: "Page 14: Title III - General Assembly" },
+            { val: "20", text: "Page 20: Title IV - Board & Committees" },
+            { val: "28", text: "Page 28: Title V - Dues & Finances" },
+            { val: "32", text: "Page 32: Title VI - Discipline & Dismissal" },
+            { val: "36", text: "Page 36: Final Provisions" }
+          ],
+          ar: [
+            { val: "1", text: "📑 فهرس المحتويات" },
+            { val: "1", text: "صفحة 1: الغلاف والعنوان" },
+            { val: "3", text: "صفحة 3: الباب الأول - أحكام عامة" },
+            { val: "7", text: "صفحة 7: الباب الثاني - الأعضاء والانخراط" },
+            { val: "14", text: "صفحة 14: الباب الثالث - الجلسة العامة" },
+            { val: "20", text: "صفحة 20: الباب الرابع - الهيئة واللجان" },
+            { val: "28", text: "صفحة 28: الباب الخامس - الاشتراكات والمالية" },
+            { val: "32", text: "صفحة 32: الباب السادس - التأديب والشطب" },
+            { val: "36", text: "صفحة 36: أحكام ختامية" }
+          ]
+        };
+        const currentVal = tocSelect.value;
+        const opts = tocOptions[lang] || tocOptions.fr;
+        tocSelect.innerHTML = opts.map(o => `<option value="${o.val}" ${o.val === currentVal ? 'selected' : ''}>${o.text}</option>`).join('');
       }
 
       if (window.cachedMetrics) renderMetrics(window.cachedMetrics);
@@ -10242,6 +10431,14 @@ const CATEGORY_I18N = {
 
       if (window.cachedPartnersList) renderPartners(window.cachedPartnersList);
       else if (typeof defaultPartners !== 'undefined') renderPartners(defaultPartners);
+
+      if (typeof renderResourceLibrary === 'function') {
+        renderResourceLibrary(window.currentAppResources || defaultResources);
+      }
+
+      if (typeof renderZoneLinks === 'function') {
+        renderZoneLinks(currentZoneLinks);
+      }
 
       if (showToast && typeof showAppToast === 'function') {
         const toastMsg = lang === 'ar' ? "تم تغيير اللغة إلى العربية بنجاح" : (lang === 'en' ? "Language switched to English!" : "Langue basculée en Français !");
@@ -14308,8 +14505,8 @@ const CATEGORY_I18N = {
         <div class="flex items-center gap-3">
           <span class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold">💬</span>
           <div>
-            <h3 class="text-lg font-extrabold text-slate-900">Gestion des Groupes Messenger de Zone</h3>
-            <p class="text-xs text-slate-500">Ajoutez, modifiez ou supprimez les liens opérationnels des convois et zones.</p>
+            <h3 class="text-lg font-extrabold text-slate-900" data-i18n="zoneLinksModalTitle">Gestion des Groupes Messenger de Zone</h3>
+            <p class="text-xs text-slate-500" data-i18n="zoneLinksModalDesc">Ajoutez, modifiez ou supprimez les liens opérationnels des convois et zones.</p>
           </div>
         </div>
         <button type="button" onclick="closeManageZoneLinksModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer">✕</button>
