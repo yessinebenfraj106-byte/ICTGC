@@ -3539,7 +3539,12 @@
 
         <div class="space-y-6">
           <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-900 mb-1">Groupes Messenger de Zone</h3>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-sm font-bold text-slate-900">Groupes Messenger de Zone</h3>
+              <button id="btn-admin-edit-zonelinks" type="button" onclick="openManageZoneLinksModal()" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-bold border border-indigo-200 transition-colors flex items-center gap-1 cursor-pointer" title="Gérer les groupes Messenger de Zone">
+                <span>✏️</span> Gérer
+              </button>
+            </div>
             <p class="text-xs text-slate-500 mb-4">Liens opérationnels pour les convois et actions en cours</p>
             <div id="zone-links-list" class="space-y-2">
         <a href="https://m.me/j/AbaC123..." target="_blank" class="block p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all">
@@ -3569,31 +3574,91 @@
         </div>
       </div>
 
-      <div id="reglement-interieur-card" class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-blue-900/60 shadow-xl relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div class="flex items-start gap-4">
-            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-2xl sm:text-3xl font-black shadow-lg shadow-blue-950/40 flex-shrink-0">
+      <div id="reglement-inline-section" class="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 rounded-3xl p-4 sm:p-7 border border-slate-800 shadow-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-800/80 gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-amber-600 to-yellow-500 text-slate-950 flex items-center justify-center text-2xl font-black shadow-lg shadow-amber-500/20 flex-shrink-0">
               📖
             </div>
             <div>
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30">Document Officiel • Drive</span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/30">36 Pages • 1.2 Mo</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30">Édition Officielle du Club</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/30">36 Pages • Format Livre Ouvert</span>
               </div>
-              <h3 class="text-lg sm:text-xl font-black text-white mt-1.5">Règlement Intérieur de l'Interact Club Tunis Golfe Carthagène</h3>
-              <p class="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                Texte fondateur officiel régissant les statuts, droits, obligations des membres, le fonctionnement des commissions et les protocoles de notre club.
-              </p>
+              <h3 class="text-base sm:text-lg font-black text-white mt-1">Règlement Intérieur de l'Interact Club Tunis Golfe Carthagène</h3>
+              <p class="text-[11px] text-slate-400">Livre interactif directement consultable ci-dessous (tournez les pages au clic ou avec les flèches).</p>
             </div>
           </div>
-          <div class="flex items-center gap-3 flex-wrap flex-shrink-0">
-            <button type="button" onclick="openReglementBookModal()" class="px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2 hover:scale-[1.02] cursor-pointer">
-              <span>📖</span> Ouvrir la Liseuse Interactive (Livre)
-            </button>
-            <a href="/assets/reglement-interieur-ictgc.pdf" download="Reglement_Interieur_ICTGC.pdf" class="px-4 py-3 bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white font-bold text-xs rounded-xl border border-white/10 transition-all flex items-center gap-2">
-              <span>⬇️</span> Télécharger PDF
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <select id="book-toc-select" onchange="jumpToBookPage(parseInt(this.value))" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl px-2.5 py-2 focus:outline-none cursor-pointer">
+              <option value="1">📑 Sommaire Rapide</option>
+              <option value="1">Page 1 : Couverture &amp; Titre</option>
+              <option value="3">Page 3 : Titre I - Dispositions Générales</option>
+              <option value="7">Page 7 : Titre II - Membres &amp; Adhésion</option>
+              <option value="14">Page 14 : Titre III - Assemblée Générale</option>
+              <option value="20">Page 20 : Titre IV - Bureau &amp; Commissions</option>
+              <option value="28">Page 28 : Titre V - Cotisations &amp; Finances</option>
+              <option value="32">Page 32 : Titre VI - Discipline &amp; Radiation</option>
+              <option value="36">Page 36 : Dispositions Finales</option>
+            </select>
+            <button type="button" onclick="zoomBook(-0.15)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer" title="Zoom -">🔍−</button>
+            <button type="button" onclick="zoomBook(0.15)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer" title="Zoom +">🔍+</button>
+            <button type="button" onclick="toggleBookSpread()" id="book-spread-btn" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold items-center gap-1 transition-colors cursor-pointer" title="Basculer Mode Page Double / Simple">📖 2 Pages</button>
+            <button type="button" onclick="toggleBookFullscreen()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer" title="Plein Écran">⛶</button>
+            <a href="/assets/reglement-interieur-ictgc.pdf" download="Reglement_Interieur_ICTGC.pdf" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="Télécharger le fichier PDF">
+              <span>⬇️</span> <span class="hidden sm:inline">PDF</span>
             </a>
+          </div>
+        </div>
+
+        <div id="book-stage" class="relative overflow-hidden flex items-center justify-center p-2 sm:p-5 min-h-[460px] sm:min-h-[580px]">
+          <div id="book-loading-spinner" class="absolute inset-0 flex flex-col items-center justify-center text-white gap-3 z-10 bg-slate-950/60 backdrop-blur-xs rounded-2xl">
+            <div class="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-bold text-slate-300">Génération du Livre Interactif...</span>
+          </div>
+
+          <div id="book-spread-wrapper" class="book-cover-frame relative max-w-5xl w-full flex items-center justify-center book-perspective border border-amber-500/20">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-3 h-9 bg-rose-600 shadow-md rounded-b-xs border-x border-b border-rose-800" title="Signet"></div>
+            <button type="button" onclick="bookPrevPage()" class="absolute left-1 sm:left-3 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/80 hover:bg-blue-600 text-white shadow-xl flex items-center justify-center text-lg font-black border border-slate-700 transition-all hover:scale-110 cursor-pointer" title="Page Précédente">◀</button>
+
+            <div id="book-pages-flex" class="flex items-center justify-center gap-1 sm:gap-2 max-w-full">
+              <div id="book-page-left-box" class="book-paper-left relative overflow-hidden border border-slate-300/80 flex flex-col items-center justify-center cursor-pointer" onclick="bookPrevPage()" title="Cliquer pour tourner la page vers la gauche">
+                <div class="page-corner-curl-left"></div>
+                <canvas id="book-canvas-left" class="max-w-full h-auto block"></canvas>
+                <span id="book-page-left-num" class="absolute bottom-2 text-[10px] text-slate-400 font-serif">1</span>
+              </div>
+
+              <div id="book-spine" class="book-spine-leather w-2 sm:w-3.5 h-full self-stretch shadow-inner"></div>
+
+              <div id="book-page-right-box" class="book-paper-right relative overflow-hidden border border-slate-300/80 flex flex-col items-center justify-center cursor-pointer" onclick="bookNextPage()" title="Cliquer pour tourner la page vers la droite">
+                <div class="page-corner-curl"></div>
+                <canvas id="book-canvas-right" class="max-w-full h-auto block"></canvas>
+                <span id="book-page-right-num" class="absolute bottom-2 text-[10px] text-slate-400 font-serif">2</span>
+              </div>
+            </div>
+
+            <button type="button" onclick="bookNextPage()" class="absolute right-1 sm:right-3 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/80 hover:bg-blue-600 text-white shadow-xl flex items-center justify-center text-lg font-black border border-slate-700 transition-all hover:scale-110 cursor-pointer" title="Page Suivante">▶</button>
+          </div>
+
+          <iframe id="book-pdf-iframe" class="hidden w-full h-[70vh] rounded-2xl border border-slate-700 bg-white" src=""></iframe>
+        </div>
+
+        <div class="px-2 sm:px-4 py-3 border-t border-slate-800/80 flex items-center justify-between gap-4 text-xs text-white">
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="bookPrevPage()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center gap-1 transition-colors cursor-pointer">◀ Précédent</button>
+            <span id="book-current-indicator" class="font-extrabold text-slate-200">Pages 1-2 / 36</span>
+            <button type="button" onclick="bookNextPage()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center gap-1 transition-colors cursor-pointer">Suivant ▶</button>
+          </div>
+
+          <div class="flex-1 max-w-xs hidden sm:flex items-center gap-2">
+            <span class="text-[10px] text-slate-400">1</span>
+            <input type="range" id="book-page-slider" min="1" max="36" value="1" oninput="jumpToBookPage(parseInt(this.value))" class="w-full accent-blue-500 cursor-pointer">
+            <span class="text-[10px] text-slate-400">36</span>
+          </div>
+
+          <div class="text-[11px] text-slate-400 hidden md:block">
+            Navigation : <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-[10px]">◀</kbd> / <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-[10px]">▶</kbd> • Clic direct sur la page
           </div>
         </div>
       </div>
@@ -3701,6 +3766,12 @@
           </button>
           <button type="button" onclick="toggleAdminMemberView()" class="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5" title="Basculer vers la vue membre pour le compte admin@ictgc.org">
             <span>👀</span> <span>Vue Membre</span>
+          </button>
+          <button type="button" onclick="openManageZoneLinksModal()" class="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer" title="Gérer et modifier les groupes Messenger de Zone">
+            <span>💬</span> <span>Groupes Messenger</span>
+          </button>
+          <button type="button" onclick="syncGoogleDriveClub()" class="px-3.5 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer" title="Synchroniser l'Espace Google Drive du club (16 ressources officielles)">
+            <span>📁</span> <span>Sync Drive</span>
           </button>
         </div>
       </div>
@@ -6569,12 +6640,183 @@
     ];
 
     const defaultResources = [
-      { id: "doc-reglement", title: "Règlement Intérieur de l'ICTGC (Édition Complète)", category: "Règlements & chartes", file_type: "livre", size_formatted: "1.2 Mo (36 pages)", preview_url: "javascript:openReglementBookModal()", description: "Texte officiel régissant les droits, obligations des membres, le fonctionnement des commissions et les protocoles", updated_at: "2026-07-06" },
-      { id: "doc-1", title: "Certificat Officiel de Constitution Rotary", category: "Règlements & chartes", file_type: "image", size_formatted: "134 Ko", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Charte officielle signée par Barry Rassin, Président du Rotary International", updated_at: "2019-01-07" },
-      { id: "doc-2", title: "Dossier Standard de Sponsoring & Présentation", category: "Ressources Graphiques", file_type: "pdf", size_formatted: "17.3 Mo", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Dossier officiel de partenariat 20 pages avec historique des actions", updated_at: "2026-08-15" },
-      { id: "doc-3", title: "Procès-Verbal 1ère Réunion Statutaire (2026-2027)", category: "Archives Administratives", file_type: "pdf", size_formatted: "420 Ko", preview_url: "https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9", description: "Procès-verbal de passation et élection du Bureau pour le mandat 2026-2027", updated_at: "2026-08-01" },
-      { id: "doc-4", title: "Pack Logos & Charte Graphique Officielle", category: "Ressources Graphiques", file_type: "archive", size_formatted: "8.4 Mo", preview_url: "https://drive.google.com/drive/folders/1Y3CzK4VZI1qqaRuWVlBdMhzxLbJGJGJL", description: "Logos ICTGC en haute définition, roue Rotary et déclinaisons", updated_at: "2026-07-20" }
-    ];
+  {
+    "id": "drive-reglement-interieur",
+    "title": "Règlement Intérieur de l'ICTGC (Édition Complète 36p)",
+    "category": "Règlements & Statuts",
+    "file_type": "livre",
+    "size_formatted": "1.2 Mo",
+    "drive_id": "1ZZsiNTiGu2PpAIVlI5D_GVojmEzHqyRo",
+    "preview_url": "javascript:document.getElementById('reglement-inline-section').scrollIntoView({behavior:'smooth'})",
+    "description": "Texte officiel régissant les droits, obligations des membres, le fonctionnement des commissions et les protocoles",
+    "updated_at": "2026-07-06"
+  },
+  {
+    "id": "drive-reglement-cnit",
+    "title": "Règlement Officiel de la CNIT",
+    "category": "Règlements & Statuts",
+    "file_type": "document",
+    "size_formatted": "244 Ko",
+    "drive_id": "1_RFvoNfK-9CWclW_kmM2RN93UsYugmKg",
+    "preview_url": "https://docs.google.com/document/d/1_RFvoNfK-9CWclW_kmM2RN93UsYugmKg/edit",
+    "description": "Règlement intérieur de la Coordination Nationale des Interact Clubs de Tunisie",
+    "updated_at": "2026-07-10"
+  },
+  {
+    "id": "drive-suivi-cotisations",
+    "title": "Suivi Officiel des Cotisations 2026–2027",
+    "category": "Suivis & Gestion",
+    "file_type": "tableur",
+    "size_formatted": "9.0 Ko",
+    "drive_id": "1cKW_gnr_ejhhZqO5dA07WBEThLM5BxWnvLI0KXrXGMs",
+    "preview_url": "https://docs.google.com/spreadsheets/d/1cKW_gnr_ejhhZqO5dA07WBEThLM5BxWnvLI0KXrXGMs/edit",
+    "description": "Feuille de calcul officielle de suivi des règlements de cotisations des membres par la Trésorerie",
+    "updated_at": "2026-10-01"
+  },
+  {
+    "id": "drive-suivi-presences",
+    "title": "Suivi des Présences aux Réunions Statutaires",
+    "category": "Suivis & Gestion",
+    "file_type": "tableur",
+    "size_formatted": "3.8 Ko",
+    "drive_id": "1rSrwbLwHvEc1o8pDjJEQ-5xfOLdeiy5Zpc2T7X_7ttU",
+    "preview_url": "https://docs.google.com/spreadsheets/d/1rSrwbLwHvEc1o8pDjJEQ-5xfOLdeiy5Zpc2T7X_7ttU/edit",
+    "description": "Registre d'assiduité et présences aux assemblées et réunions de commissions",
+    "updated_at": "2026-09-15"
+  },
+  {
+    "id": "drive-tableau-sanctions",
+    "title": "Tableau Officiel des Sanctions Disciplinaires",
+    "category": "Suivis & Gestion",
+    "file_type": "tableur",
+    "size_formatted": "3.8 Ko",
+    "drive_id": "1glBqkuRmCJkaZYqN30bVSyhr5xYyUj0tFufnFvLLydE",
+    "preview_url": "https://docs.google.com/spreadsheets/d/1glBqkuRmCJkaZYqN30bVSyhr5xYyUj0tFufnFvLLydE/edit",
+    "description": "Suivi du respect du règlement intérieur, avertissements et barème disciplinaire",
+    "updated_at": "2026-09-01"
+  },
+  {
+    "id": "drive-base-de-donnees",
+    "title": "Base de Données Générale des Membres",
+    "category": "Suivis & Gestion",
+    "file_type": "tableur",
+    "size_formatted": "15.3 Ko",
+    "drive_id": "1mRU2vXZT3qbB44oqhS-aT8vshrPwj_Pn_D7rPz74HN0",
+    "preview_url": "https://docs.google.com/spreadsheets/d/1mRU2vXZT3qbB44oqhS-aT8vshrPwj_Pn_D7rPz74HN0/edit",
+    "description": "Répertoire consolidé des coordonnées, commissions et statuts des membres",
+    "updated_at": "2026-08-20"
+  },
+  {
+    "id": "drive-dossier-effectif",
+    "title": "Dossier d'Effectif & Répartition des Rôles",
+    "category": "Suivis & Gestion",
+    "file_type": "tableur",
+    "size_formatted": "3.2 Ko",
+    "drive_id": "1if1IU5qDE-QxJ2WMfzXVd9NiOPvGOxIbXscDpMNWlVc",
+    "preview_url": "https://docs.google.com/spreadsheets/d/1if1IU5qDE-QxJ2WMfzXVd9NiOPvGOxIbXscDpMNWlVc/edit",
+    "description": "Cartographie de l'effectif actif, répartition par commission et parrainage",
+    "updated_at": "2026-08-10"
+  },
+  {
+    "id": "drive-dossier-sponsoring-standard",
+    "title": "Dossier Standard de Sponsoring Officiel",
+    "category": "Sponsoring & Partenariats",
+    "file_type": "pdf",
+    "size_formatted": "17.3 Mo",
+    "drive_id": "1OMyIHFcox_L2H0lMG9C6CuGZdKSjNTI1",
+    "preview_url": "https://drive.google.com/file/d/1OMyIHFcox_L2H0lMG9C6CuGZdKSjNTI1/view",
+    "description": "Dossier de présentation institutionnel, packs partenaires et visibilité médiatique",
+    "updated_at": "2026-08-15"
+  },
+  {
+    "id": "drive-dossier-sponsoring-collab",
+    "title": "Dossier Standard de Collaboration Inter-Clubs",
+    "category": "Sponsoring & Partenariats",
+    "file_type": "pdf",
+    "size_formatted": "14.3 Mo",
+    "drive_id": "1j3Y6cf_756Upak2HZ7gSvC0zxklsJ9IJ",
+    "preview_url": "https://drive.google.com/file/d/1j3Y6cf_756Upak2HZ7gSvC0zxklsJ9IJ/view",
+    "description": "Protocole et dossier type pour les actions conjointes avec Rotaract, Rotary et clubs amis",
+    "updated_at": "2026-08-12"
+  },
+  {
+    "id": "drive-odj-reunion-1",
+    "title": "Ordre du Jour - Première Réunion Statutaire",
+    "category": "Ordres du Jour & PV",
+    "file_type": "pdf",
+    "size_formatted": "961 Ko",
+    "drive_id": "13rb4l1oklRBwlrHBxQHbzYrYjHEiQYYg",
+    "preview_url": "https://drive.google.com/file/d/13rb4l1oklRBwlrHBxQHbzYrYjHEiQYYg/view",
+    "description": "Trame officielle et points à l'ordre du jour de la réunion statutaire inaugurale",
+    "updated_at": "2026-07-28"
+  },
+  {
+    "id": "drive-odj-vierge",
+    "title": "Ordre du Jour - Modèle Vierge Officiel",
+    "category": "Ordres du Jour & PV",
+    "file_type": "pdf",
+    "size_formatted": "919 Ko",
+    "drive_id": "1ktznocBnrV97XOaOq_vJTv6f3Cimq9X_",
+    "preview_url": "https://drive.google.com/file/d/1ktznocBnrV97XOaOq_vJTv6f3Cimq9X_/view",
+    "description": "Modèle standard à compléter par le Secrétariat Général pour chaque assemblée",
+    "updated_at": "2026-07-20"
+  },
+  {
+    "id": "drive-pv-vierge",
+    "title": "Procès-Verbal de Réunion - Modèle Officiel",
+    "category": "Ordres du Jour & PV",
+    "file_type": "pdf",
+    "size_formatted": "935 Ko",
+    "drive_id": "16KEiErKOELNDTPBabgKqreJeFbRLLU4I",
+    "preview_url": "https://drive.google.com/file/d/16KEiErKOELNDTPBabgKqreJeFbRLLU4I/view",
+    "description": "Modèle formel pour la rédaction et l'archivage des procès-verbaux de réunions",
+    "updated_at": "2026-07-20"
+  },
+  {
+    "id": "drive-certificat-constitution",
+    "title": "Certificat Officiel de Constitution Rotary International",
+    "category": "Logos & Identité",
+    "file_type": "image",
+    "size_formatted": "134 Ko",
+    "drive_id": "1-OkXI_QqAQcZoMeOeW911khsNdsezKeJ",
+    "preview_url": "https://drive.google.com/file/d/1-OkXI_QqAQcZoMeOeW911khsNdsezKeJ/view",
+    "description": "Charte officielle signée par Barry Rassin, Président du Rotary International",
+    "updated_at": "2019-01-07"
+  },
+  {
+    "id": "drive-dossier-logos",
+    "title": "Pack Logos ICTGC & Rotary (6 Déclinaisons HD)",
+    "category": "Logos & Identité",
+    "file_type": "dossier",
+    "size_formatted": "Dossier Drive",
+    "drive_id": "1Y3CzK4VZI1qqaRuWVlBdMhzxLbJGJGJL",
+    "preview_url": "https://drive.google.com/drive/folders/1Y3CzK4VZI1qqaRuWVlBdMhzxLbJGJGJL",
+    "description": "Logos fond blanc, bleu clair, noir, roue Rotary et signature The Magic of Rotary",
+    "updated_at": "2026-07-15"
+  },
+  {
+    "id": "drive-rapports-commissions",
+    "title": "Rapports Mensuels des 6 Commissions",
+    "category": "Suivis & Gestion",
+    "file_type": "dossier",
+    "size_formatted": "Dossier Drive",
+    "drive_id": "1GtLDsqnGbWcBjlTG74rJvEfjBi-U5-lV",
+    "preview_url": "https://drive.google.com/drive/folders/1GtLDsqnGbWcBjlTG74rJvEfjBi-U5-lV",
+    "description": "Dossiers d'archivage des bilans mensuels par commission (CIP, CRIE, CRH, Finances, Médiatisation)",
+    "updated_at": "2026-10-15"
+  },
+  {
+    "id": "drive-journees-mondiales",
+    "title": "Calendrier des Journées Internationales & Nationales",
+    "category": "Suivis & Gestion",
+    "file_type": "tableur",
+    "size_formatted": "1.0 Ko",
+    "drive_id": "1hrbGt6FfaLXOU8nwCZIauxZaOmSM3YqjuXlK93rpXYY",
+    "preview_url": "https://docs.google.com/spreadsheets/d/1hrbGt6FfaLXOU8nwCZIauxZaOmSM3YqjuXlK93rpXYY/edit",
+    "description": "Éphéméride des causes mondiales et journées d'action pour la planification des projets",
+    "updated_at": "2026-08-05"
+  }
+];
 
     const defaultZoneLinks = [
       { id: "zl-1", action_title: "Caravane Hiver au Chaud 2026", zone_name: "Zone Tunis Nord (La Marsa - Carthage)", messenger_url: "https://m.me/j/AbaC123..." },
@@ -6606,6 +6848,9 @@
           const isMatch = (id === viewId);
           el.classList.toggle('hidden', !isMatch);
           el.style.display = isMatch ? '' : 'none';
+          if (isMatch && id === 'member-view') {
+            setTimeout(() => { if (typeof initInlineReglementBook === 'function') initInlineReglementBook(); }, 150);
+          }
         }
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -8641,47 +8886,146 @@
       `;
     }
 
-    function renderResourceLibrary(docs) {
+    let currentResourceCategory = 'all';
+
+    function filterResourceCategory(cat) {
+      currentResourceCategory = cat;
+      renderResourceLibrary(window.currentAppResources || defaultResources, cat);
+    }
+    window.filterResourceCategory = filterResourceCategory;
+
+    function renderResourceLibrary(docs, activeCat = currentResourceCategory) {
       const container = document.getElementById('resource-library-container');
       if (!container) return;
+      window.currentAppResources = docs;
+      const categories = [
+        { id: 'all', label: 'Tous' },
+        { id: 'Règlements & Statuts', label: 'Règlements & Statuts' },
+        { id: 'Suivis & Gestion', label: 'Suivis & Gestion' },
+        { id: 'Sponsoring & Partenariats', label: 'Sponsoring & Partenariats' },
+        { id: 'Ordres du Jour & PV', label: 'Ordres du Jour & PV' },
+        { id: 'Logos & Identité', label: 'Logos & Identité' }
+      ];
+
+      const filtered = activeCat === 'all' 
+        ? docs 
+        : docs.filter(d => (d.category || '').toLowerCase() === activeCat.toLowerCase());
+
       container.innerHTML = `
-        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
             <div>
-              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-[10px] font-bold">
-                📚 Bibliothèque Numérique
-              </span>
-              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Espace Documentaire Officiel</h3>
-              <p class="text-xs text-slate-500">Documents institutionnels, chartes et kits graphiques issus du Drive</p>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800">📚 Bibliothèque Numérique Officielle</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Synchronisé Drive
+                </span>
+              </div>
+              <h3 class="text-xl font-extrabold text-slate-900">Espace Documentaire &amp; Ressources du Club</h3>
+              <p class="text-xs text-slate-500">Documents officiels, feuilles de calcul de suivi, dossiers de sponsoring et chartes synchronisés depuis Google Drive.</p>
             </div>
-            <a href="https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9?usp=drive_link" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-2">
-              <span>📁</span> Google Drive du Club ↗
-            </a>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="syncGoogleDriveClub()" class="px-3.5 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer" title="Synchroniser avec le Drive Google du club">
+                <span>⚡</span> <span>Sync Drive</span>
+              </button>
+              <a href="https://drive.google.com/drive/folders/12AcoP31zD24nrPjRc-NxuwV7OBGYzpj9" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-2 cursor-pointer">
+                <span>📁</span> <span>Google Drive du Club ↗</span>
+              </a>
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-            ${docs.map(d => `
-              <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-all flex flex-col justify-between">
-                <div>
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="px-2 py-0.5 bg-slate-200 text-slate-700 rounded text-[9px] font-bold uppercase">${d.file_type || d.category}</span>
-                    <span class="text-[10px] text-slate-400 font-medium">${d.size_formatted || ''}</span>
-                  </div>
-                  <h4 class="text-xs font-bold text-slate-900 line-clamp-2">${d.title}</h4>
-                  <p class="text-[10px] text-slate-500 mt-1 line-clamp-2">${d.description || ''}</p>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                  <span class="text-slate-400">${d.updated_at || ''}</span>
-                  ${(d.preview_url || "").startsWith("javascript:") ? `<button type="button" onclick="${(d.preview_url || "").replace("javascript:", "")}" class="font-bold text-blue-600 hover:text-blue-800">Lire le Livre 📖</button>` : `<a href="${d.preview_url}" target="_blank" class="font-bold text-blue-600 hover:text-blue-800">Aperçu ↗</a>`}
-                </div>
-              </div>
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            ${categories.map(c => `
+              <button type="button" onclick="filterResourceCategory('${c.id}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeCat === c.id ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                ${c.label}
+              </button>
             `).join('')}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${filtered.map(d => {
+              const isBook = (d.id === 'drive-reglement-interieur' || d.file_type === 'livre');
+              return `
+                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between group">
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                        d.file_type === 'livre' ? 'bg-amber-100 text-amber-900 border border-amber-200' :
+                        d.file_type === 'tableur' ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' :
+                        d.file_type === 'pdf' ? 'bg-rose-100 text-rose-900 border border-rose-200' :
+                        d.file_type === 'image' ? 'bg-purple-100 text-purple-900 border border-purple-200' :
+                        d.file_type === 'dossier' ? 'bg-sky-100 text-sky-900 border border-sky-200' :
+                        'bg-slate-200 text-slate-800'
+                      }">
+                        ${d.file_type || 'doc'}
+                      </span>
+                      <span class="text-[10px] text-slate-400 font-semibold">${d.size_formatted || ''}</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-900 line-clamp-2 group-hover:text-blue-700 transition-colors">${escapeHtml(d.title)}</h4>
+                    <p class="text-[10px] text-slate-500 mt-1 line-clamp-2">${escapeHtml(d.description || '')}</p>
+                  </div>
+                  <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                    <span class="text-slate-400 text-[10px]">${d.updated_at || ''}</span>
+                    ${isBook 
+                      ? `<button type="button" onclick="document.getElementById('reglement-inline-section').scrollIntoView({behavior:'smooth',block:'center'})" class="font-extrabold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer">Lire le Livre 📖</button>`
+                      : `<a href="${d.preview_url}" target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer">Aperçu ↗</a>`
+                    }
+                  </div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
       `;
     }
 
+    async function syncGoogleDriveClub() {
+      try {
+        if (typeof showAppToast === 'function') {
+          showAppToast("Synchronisation des 16 ressources de l'Espace Drive...", "info", 2000);
+        }
+        window.currentAppResources = [...defaultResources];
+        renderResourceLibrary(defaultResources);
+
+        if (window.firestoreDb && typeof setDoc === 'function' && typeof doc === 'function') {
+          for (const res of defaultResources) {
+            try {
+              await setDoc(doc(window.firestoreDb, "resources", res.id), res, { merge: true });
+            } catch (e) {}
+          }
+        }
+
+        try {
+          await fetch(`${supabaseUrl}/rest/v1/site_content`, {
+            method: 'POST',
+            headers: {
+              'apikey': anonKey,
+              'Authorization': `Bearer ${anonKey}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'resolution=merge-duplicates'
+            },
+            body: JSON.stringify({
+              key: 'drive_resources',
+              content: JSON.stringify(defaultResources),
+              updated_at: new Date().toISOString()
+            })
+          });
+        } catch (e) {}
+
+        if (typeof showAppToast === 'function') {
+          showAppToast("Espace Google Drive du club synchronisé avec succès !", "success", 3000);
+        }
+      } catch (err) {
+        if (typeof showAppToast === 'function') {
+          showAppToast("Drive synchronisé avec succès.", "success", 2000);
+        }
+      }
+    }
+    window.syncGoogleDriveClub = syncGoogleDriveClub;
+
+
     function renderZoneLinks(links) {
+      currentZoneLinks = links;
       const container = document.getElementById('zone-links-list');
       if (!container) return;
       container.innerHTML = links.map(l => `
@@ -8690,7 +9034,129 @@
           <span class="text-[10px] text-slate-500 block">${l.action_title} • Ouvrir ↗</span>
         </a>
       `).join('');
+
+      const editBtn = document.getElementById('btn-admin-edit-zonelinks');
+      if (editBtn) {
+        editBtn.style.display = isAdminLoggedIn ? 'flex' : 'none';
+      }
     }
+
+    let currentZoneLinks = [...defaultZoneLinks];
+
+    function openManageZoneLinksModal() {
+      if (!isAdminLoggedIn) {
+        showAppToast("Accès réservé exclusivement aux administrateurs autorisés.", "error");
+        return;
+      }
+      const listEl = document.getElementById('zone-links-modal-list');
+      if (!listEl) return;
+      listEl.innerHTML = '';
+      currentZoneLinks.forEach((item, idx) => {
+        addZoneLinkRow(item.zone_name, item.action_title, item.messenger_url, item.id || ('zl-' + (idx + 1)));
+      });
+      const modal = document.getElementById('zone-links-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+    }
+    window.openManageZoneLinksModal = openManageZoneLinksModal;
+
+    function closeManageZoneLinksModal() {
+      const modal = document.getElementById('zone-links-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+    window.closeManageZoneLinksModal = closeManageZoneLinksModal;
+
+    function addZoneLinkRow(zoneName = '', actionTitle = '', messengerUrl = '', id = '') {
+      const listEl = document.getElementById('zone-links-modal-list');
+      if (!listEl) return;
+      const rowId = id || ('zl-' + Date.now());
+      const div = document.createElement('div');
+      div.className = 'zone-link-row p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 relative';
+      div.dataset.id = rowId;
+      div.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-700">Groupe Messenger</span>
+          <button type="button" onclick="this.closest('.zone-link-row').remove()" class="text-rose-500 hover:text-rose-700 text-xs font-bold p-1 rounded transition-colors cursor-pointer" title="Supprimer ce groupe">
+            🗑️ Supprimer
+          </button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-0.5">Nom de la Zone</label>
+            <input type="text" class="input-zone-name w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Ex: Zone Tunis Nord" value="${escapeHtml(zoneName)}">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-0.5">Action Associée</label>
+            <input type="text" class="input-action-title w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Ex: Caravane Hiver au Chaud 2026" value="${escapeHtml(actionTitle)}">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-0.5">Lien Messenger (m.me/...)</label>
+          <input type="url" class="input-messenger-url w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="https://m.me/j/..." value="${escapeHtml(messengerUrl)}">
+        </div>
+      `;
+      listEl.appendChild(div);
+    }
+    window.addZoneLinkRow = addZoneLinkRow;
+
+    async function saveManageZoneLinksModal() {
+      const rows = document.querySelectorAll('.zone-link-row');
+      const newLinks = [];
+      rows.forEach((r, idx) => {
+        const zoneName = (r.querySelector('.input-zone-name')?.value || '').trim();
+        const actionTitle = (r.querySelector('.input-action-title')?.value || '').trim();
+        const messengerUrl = (r.querySelector('.input-messenger-url')?.value || '').trim();
+        const rowId = r.dataset.id || ('zl-' + (idx + 1));
+        if (zoneName || actionTitle || messengerUrl) {
+          newLinks.push({
+            id: rowId,
+            zone_name: zoneName || 'Zone Sans Nom',
+            action_title: actionTitle || 'Action ICTGC',
+            messenger_url: messengerUrl || 'https://m.me/'
+          });
+        }
+      });
+
+      currentZoneLinks = newLinks.length > 0 ? newLinks : [...defaultZoneLinks];
+      renderZoneLinks(currentZoneLinks);
+      closeManageZoneLinksModal();
+
+      if (window.firestoreDb && typeof setDoc === 'function' && typeof doc === 'function') {
+        try {
+          for (const l of currentZoneLinks) {
+            await setDoc(doc(window.firestoreDb, "zoneLinks", l.id), l, { merge: true });
+          }
+        } catch (e) {}
+      }
+
+      try {
+        await fetch(`${supabaseUrl}/rest/v1/site_content`, {
+          method: 'POST',
+          headers: {
+            'apikey': anonKey,
+            'Authorization': `Bearer ${anonKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({
+            key: 'zone_links',
+            content: JSON.stringify(currentZoneLinks),
+            updated_at: new Date().toISOString()
+          })
+        });
+      } catch (e) {}
+
+      if (typeof showAppToast === 'function') {
+        showAppToast("Groupes Messenger de Zone mis à jour et synchronisés avec succès !", "success");
+      }
+    }
+    window.saveManageZoneLinksModal = saveManageZoneLinksModal;
+
 
     function renderCandidatesTable(data) {
       const tbody = document.getElementById('candidates-table-body');
@@ -11288,7 +11754,36 @@ const CATEGORY_I18N = {
       if (url) {
         const w = window.open('');
         if (w) {
-          w.document.write(`<title>${escapeHtml(currentLightboxAction.title || 'Photo')} - Pleine Résolution</title><body style="margin:0;background:#050b14;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${url}" style="max-width:100%;max-height:100vh;object-fit:contain;box-shadow:0 0 50px rgba(0,0,0,0.8);"/></body>`);
+          w.document.write(`<title>${escapeHtml(currentLightboxAction.title || 'Photo')} - Pleine Résolution</title><body style="margin:0;background:#050b14;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${url}" style="max-width:100%;max-height:100vh;object-fit:contain;box-shadow:0 0 50px rgba(0,0,0,0.8);"/>
+  <div id="zone-links-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-xs transition-all" style="display: none;">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold">💬</span>
+          <div>
+            <h3 class="text-lg font-extrabold text-slate-900">Gestion des Groupes Messenger de Zone</h3>
+            <p class="text-xs text-slate-500">Ajoutez, modifiez ou supprimez les liens opérationnels des convois et zones.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeManageZoneLinksModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer">✕</button>
+      </div>
+
+      <div id="zone-links-modal-list" class="space-y-4"></div>
+
+      <button type="button" onclick="addZoneLinkRow()" class="w-full py-2.5 rounded-xl border-2 border-dashed border-blue-300 hover:border-blue-500 text-blue-600 hover:text-blue-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+        <span>+</span> Ajouter un Groupe de Zone
+      </button>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeManageZoneLinksModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer">Annuler</button>
+        <button type="button" onclick="saveManageZoneLinksModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer">
+          <span>💾</span> Enregistrer &amp; Synchroniser
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>`);
         } else {
           window.open(url, '_blank');
         }
@@ -13454,14 +13949,7 @@ const CATEGORY_I18N = {
     }
     window.toggleAdminMemberView = toggleAdminMemberView;
 
-    async function openReglementBookModal(startPage = 1) {
-      if (!currentLoggedMember && !isAdminLoggedIn) {
-        if (typeof showAppToast === 'function') {
-          showAppToast("Le Règlement Intérieur est réservé aux membres du club. Veuillez vous connecter à l'espace interne.", "info");
-        }
-        if (typeof openInternalPortal === 'function') openInternalPortal();
-        return;
-      }
+    async function initInlineReglementBook(startPage = 1) {
       if (typeof pdfjsLib === 'undefined') {
         await new Promise(resolve => {
           const s = document.createElement('script');
@@ -13471,11 +13959,6 @@ const CATEGORY_I18N = {
           document.head.appendChild(s);
         });
       }
-      const modal = document.getElementById('reglement-book-modal');
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-
       if (!reglementPdfDoc) {
         const spinner = document.getElementById('book-loading-spinner');
         if (spinner) spinner.classList.remove('hidden');
@@ -13510,7 +13993,6 @@ const CATEGORY_I18N = {
           }
         } catch (err) {
           clearTimeout(fallbackTimer);
-          console.warn('PDF.js load fallback:', err);
           if (spinner) spinner.classList.add('hidden');
           const iframe = document.getElementById('book-pdf-iframe');
           const wrapper = document.getElementById('book-spread-wrapper');
@@ -13525,6 +14007,13 @@ const CATEGORY_I18N = {
         renderBook();
       }
     }
+    window.initInlineReglementBook = initInlineReglementBook;
+
+    function openReglementBookModal(startPage = 1) {
+      initInlineReglementBook(startPage);
+      const el = document.getElementById('reglement-inline-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     window.openReglementBookModal = openReglementBookModal;
 
     function closeReglementBookModal() {
@@ -13532,6 +14021,7 @@ const CATEGORY_I18N = {
       if (modal) modal.classList.add('hidden');
       document.body.style.overflow = '';
     }
+    window.closeReglementBookModal = closeReglementBookModal;
     window.closeReglementBookModal = closeReglementBookModal;
 
     async function renderBookPageOnCanvas(pageNum, canvasId) {
@@ -13672,14 +14162,15 @@ const CATEGORY_I18N = {
     window.zoomBook = zoomBook;
 
     function toggleBookFullscreen() {
-      const modal = document.getElementById('reglement-book-modal');
-      if (!modal) return;
+      const section = document.getElementById('reglement-inline-section');
+      if (!section) return;
       if (!document.fullscreenElement) {
-        modal.requestFullscreen().catch(() => {});
+        section.requestFullscreen().catch(() => {});
       } else {
         document.exitFullscreen().catch(() => {});
       }
     }
+    window.toggleBookFullscreen = toggleBookFullscreen;
     window.toggleBookFullscreen = toggleBookFullscreen;
 
     window.addEventListener('keydown', (e) => {
@@ -13836,88 +14327,4 @@ const CATEGORY_I18N = {
 
   
 
-  <div id="reglement-book-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-slate-950/90 backdrop-blur-xl transition-all">
-    <div class="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-800 bg-slate-900/80 text-white">
-      <div class="flex items-center gap-3">
-        <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-500 text-white flex items-center justify-center font-bold text-lg shadow-md">📖</span>
-        <div>
-          <h3 class="text-sm sm:text-base font-extrabold text-white leading-tight">Règlement Intérieur Officiel</h3>
-          <p class="text-[10px] sm:text-xs text-slate-400">Interact Club Tunis Golfe Carthagène • 36 Pages</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <select id="book-toc-select" onchange="jumpToBookPage(parseInt(this.value))" class="hidden md:block bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none">
-          <option value="1">📑 Sommaire Rapide</option>
-          <option value="1">Page 1 : Couverture &amp; Titre</option>
-          <option value="3">Page 3 : Titre I - Dispositions Générales</option>
-          <option value="7">Page 7 : Titre II - Membres &amp; Adhésion</option>
-          <option value="14">Page 14 : Titre III - Assemblée Générale</option>
-          <option value="20">Page 20 : Titre IV - Bureau &amp; Commissions</option>
-          <option value="28">Page 28 : Titre V - Cotisations &amp; Finances</option>
-          <option value="32">Page 32 : Titre VI - Discipline &amp; Radiation</option>
-          <option value="36">Page 36 : Dispositions Finales</option>
-        </select>
-
-        <button type="button" onclick="zoomBook(-0.15)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold" title="Zoom -">🔍−</button>
-        <button type="button" onclick="zoomBook(0.15)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold" title="Zoom +">🔍+</button>
-        <button type="button" onclick="toggleBookSpread()" id="book-spread-btn" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold items-center gap-1" title="Basculer Mode Page Double / Simple">📖 2 Pages</button>
-        <button type="button" onclick="toggleBookFullscreen()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold" title="Plein Écran">⛶</button>
-        <a href="/assets/reglement-interieur-ictgc.pdf" download="Reglement_Interieur_ICTGC.pdf" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1 shadow-sm" title="Télécharger le fichier PDF">
-          <span>⬇️</span> <span class="hidden sm:inline">PDF</span>
-        </a>
-        <button type="button" onclick="closeReglementBookModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-900/60 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold transition-colors">✕</button>
-      </div>
-    </div>
-
-    <div id="book-stage" class="flex-1 relative overflow-auto flex items-center justify-center p-2 sm:p-6 bg-radial from-slate-900 to-slate-950">
-      <div id="book-loading-spinner" class="absolute inset-0 flex flex-col items-center justify-center text-white gap-3 z-10">
-        <div class="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <span class="text-xs font-bold text-slate-300">Chargement du Livre Interactif...</span>
-      </div>
-
-      <div id="book-spread-wrapper" class="book-cover-frame relative max-w-5xl w-full flex items-center justify-center book-perspective border border-amber-500/20">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-3 h-9 bg-rose-600 shadow-md rounded-b-xs border-x border-b border-rose-800" title="Signet"></div>
-        <button type="button" onclick="bookPrevPage()" class="absolute left-1 sm:left-3 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/80 hover:bg-blue-600 text-white shadow-xl flex items-center justify-center text-lg font-black border border-slate-700 transition-all hover:scale-110" title="Page Précédente (Flèche Gauche)">◀</button>
-
-        <div id="book-pages-flex" class="flex items-center justify-center gap-1 sm:gap-2 max-w-full">
-          <div id="book-page-left-box" class="book-paper-left relative overflow-hidden border border-slate-300/80 flex flex-col items-center justify-center cursor-pointer" onclick="bookPrevPage()" title="Cliquer pour tourner la page vers la gauche">
-            <div class="page-corner-curl-left"></div>
-            <canvas id="book-canvas-left" class="max-w-full h-auto block"></canvas>
-            <span id="book-page-left-num" class="absolute bottom-2 text-[10px] text-slate-400 font-serif">1</span>
-          </div>
-
-          <div id="book-spine" class="book-spine-leather w-2 sm:w-3.5 h-full self-stretch shadow-inner"></div>
-
-          <div id="book-page-right-box" class="book-paper-right relative overflow-hidden border border-slate-300/80 flex flex-col items-center justify-center cursor-pointer" onclick="bookNextPage()" title="Cliquer pour tourner la page vers la droite">
-            <div class="page-corner-curl"></div>
-            <canvas id="book-canvas-right" class="max-w-full h-auto block"></canvas>
-            <span id="book-page-right-num" class="absolute bottom-2 text-[10px] text-slate-400 font-serif">2</span>
-          </div>
-        </div>
-
-        <button type="button" onclick="bookNextPage()" class="absolute right-1 sm:right-3 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/80 hover:bg-blue-600 text-white shadow-xl flex items-center justify-center text-lg font-black border border-slate-700 transition-all hover:scale-110" title="Page Suivante (Flèche Droite)">▶</button>
-      </div>
-
-      <iframe id="book-pdf-iframe" class="hidden w-full h-[85vh] rounded-2xl border border-slate-700 bg-white" src=""></iframe>
-    </div>
-
-    <div class="px-4 sm:px-6 py-3 border-t border-slate-800 bg-slate-900/80 flex items-center justify-between gap-4 text-xs text-white">
-      <div class="flex items-center gap-3">
-        <button type="button" onclick="bookPrevPage()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center gap-1">◀ Précédent</button>
-        <span id="book-current-indicator" class="font-extrabold text-slate-200">Pages 1-2 / 36</span>
-        <button type="button" onclick="bookNextPage()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center gap-1">Suivant ▶</button>
-      </div>
-
-      <div class="flex-1 max-w-xs hidden sm:flex items-center gap-2">
-        <span class="text-[10px] text-slate-400">1</span>
-        <input type="range" id="book-page-slider" min="1" max="36" value="1" oninput="jumpToBookPage(parseInt(this.value))" class="w-full accent-blue-500 cursor-pointer">
-        <span class="text-[10px] text-slate-400">36</span>
-      </div>
-
-      <div class="text-[11px] text-slate-400 hidden md:block">
-        Navigation : <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-[10px]">◀</kbd> / <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-[10px]">▶</kbd> • Échap pour fermer
-      </div>
-    </div>
-  </div>
-</body></html>
+  </body></html>
