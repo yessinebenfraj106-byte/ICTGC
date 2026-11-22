@@ -11755,33 +11755,7 @@ const CATEGORY_I18N = {
         const w = window.open('');
         if (w) {
           w.document.write(`<title>${escapeHtml(currentLightboxAction.title || 'Photo')} - Pleine Résolution</title><body style="margin:0;background:#050b14;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${url}" style="max-width:100%;max-height:100vh;object-fit:contain;box-shadow:0 0 50px rgba(0,0,0,0.8);"/>
-  <div id="zone-links-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-xs transition-all" style="display: none;">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div class="flex items-center gap-3">
-          <span class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold">💬</span>
-          <div>
-            <h3 class="text-lg font-extrabold text-slate-900">Gestion des Groupes Messenger de Zone</h3>
-            <p class="text-xs text-slate-500">Ajoutez, modifiez ou supprimez les liens opérationnels des convois et zones.</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeManageZoneLinksModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer">✕</button>
-      </div>
-
-      <div id="zone-links-modal-list" class="space-y-4"></div>
-
-      <button type="button" onclick="addZoneLinkRow()" class="w-full py-2.5 rounded-xl border-2 border-dashed border-blue-300 hover:border-blue-500 text-blue-600 hover:text-blue-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-        <span>+</span> Ajouter un Groupe de Zone
-      </button>
-
-      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-        <button type="button" onclick="closeManageZoneLinksModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer">Annuler</button>
-        <button type="button" onclick="saveManageZoneLinksModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer">
-          <span>💾</span> Enregistrer &amp; Synchroniser
-        </button>
-      </div>
-    </div>
-  </div>
+  
 
 </body>`);
         } else {
@@ -14327,4 +14301,32 @@ const CATEGORY_I18N = {
 
   
 
-  </body></html>
+  
+  <div id="zone-links-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-xs transition-all" style="display: none;">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold">💬</span>
+          <div>
+            <h3 class="text-lg font-extrabold text-slate-900">Gestion des Groupes Messenger de Zone</h3>
+            <p class="text-xs text-slate-500">Ajoutez, modifiez ou supprimez les liens opérationnels des convois et zones.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeManageZoneLinksModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer">✕</button>
+      </div>
+
+      <div id="zone-links-modal-list" class="space-y-4"></div>
+
+      <button type="button" onclick="addZoneLinkRow()" class="w-full py-2.5 rounded-xl border-2 border-dashed border-blue-300 hover:border-blue-500 text-blue-600 hover:text-blue-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+        <span>+</span> Ajouter un Groupe de Zone
+      </button>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <button type="button" onclick="closeManageZoneLinksModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer">Annuler</button>
+        <button type="button" onclick="saveManageZoneLinksModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer">
+          <span>💾</span> Enregistrer &amp; Synchroniser
+        </button>
+      </div>
+    </div>
+  </div>
+</body></html>
